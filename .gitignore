@@ -1,0 +1,111 @@
+# =============================================================================
+# Monorepo — stratégie .gitignore (NestJS + Next.js + Expo)
+# =============================================================================
+# Règle générale : versionner le code source et les fichiers d’exemple ;
+# ne pas versionner ce qui se régénère, ce qui est secret, ou ce qui est
+# strictement personnel / machine locale.
+#
+# Chaque dossier backend/, web/ et mobile/ a aussi son propre .gitignore
+# pour les détails propres à l’outil (Next, Expo, Nest).
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# 1) Secrets et environnement local
+# -----------------------------------------------------------------------------
+# Pourquoi : les clés API, mots de passe et URLs privées ne doivent jamais
+# être poussés sur Git. On garde uniquement des exemples sans secrets.
+.env
+.env.*
+!.env.example
+!.env.local.example
+**/.env
+!**/.env.example
+!**/.env.local.example
+
+# -----------------------------------------------------------------------------
+# 2) Dépendances Node (réinstallables avec npm ci / npm install)
+# -----------------------------------------------------------------------------
+node_modules/
+
+# -----------------------------------------------------------------------------
+# 3) Sorties de build et artefacts de compilation
+# -----------------------------------------------------------------------------
+# Pourquoi : dossiers recréés à chaque build ; inutiles et lourds dans Git.
+dist/
+build/
+.next/
+out/
+web-build/
+coverage/
+*.tsbuildinfo
+
+# -----------------------------------------------------------------------------
+# 4) Caches d’outils (ESLint, bundlers, tests, etc.)
+# -----------------------------------------------------------------------------
+.cache/
+.eslintcache
+.turbo/
+.parcel-cache/
+**/.cache/
+.nyc_output/
+
+# -----------------------------------------------------------------------------
+# 5) Expo et React Native (dossiers générés / locaux)
+# -----------------------------------------------------------------------------
+.expo/
+.expo-shared/
+.metro-health-check*
+
+# -----------------------------------------------------------------------------
+# 6) Docs et brouillons personnels (non partagés avec l’équipe / le jury)
+# -----------------------------------------------------------------------------
+# Placez ici vos notes perso : elles ne seront pas suivies par Git.
+private/
+**/private/
+.notes/
+drafts/
+*_PERSO.md
+*_PRIVATE.md
+*_perso.md
+*_private.md
+
+# -----------------------------------------------------------------------------
+# 7) Scripts shell et dossiers d’aide locale (hors scripts du projet)
+# -----------------------------------------------------------------------------
+# Les scripts de replay d’historique du repo (replay-full-history.sh, etc.)
+# ne sont PAS listés ici : ils restent versionnés car ils font partie du projet.
+# Ignorer uniquement les brouillons / scripts perso :
+*.local.sh
+local-scripts/
+tools/local/
+
+# -----------------------------------------------------------------------------
+# 8) Fichiers système et éditeurs
+# -----------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+*.swp
+*.swo
+
+# -----------------------------------------------------------------------------
+# 9) Journaux et débogage npm / yarn / pnpm
+# -----------------------------------------------------------------------------
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# -----------------------------------------------------------------------------
+# 10) Certificats et clés (mobile / HTTPS local)
+# -----------------------------------------------------------------------------
+*.pem
+*.p12
+*.key
+*.jks
+*.p8
+*.mobileprovision
