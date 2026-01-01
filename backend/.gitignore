@@ -1,0 +1,61 @@
+# -----------------------------------------------------------------------------
+# Backend NestJS — complète le .gitignore à la racine du monorepo.
+# Voir aussi ../.gitignore pour secrets, caches et docs perso.
+# -----------------------------------------------------------------------------
+
+# Sortie compilée Nest
+/dist
+/node_modules
+/build
+
+# Journaux
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# OS
+.DS_Store
+
+# Tests
+/coverage
+/.nyc_output
+
+# IDE
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# VS Code : on peut versionner les réglages partagés du projet
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Variables d’environnement (ne pas committer les secrets)
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+
+# Fichiers temporaires
+.temp
+.tmp
+
+# Données runtime
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Rapports Node
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
