@@ -1,0 +1,47 @@
+# -----------------------------------------------------------------------------
+# Frontend Next.js — complète le .gitignore à la racine du monorepo.
+# Voir aussi ../.gitignore pour secrets, caches et docs perso.
+# -----------------------------------------------------------------------------
+
+# Dépendances
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# Tests
+/coverage
+
+# Next.js (dossier de dev / prod généré)
+/.next/
+/out/
+
+# Build production
+/build
+
+# Divers
+.DS_Store
+*.pem
+
+# Débogage
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Fichiers .env : tout ignorer sauf l’exemple versionné
+.env*
+!.env.local.example
+
+# Déploiement Vercel (config locale)
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+
+# next-env.d.ts est régénéré par Next ; certains équipes le forcent avec git add -f
+next-env.d.ts
