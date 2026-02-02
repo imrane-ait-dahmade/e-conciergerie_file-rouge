@@ -1,0 +1,122 @@
+// =============================================================================
+// globals.scss — entrée SCSS globale du projet
+//
+// Ordre des @use (obligatoire en Sass moderne) :
+//   1. variables  → tokens (couleurs, espacements…)
+//   2. mixins      → peut lire les variables
+//   3. auth-theme, home → styles par zone (ils font @use "variables" en interne aussi,
+//      ce qui est autorisé : chaque fichier ne charge qu’une fois les variables)
+//
+// globals.css (à côté) contient Tailwind + shadcn : ne pas y mettre la syntaxe Tailwind v4
+// dans un fichier .scss, le compilateur Sass ne la comprend pas.
+// =============================================================================
+
+@use "../styles/variables" as *;
+@use "../styles/mixins" as *;
+@use "../styles/auth-theme";
+@use "../styles/home";
+
+// --- Variables CSS : miroir des tokens pour usage dans du CSS ou style={{ }} ---
+:root {
+  // Sémantique (préférer pour le design system)
+  --ds-brand-primary: #{$brand-primary};
+  --ds-brand-secondary: #{$brand-secondary};
+  --ds-accent: #{$accent};
+  --ds-accent-hover: #{$accent-hover};
+  --ds-accent-warning: #{$accent-warning};
+  --ds-background-page: #{$background-page};
+  --ds-background-card: #{$background-card};
+  --ds-background-muted: #{$background-muted};
+  --ds-text-primary: #{$text-primary};
+  --ds-text-muted: #{$text-muted};
+  --ds-text-on-accent: #{$text-on-accent};
+  --ds-border-default: #{$border-default};
+  --ds-border-strong: #{$border-strong};
+  --ds-state-success: #{$state-success};
+  --ds-state-danger: #{$state-danger};
+
+  // Primitives (miroir des alias historiques)
+  --ds-color-blue-primary: #{$color-blue-primary};
+  --ds-color-navy-dark: #{$color-navy-dark};
+  --ds-color-gold: #{$color-gold};
+  --ds-color-gold-hover: #{$color-gold-hover};
+  --ds-color-bg-page: #{$color-bg-page};
+  --ds-color-white: #{$color-white};
+  --ds-color-text-muted: #{$color-text-muted};
+  --ds-color-border: #{$color-border};
+  --ds-color-success: #{$color-success};
+  --ds-color-danger: #{$color-danger};
+
+  --app-color-primary: #{$color-primary};
+  --app-color-secondary: #{$color-secondary};
+  --app-color-background: #{$color-background};
+  --app-color-foreground: #{$color-foreground};
+  --app-color-muted: #{$color-muted};
+  --app-color-muted-foreground: #{$color-muted-foreground};
+  --app-color-border: #{$color-border};
+  --app-color-success: #{$color-success};
+  --app-color-danger: #{$color-danger};
+  --app-color-warning: #{$color-warning};
+  --app-color-white: #{$color-white};
+  --app-color-black: #{$color-black};
+
+  --app-space-1: #{$space-1};
+  --app-space-2: #{$space-2};
+  --app-space-3: #{$space-3};
+  --app-space-4: #{$space-4};
+  --app-space-6: #{$space-6};
+  --app-space-8: #{$space-8};
+
+  --app-radius-sm: #{$radius-sm};
+  --app-radius-md: #{$radius-md};
+  --app-radius-lg: #{$radius-lg};
+
+  --app-shadow-sm: #{$shadow-sm};
+  --app-shadow-md: #{$shadow-md};
+  --app-shadow-lg: #{$shadow-lg};
+
+  --app-font-sans: #{$font-family-sans};
+  --app-font-mono: #{$font-family-mono};
+  --app-text-base: #{$font-size-base};
+  --app-leading-normal: #{$line-height-normal};
+
+  --app-auth-gradient-start: #{$auth-gradient-start};
+  --app-auth-gradient-end: #{$auth-gradient-end};
+  --app-auth-card-bg: #{$auth-card-bg};
+  --app-auth-title-color: #{$auth-title-color};
+
+  --app-figma-brand-text: #{$color-figma-brand-text};
+  --app-figma-link-blue: #{$color-figma-link-blue};
+  --app-figma-cta-yellow: #{$color-figma-cta-yellow};
+}
+
+// --- Reset léger (le préflight Tailwind dans globals.css couvre déjà beaucoup) ---
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+// Le corps du document est stylé dans globals.css (@layer base) avec les tokens Tailwind
+// (--background, --foreground). Ne pas dupliquer ici pour garder le thème shadcn cohérent.
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
