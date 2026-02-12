@@ -1,0 +1,273 @@
+// =============================================================================
+// Thème visuel pages authentification (connexion / inscription)
+// Toutes les valeurs proviennent de _variables.scss ($auth-* , $color-* , …)
+// =============================================================================
+
+@use "variables" as *;
+
+// --- Fond plein page : centrage vertical + horizontal de la carte ------------
+.auth-page {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: $auth-page-min-height;
+  width: 100%;
+  padding: $auth-page-padding-y $auth-page-padding-x;
+  overflow: hidden;
+  background-color: $auth-gradient-mid;
+  background-image:
+    radial-gradient(
+      ellipse 120% 80% at 100% 0%,
+      $auth-gradient-spot,
+      transparent 55%
+    ),
+    linear-gradient(
+      $auth-gradient-angle,
+      $auth-gradient-start 0%,
+      $auth-gradient-mid 45%,
+      $auth-gradient-end 100%
+    );
+
+  @media (min-width: $breakpoint-sm) {
+    padding: $auth-page-padding-y-lg $auth-page-padding-x-lg;
+  }
+}
+
+// Largeur utile : pleine largeur sur mobile, plafonnée et centrée au-delà
+.auth-page__inner {
+  position: relative;
+  z-index: 1;
+  width: min(100%, #{$layout-auth-max-width});
+}
+
+.auth-page__inner--wide {
+  width: min(100%, #{$layout-auth-max-width-lg});
+}
+
+// --- Carte shadcn (login / signup) : bordure, ombre, séparation titre / corps -
+.auth-card-shell {
+  width: 100%;
+  background: $auth-card-bg;
+  border: $auth-card-border-width solid $auth-card-border-color;
+  border-radius: $auth-card-radius;
+  box-shadow: $auth-card-shadow;
+
+  [data-slot="card-header"] {
+    padding-bottom: $auth-card-header-padding-bottom;
+    border-bottom: $auth-header-separator-width solid $auth-header-separator-color;
+  }
+
+  [data-slot="card-content"] {
+    padding-top: $auth-card-content-padding-top;
+  }
+
+  [data-slot="card-footer"] {
+    border-top: $auth-header-separator-width solid $auth-header-separator-color;
+    padding-top: $space-4;
+  }
+}
+
+.auth-card-shell--narrow {
+  max-width: $layout-auth-max-width;
+}
+
+.auth-card-shell--wide {
+  max-width: $layout-auth-max-width-lg;
+}
+
+// --- Ancienne carte HTML (si réutilisée ailleurs) ---------------------------
+.auth-card {
+  width: 100%;
+  max-width: $auth-card-max-width;
+  margin-inline: auto;
+  padding-block: $auth-card-padding-y;
+  padding-inline: $auth-card-padding-x;
+  background: $auth-card-bg;
+  border: $auth-card-border-width solid $auth-card-border-color;
+  border-radius: $auth-card-radius;
+  box-shadow: $auth-card-shadow;
+}
+
+.auth-card--wide {
+  max-width: min(100%, $layout-auth-max-width-lg);
+}
+
+.auth-card__header {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+  margin-bottom: $space-2;
+}
+
+.auth-card__title {
+  margin: 0;
+  font-family: $font-family-sans;
+  font-size: $auth-title-size;
+  font-weight: $auth-title-weight;
+  letter-spacing: $auth-title-tracking;
+  line-height: $line-height-tight;
+  color: $auth-title-color;
+}
+
+.auth-card__subtitle {
+  margin: 0;
+  max-width: $auth-subtitle-max-width;
+  font-size: $auth-subtitle-size;
+  line-height: $auth-subtitle-leading;
+  color: $auth-subtitle-color;
+}
+
+// --- Formulaire --------------------------------------------------------------
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.auth-form__body {
+  display: flex;
+  flex-direction: column;
+  gap: $auth-form-gap;
+}
+
+.auth-form__grid {
+  display: grid;
+  gap: $auth-field-group-gap;
+
+  @media (min-width: $breakpoint-sm) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.auth-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: $auth-field-stack-gap;
+}
+
+.auth-form__label {
+  font-size: $auth-label-size;
+  font-weight: $auth-label-weight;
+  color: $auth-label-color;
+  line-height: $line-height-snug;
+}
+
+.auth-form__input {
+  min-height: $auth-input-min-height;
+  border-radius: $auth-input-radius !important;
+  border: $auth-input-border !important;
+  background-color: $auth-input-bg !important;
+  padding-inline: $auth-input-padding-x !important;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    background-color 0.15s ease;
+
+  &::placeholder {
+    color: $color-muted-foreground;
+    opacity: 0.85;
+  }
+
+  &:hover:not(:disabled) {
+    border-color: oklch(0.82 0.03 265) !important;
+  }
+
+  &:focus-visible {
+    outline: none !important;
+    border-color: $color-primary !important;
+    box-shadow: 0 0 0 $auth-input-focus-ring-width $auth-input-focus-ring-color !important;
+  }
+}
+
+.auth-form__footer {
+  display: flex;
+  flex-direction: column;
+  gap: $auth-footer-gap;
+  margin-top: $space-6;
+  padding-top: $space-4;
+  border-top: 1px solid oklch(0.91 0.015 265 / 0.7);
+
+  @media (min-width: $breakpoint-sm) {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.auth-form__meta {
+  margin: 0;
+  text-align: center;
+  font-size: $auth-footer-meta-size;
+  line-height: $line-height-normal;
+  color: $color-muted-foreground;
+
+  @media (min-width: $breakpoint-sm) {
+    text-align: right;
+  }
+}
+
+.auth-form__link {
+  font-weight: $font-weight-medium;
+  color: $color-primary;
+  text-decoration: none;
+  text-underline-offset: 3px;
+  transition: color 0.15s ease;
+
+  &:hover {
+    color: $auth-button-bg-hover;
+    text-decoration: underline;
+  }
+}
+
+// --- Bouton submit (surcharge sobre du bouton shadcn) ------------------------
+.auth-form__submit {
+  min-height: $auth-button-min-height;
+  width: 100%;
+  border-radius: $auth-button-radius !important;
+  padding-inline: $auth-button-padding-x !important;
+  font-weight: $auth-button-font-weight !important;
+  background-color: $auth-button-bg !important;
+  color: $auth-button-color !important;
+  border-color: transparent !important;
+  box-shadow: $auth-button-shadow;
+
+  @media (min-width: $breakpoint-sm) {
+    width: auto;
+    min-width: 10rem;
+  }
+
+  &:hover:not(:disabled) {
+    background-color: $auth-button-bg-hover !important;
+  }
+
+  &:disabled {
+    opacity: $auth-button-disabled-opacity;
+  }
+}
+
+// --- Alertes erreur / succès -------------------------------------------------
+.auth-form__alert {
+  margin: 0;
+  padding: $auth-alert-padding-y $auth-alert-padding-x;
+  border-radius: $auth-alert-radius;
+  border-width: $auth-alert-border-width;
+  border-style: solid;
+  font-size: $auth-alert-font-size;
+  line-height: $line-height-normal;
+}
+
+.auth-form__alert--error {
+  background-color: $auth-alert-error-bg;
+  border-color: $auth-alert-error-border;
+  color: $auth-alert-error-text;
+}
+
+.auth-form__alert--success {
+  background-color: $auth-alert-success-bg;
+  border-color: $auth-alert-success-border;
+  color: $auth-alert-success-text;
+}

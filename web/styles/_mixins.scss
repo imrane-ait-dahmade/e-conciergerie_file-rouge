@@ -1,0 +1,56 @@
+// =============================================================================
+// Mixins SCSS réutilisables
+//
+// Ce fichier charge d’abord les variables (une seule fois via @use).
+// Dans globals.scss : @use "../styles/mixins" as *;
+// =============================================================================
+
+@use "variables" as *;
+
+/// Conteneur centré avec largeur max.
+@mixin container($max-width: $breakpoint-lg) {
+  width: 100%;
+  max-width: $max-width;
+  margin-inline: auto;
+  padding-inline: $space-4;
+}
+
+/// Flex : centre horizontal + vertical.
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/// Texte sur une ligne avec points de suspension.
+@mixin truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/// Texte réservé aux lecteurs d’écran.
+@mixin visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/// Anneau de focus clavier (accessibilité).
+@mixin focus-ring {
+  outline: 2px solid $brand-primary;
+  outline-offset: 2px;
+}
+
+/// Media query mobile-first : min-width.
+@mixin respond-min($min) {
+  @media (min-width: $min) {
+    @content;
+  }
+}

@@ -1,0 +1,255 @@
+// =============================================================================
+// Design system SCSS — e-conciergerie
+//
+// Préférer les tokens sémantiques ($brand-primary, $text-muted…) dans les styles.
+// Les noms $color-* ci-dessous restent des alias pour compatibilité (shadcn, anciens fichiers).
+//
+// Utilisation dans un partial :
+//   @use "../styles/variables" as *;
+//   color: $text-primary;
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// 1) Palette sémantique (API principale — home, login, signup, dashboard)
+//
+//    Boutons :
+//      - CTA accent (or)     → $accent + $accent-hover, texte $text-on-accent
+//      - Lien / ghost bleu   → $brand-primary (texte ou bordure)
+//      - Danger              → $state-danger
+//
+//    Cartes / surfaces :
+//      - fond carte / modal  → $background-card
+//      - fond page           → $background-page
+//      - bande atténuée      → $background-muted
+//
+//    Fonds plein écran :
+//      - login / signup      → $background-page + dégradés ($auth-*)
+//
+//    Titres & texte :
+//      - titres, corps fort  → $text-primary (marine)
+//      - secondaire, aide    → $text-muted
+//      - liens navigation    → $brand-primary (bleu)
+//
+//    Bordures :
+//      - défaut douce        → $border-default
+// -----------------------------------------------------------------------------
+
+// Marque
+$brand-primary: #1e3a8a; // bleu fort — liens, focus, accents marque
+$brand-secondary: #0b1120; // marine — titres, logo texte, hiérarchie « brand »
+
+// Accents
+$accent: #fbbf24; // or chaud — CTA principaux, badges highlight
+$accent-hover: #f59e0b;
+$accent-warning: #d97706; // alertes, états attention (distinct de l’or CTA)
+
+// Surfaces
+$background-page: #f8fafc; // fond global des pages
+$background-card: #ffffff; // cartes, panneaux, champs sur fond gris
+$background-muted: #f1f5f9; // bandes, zones secondaires, trust placeholders
+
+// Texte
+$text-primary: $brand-secondary; // titres, lecture principale (marine)
+$text-muted: #64748b; // sous-titres, labels secondaires, placeholders
+$text-on-accent: #ffffff; // texte sur bouton or ou fonds très sombres
+$text-on-brand: #ffffff; // texte sur bouton plein bleu (si utilisé)
+
+// Bordures (modernes, douces)
+$border-default: #e2e8f0;
+$border-strong: #cbd5e1; // séparateurs un peu plus visibles
+
+// États (formulaires, alertes)
+$state-success: #16a34a;
+$state-danger: #dc2626;
+
+// -----------------------------------------------------------------------------
+// 2) Primitives (alias des mêmes teintes — utiles si besoin d’un nom « matière »)
+// -----------------------------------------------------------------------------
+
+$color-blue-primary: $brand-primary;
+$color-navy-dark: $brand-secondary;
+$color-gold: $accent;
+$color-gold-hover: $accent-hover;
+$color-bg-page: $background-page;
+$color-white: $background-card;
+$color-text-muted: $text-muted;
+$color-border: $border-default;
+$color-surface-muted: $background-muted;
+$color-success: $state-success;
+$color-danger: $state-danger;
+$color-warning: $accent-warning;
+
+// -----------------------------------------------------------------------------
+// 3) Alias shadcn / usage transversal
+// -----------------------------------------------------------------------------
+
+$color-primary: $brand-primary;
+$color-secondary: $accent;
+$color-background: $background-page;
+$color-foreground: $text-primary;
+$color-muted: $background-muted;
+$color-muted-foreground: $text-muted;
+$color-black: $brand-secondary;
+
+// Compat maquette header / CTA (déprécié au profit des tokens sémantiques)
+$color-figma-brand-text: $text-primary;
+$color-figma-link-blue: $brand-primary;
+$color-figma-cta-yellow: $accent;
+$color-figma-cta-yellow-hover: $accent-hover;
+$radius-figma-pill: 7px;
+
+// -----------------------------------------------------------------------------
+// 4) Espacements (échelle 4px)
+// -----------------------------------------------------------------------------
+
+$space-0: 0;
+$space-1: 0.25rem;
+$space-2: 0.5rem;
+$space-3: 0.75rem;
+$space-4: 1rem;
+$space-5: 1.25rem;
+$space-6: 1.5rem;
+$space-8: 2rem;
+$space-10: 2.5rem;
+$space-12: 3rem;
+
+// -----------------------------------------------------------------------------
+// 5) Rayons
+// -----------------------------------------------------------------------------
+
+$radius-sm: 0.375rem;
+$radius-md: 0.5rem;
+$radius-lg: 0.625rem;
+$radius-xl: 0.875rem;
+$radius-full: 9999px;
+
+// -----------------------------------------------------------------------------
+// 6) Ombres
+// -----------------------------------------------------------------------------
+
+$shadow-sm: 0 1px 2px rgb(15 23 42 / 0.06);
+$shadow-md:
+  0 4px 6px -1px rgb(15 23 42 / 0.08),
+  0 2px 4px -2px rgb(15 23 42 / 0.06);
+$shadow-lg:
+  0 10px 15px -3px rgb(15 23 42 / 0.08),
+  0 4px 6px -4px rgb(15 23 42 / 0.06);
+
+// -----------------------------------------------------------------------------
+// 7) Typographie
+// -----------------------------------------------------------------------------
+
+$font-family-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+$font-family-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+$font-size-xs: 0.75rem;
+$font-size-sm: 0.875rem;
+$font-size-base: 1rem;
+$font-size-lg: 1.125rem;
+$font-size-xl: 1.25rem;
+$font-size-2xl: 1.5rem;
+$font-size-3xl: 1.875rem;
+
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+
+$line-height-tight: 1.25;
+$line-height-snug: 1.375;
+$line-height-normal: 1.5;
+$line-height-relaxed: 1.625;
+
+// -----------------------------------------------------------------------------
+// 8) Breakpoints
+// -----------------------------------------------------------------------------
+
+$breakpoint-sm: 40rem;
+$breakpoint-md: 48rem;
+$breakpoint-lg: 64rem;
+$breakpoint-xl: 80rem;
+
+// -----------------------------------------------------------------------------
+// 9) Layout auth + pages (réutilise la palette sémantique)
+// -----------------------------------------------------------------------------
+
+$layout-auth-max-width: 28rem;
+$layout-auth-max-width-lg: 38rem;
+
+$auth-gradient-angle: 160deg;
+$auth-gradient-start: #eff6ff;
+$auth-gradient-mid: #f8fafc;
+$auth-gradient-end: #fffbeb;
+$auth-gradient-spot: rgb(59 130 246 / 0.15);
+$auth-page-min-height: calc(100dvh - 3.5rem);
+
+$auth-page-padding-x: $space-4;
+$auth-page-padding-x-lg: $space-6;
+$auth-page-padding-y: $space-6;
+$auth-page-padding-y-lg: $space-10;
+
+$auth-header-separator-color: $border-default;
+$auth-header-separator-width: 1px;
+$auth-card-header-padding-bottom: $space-5;
+$auth-card-content-padding-top: $space-5;
+
+$auth-card-bg: $background-card;
+$auth-card-border-color: rgb(226 232 240 / 0.85);
+$auth-card-border-width: 1px;
+$auth-card-radius: $radius-xl;
+$auth-card-shadow: $shadow-lg;
+$auth-card-padding-x: $space-6;
+$auth-card-padding-y: $space-6;
+$auth-card-max-width: $layout-auth-max-width;
+
+$auth-title-size: $font-size-2xl;
+$auth-title-weight: $font-weight-semibold;
+$auth-title-tracking: -0.03em;
+$auth-title-color: $text-primary;
+$auth-title-margin-bottom: $space-1;
+
+$auth-subtitle-size: $font-size-sm;
+$auth-subtitle-color: $text-muted;
+$auth-subtitle-leading: $line-height-relaxed;
+$auth-subtitle-max-width: 42ch;
+
+$auth-form-gap: $space-5;
+$auth-field-stack-gap: $space-2;
+$auth-field-group-gap: $space-4;
+$auth-footer-gap: $space-4;
+$auth-footer-meta-size: $font-size-sm;
+
+$auth-alert-padding-x: $space-4;
+$auth-alert-padding-y: $space-3;
+$auth-alert-radius: $radius-md;
+$auth-alert-font-size: $font-size-sm;
+$auth-alert-border-width: 1px;
+
+$auth-alert-error-bg: #fef2f2;
+$auth-alert-error-border: #fecaca;
+$auth-alert-error-text: #b91c1c;
+
+$auth-alert-success-bg: #f0fdf4;
+$auth-alert-success-border: #bbf7d0;
+$auth-alert-success-text: #15803d;
+
+$auth-label-size: $font-size-sm;
+$auth-label-weight: $font-weight-medium;
+$auth-label-color: $text-primary;
+$auth-input-min-height: 2.5rem;
+$auth-input-radius: $radius-md;
+$auth-input-border: 1px solid $border-default;
+$auth-input-bg: rgb(255 255 255 / 0.85);
+$auth-input-padding-x: $space-3;
+$auth-input-focus-ring-width: 2px;
+$auth-input-focus-ring-color: rgb(30 58 138 / 0.35);
+
+$auth-button-min-height: 2.5rem;
+$auth-button-radius: $radius-md;
+$auth-button-padding-x: $space-6;
+$auth-button-font-weight: $font-weight-semibold;
+$auth-button-shadow: 0 1px 2px rgb(30 58 138 / 0.15);
+$auth-button-bg: $accent;
+$auth-button-bg-hover: $accent-hover;
+$auth-button-color: $text-on-accent;
+$auth-button-disabled-opacity: 0.65;

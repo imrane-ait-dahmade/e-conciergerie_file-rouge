@@ -1,0 +1,691 @@
+// =============================================================================
+// Styles page d’accueil + en-tête (alignés maquette Figma : couleurs via _variables)
+// =============================================================================
+
+@use "variables" as *;
+@use "mixins" as *;
+
+.ec-header {
+  background: $background-card;
+  border-bottom: 1px solid $border-default;
+}
+
+.ec-header__inner {
+  @include container($breakpoint-xl);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 3.0625rem; // ~49px Figma
+  padding-block: $space-2;
+}
+
+.ec-header__brand {
+  display: flex;
+  align-items: center;
+  gap: $space-1;
+  text-decoration: none;
+  color: inherit;
+
+  &:focus-visible {
+    @include focus-ring;
+    border-radius: $radius-sm;
+  }
+}
+
+.ec-header__brand-text {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-bold;
+  color: $text-primary;
+  letter-spacing: -0.02em;
+  line-height: $line-height-tight;
+}
+
+.ec-header__actions {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+
+  @include respond-min($breakpoint-sm) {
+    gap: $space-4;
+  }
+}
+
+.ec-header__lang {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  padding: 0;
+  border: none;
+  border-radius: $radius-sm;
+  background: oklch(0.45 0 0);
+  cursor: pointer;
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+}
+
+.ec-header__lang-flag {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: $radius-full;
+  overflow: hidden;
+  font-size: 1.25rem;
+  line-height: 1.5rem;
+}
+
+.ec-header__link-login {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-bold;
+  color: $brand-primary;
+  text-decoration: none;
+  padding: $space-2;
+  white-space: nowrap;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+    border-radius: $radius-sm;
+  }
+}
+
+.ec-header__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2rem;
+  padding-inline: $space-3;
+  font-size: $font-size-sm;
+  min-width: 7rem;
+  border-radius: $radius-figma-pill;
+  background: $accent;
+  color: $text-on-accent;
+  font-weight: $font-weight-bold;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: $accent-hover;
+  }
+}
+
+// --- Blocs page d’accueil ----------------------------------------------------
+
+.home-section {
+  @include container($breakpoint-xl);
+  padding-block: $space-10;
+
+  @include respond-min($breakpoint-md) {
+    padding-block: $space-12;
+  }
+}
+
+.home-hero {
+  background: linear-gradient(
+    180deg,
+    oklch(0.97 0.02 258) 0%,
+    $background-page 100%
+  );
+}
+
+// --- Carte héro (grand bloc arrondi type « card » maquette) -------------------
+// Structure : .home-hero__card > .home-hero__card-inner > [ .home-hero__media | .home-hero__copy ]
+
+.home-hero__card {
+  width: 100%;
+  max-width: 72rem;
+  margin-inline: auto;
+  padding: $space-6;
+  border-radius: $radius-xl;
+  border: 1px solid $border-default;
+  background: $background-card;
+  box-shadow: $shadow-md;
+
+  @include respond-min($breakpoint-md) {
+    padding: $space-8 $space-10;
+    border-radius: calc($radius-xl + 0.125rem);
+  }
+}
+
+// Grille intérieure : image à gauche, texte à droite (une colonne sur mobile : image puis texte)
+.home-hero__card-inner {
+  display: grid;
+  gap: $space-8;
+  align-items: center;
+  min-width: 0;
+
+  @include respond-min($breakpoint-md) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    gap: $space-10;
+    align-items: center;
+  }
+}
+
+// Colonne gauche : logo / illustration
+.home-hero__media {
+  min-width: 0;
+}
+
+.home-hero__media-frame {
+  position: relative;
+  margin-inline: auto;
+  width: 100%;
+  max-width: 20rem;
+  aspect-ratio: 1;
+  border-radius: $radius-lg;
+  background: linear-gradient(
+    160deg,
+    $background-muted 0%,
+    rgb(255 255 255 / 0.9) 100%
+  );
+
+  @include respond-min($breakpoint-md) {
+    max-width: none;
+    min-height: 15rem;
+  }
+}
+
+// Conteneur Next/Image en « fill » : marges intérieures pour ne pas coller au bord arrondi
+.home-hero__visual {
+  position: absolute;
+  inset: $space-5;
+}
+
+.home-hero__visual-img {
+  object-fit: contain;
+  object-position: center;
+}
+
+// Colonne droite : titre marketing + paragraphe + boutons stores
+.home-hero__copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  text-align: center;
+
+  @include respond-min($breakpoint-md) {
+    text-align: start;
+    align-items: flex-start;
+  }
+}
+
+.home-hero__title {
+  font-size: clamp($font-size-2xl, 3.6vw, 2.5rem);
+  font-weight: $font-weight-bold;
+  color: $text-primary;
+  line-height: $line-height-tight;
+  letter-spacing: -0.02em;
+  max-width: 22ch;
+
+  @include respond-min($breakpoint-md) {
+    max-width: 18ch;
+  }
+}
+
+.home-hero__lead {
+  margin-top: $space-4;
+  font-size: $font-size-lg;
+  color: $text-muted;
+  max-width: 48ch;
+  line-height: $line-height-relaxed;
+}
+
+// Boutons App Store / Google Play (sous le texte, alignés comme la maquette)
+.home-hero__stores {
+  margin-top: $space-8;
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-3;
+  justify-content: center;
+
+  @include respond-min($breakpoint-md) {
+    justify-content: flex-start;
+  }
+}
+
+.home-app-badge {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  min-height: 2.75rem;
+  min-width: 9rem;
+  padding-inline: $space-4;
+  padding-block: $space-2;
+  border-radius: $radius-md;
+  border: 1px solid $border-default;
+  background: $background-card;
+  text-decoration: none;
+  color: $text-primary;
+  box-shadow: $shadow-sm;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+
+  &:hover {
+    background: $background-muted;
+    border-color: $border-strong;
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+}
+
+.home-app-badge__kicker {
+  font-size: $font-size-xs;
+  color: $text-muted;
+  line-height: 1.2;
+}
+
+.home-app-badge__label {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  line-height: $line-height-snug;
+}
+
+.home-section__title {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+  color: $text-primary;
+  margin-bottom: $space-2;
+}
+
+.home-section__subtitle {
+  font-size: $font-size-sm;
+  color: $text-muted;
+  margin-bottom: $space-8;
+  max-width: 50ch;
+}
+
+.home-section__subtitle--center {
+  margin-inline: auto;
+  text-align: center;
+}
+
+.home-section__title--center {
+  text-align: center;
+  margin-inline: auto;
+}
+
+// Abonnement établissements : grande carte arrondie, image à gauche, texte + prix + CTA à droite
+.home-subscription {
+  background: linear-gradient(
+    180deg,
+    $background-muted 0%,
+    $background-page 100%
+  );
+}
+
+.home-subscription__card {
+  width: 100%;
+  max-width: 72rem;
+  margin-inline: auto;
+  border-radius: $radius-xl;
+  border: 1px solid $border-default;
+  background: $background-card;
+  box-shadow: $shadow-md;
+  overflow: hidden;
+}
+
+.home-subscription__card-inner {
+  display: grid;
+  min-width: 0;
+
+  @include respond-min($breakpoint-md) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    align-items: stretch;
+  }
+}
+
+// Illustration (colonne gauche en LTR)
+.home-subscription__media {
+  position: relative;
+  min-height: 14rem;
+  background: linear-gradient(
+    145deg,
+    $background-muted 0%,
+    rgb(255 255 255 / 0.96) 100%
+  );
+
+  @include respond-min($breakpoint-md) {
+    min-height: 18rem;
+  }
+}
+
+.home-subscription__visual {
+  position: absolute;
+  inset: 0;
+}
+
+.home-subscription__visual-img {
+  object-fit: cover;
+  object-position: center;
+}
+
+// Texte + prix + bouton (colonne droite en LTR)
+.home-subscription__content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: $space-6;
+  text-align: center;
+
+  @include respond-min($breakpoint-md) {
+    padding: $space-8 $space-10;
+    text-align: start;
+    align-items: flex-start;
+  }
+}
+
+.home-subscription__heading {
+  font-size: clamp($font-size-xl, 2.5vw, $font-size-2xl);
+  font-weight: $font-weight-bold;
+  color: $text-primary;
+  line-height: $line-height-tight;
+  letter-spacing: -0.02em;
+  max-width: 22ch;
+}
+
+.home-subscription__lead {
+  margin-top: $space-3;
+  font-size: $font-size-base;
+  color: $text-muted;
+  line-height: $line-height-relaxed;
+  max-width: 36ch;
+}
+
+// Prix annuel mis en avant
+.home-subscription__price-row {
+  margin-top: $space-6;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: $space-2 $space-3;
+
+  @include respond-min($breakpoint-md) {
+    justify-content: flex-start;
+  }
+}
+
+.home-subscription__price {
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  font-weight: $font-weight-bold;
+  color: $brand-primary;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.home-subscription__period {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-medium;
+  color: $text-muted;
+}
+
+// CTA principal (or, comme le reste du design system)
+.home-subscription__cta {
+  margin-top: $space-8;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding-inline: $space-6;
+  padding-block: $space-2;
+  border-radius: $radius-figma-pill;
+  border: none;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-bold;
+  text-decoration: none;
+  white-space: nowrap;
+  background: $accent;
+  color: $text-on-accent;
+  box-shadow: 0 1px 2px rgb(30 58 138 / 0.12);
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: $accent-hover;
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+}
+
+.home-card-grid {
+  display: grid;
+  gap: $space-4;
+
+  @include respond-min($breakpoint-sm) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include respond-min($breakpoint-lg) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+// Cartes « fonctionnalités » (préférer ces classes aux utilitaires Tailwind seuls)
+.home-feature-card {
+  border-radius: $radius-lg;
+  border: 1px solid $border-default;
+  background: $background-card;
+  padding: $space-5;
+  box-shadow: $shadow-sm;
+}
+
+.home-feature-card__title {
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  color: $text-primary;
+  line-height: $line-height-snug;
+}
+
+.home-feature-card__text {
+  margin-top: $space-2;
+  font-size: $font-size-sm;
+  color: $text-muted;
+  line-height: $line-height-relaxed;
+}
+
+// Logos partenaires : rangée horizontale, responsive (wrap + scroll léger sur petit écran)
+.home-partners {
+  margin-top: $space-10;
+  width: 100%;
+}
+
+.home-partners__row {
+  list-style: none;
+  margin: 0;
+  padding: $space-6 $space-5;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: $space-6 $space-10;
+  border-radius: $radius-md;
+  border: 1px solid $border-default;
+  background: $background-card;
+  box-shadow: $shadow-sm;
+}
+
+.home-partners__item {
+  flex: 0 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding-inline: $space-2;
+}
+
+.home-partners__logo {
+  width: auto;
+  max-width: 7.5rem;
+  max-height: 2.75rem;
+  height: auto;
+  object-fit: contain;
+  object-position: center;
+  opacity: 0.95;
+  transition: opacity 0.15s ease;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.home-trust-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-4;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.85;
+}
+
+.home-trust-placeholder {
+  height: 2.5rem;
+  min-width: 6rem;
+  border-radius: $radius-md;
+  background: $background-muted;
+}
+
+// --- Pied de page : confiance + réseaux + liens légaux -----------------------
+
+.site-footer {
+  border-top: 1px solid $border-default;
+  background: $background-card;
+}
+
+.site-footer__inner {
+  @include container($breakpoint-xl);
+  padding-block: $space-10;
+}
+
+.site-footer__trust {
+  text-align: center;
+  padding-bottom: $space-8;
+  border-bottom: 1px solid $border-default;
+}
+
+.site-footer__trust-logos {
+  margin-top: $space-6;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: $space-6;
+}
+
+.site-footer__trust-logo {
+  height: 2.75rem;
+  width: auto;
+  max-width: 8rem;
+  object-fit: contain;
+  opacity: 0.9;
+}
+
+// Bloc réseaux sociaux : titre + icônes + handle (tout centré, sobre)
+.site-footer__social-section {
+  text-align: center;
+  padding-block: $space-8;
+  border-bottom: 1px solid $border-default;
+}
+
+.site-footer__social-title {
+  margin: 0;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $text-primary;
+  letter-spacing: -0.02em;
+}
+
+.site-footer__social-links {
+  list-style: none;
+  margin: $space-5 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: $space-3;
+}
+
+.site-footer__social-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: $radius-full;
+  border: 1px solid $border-default;
+  background: $background-page;
+  color: $text-primary;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+
+  &:hover {
+    background: $background-muted;
+    border-color: $border-strong;
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+}
+
+.site-footer__social-handle {
+  margin: $space-4 0 0;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-muted;
+  letter-spacing: 0.02em;
+}
+
+.site-footer__tagline {
+  text-align: center;
+  font-size: $font-size-sm;
+  color: $text-muted;
+  max-width: 40rem;
+  margin-inline: auto;
+  line-height: $line-height-relaxed;
+}
+
+.site-footer__links {
+  margin-top: $space-6;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: $space-4 $space-6;
+}
+
+.site-footer__link {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $brand-primary;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+    border-radius: $radius-sm;
+  }
+}
+
+.site-footer__rights {
+  margin-top: $space-8;
+  text-align: center;
+  font-size: $font-size-xs;
+  color: $text-muted;
+}
