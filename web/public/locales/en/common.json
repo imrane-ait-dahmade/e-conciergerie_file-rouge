@@ -1,0 +1,90 @@
+{
+  "brand": "E-conciergerie",
+  "login": "login",
+  "register": "Register",
+  "footer": {
+    "tagline": "Your digital platform to simplify daily life in Morocco.",
+    "contact": "Contact",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "rights": "{year} E-conciergerie. All rights reserved.",
+    "socialTitle": "Follow us",
+    "socialHandle": "@econciergerie"
+  },
+  "appDownload": {
+    "title": "Your digital concierge in Morocco",
+    "description": "e_conciergerie.ma is much more than a simple platform — it's your digital gateway to everything Morocco has best to offer.",
+    "appStore": "App Store",
+    "appStoreSubtitle": "Download on",
+    "googlePlay": "Google Play",
+    "googlePlaySubtitle": "Get it on"
+  },
+  "establishmentOffer": {
+    "heading": "Do you have an establishment?",
+    "lead": "Subscribe for only",
+    "price": "99 MAD",
+    "pricePeriod": "per year",
+    "button": "Subscribe now and publish your service"
+  },
+  "serviceProviders": {
+    "title": "Best Service Providers",
+    "subtitle": "Most popular options among travelers living in Morocco"
+  },
+  "trust": {
+    "title": "Trusted by leading brands",
+    "subtitle": "Join thousands who rely on our network across Morocco."
+  },
+  "features": {
+    "title": "Built for everyday convenience",
+    "subtitle": "Everything you need to find, book, and enjoy trusted services.",
+    "findServices": {
+      "title": "Find services easily",
+      "description": "Browse categories and discover providers near you in a few taps."
+    },
+    "bookQuickly": {
+      "title": "Book quickly",
+      "description": "Request a slot and confirm details without the back-and-forth."
+    },
+    "trustedProviders": {
+      "title": "Trusted providers",
+      "description": "Work with vetted partners chosen for quality and reliability."
+    },
+    "allInOne": {
+      "title": "All in one place",
+      "description": "Track requests, messages, and updates from a single app."
+    }
+  },
+  "landingCta": {
+    "title": "Download the app",
+    "description": "Get E-conciergerie on your phone and carry Morocco’s best services in your pocket."
+  },
+  "loginPage": {
+    "title": "Sign in",
+    "description": "Enter your email and password to access your account.",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "submit": "Sign in",
+    "submitting": "Signing in…",
+    "errorTitle": "Could not sign in",
+    "signupPrompt": "No account yet?",
+    "signupCta": "Create an account"
+  },
+  "signupPage": {
+    "title": "Sign up",
+    "description": "Create an account. Your password must meet server rules: uppercase, lowercase, number, special character, at least 8 characters.",
+    "nomLabel": "Last name",
+    "prenomLabel": "First name",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "confirmPasswordLabel": "Confirm password",
+    "submit": "Sign up",
+    "submitting": "Signing up…",
+    "errorTitle": "Could not sign up",
+    "passwordMismatch": "Passwords do not match.",
+    "signupError": "Sign up failed",
+    "successTitle": "Success",
+    "successMessage": "Account created. Redirecting to sign in…",
+    "loginPrompt": "Already have an account?",
+    "loginCta": "Sign in"
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "brand": "E-conciergerie",
+  "login": "connexion",
+  "register": "Inscription",
+  "footer": {
+    "tagline": "Votre plateforme digitale pour simplifier votre quotidien au Maroc.",
+    "contact": "Contact",
+    "privacy": "Confidentialité",
+    "terms": "Conditions",
+    "rights": "{year} E-conciergerie. Tous droits réservés.",
+    "socialTitle": "Suivez-nous",
+    "socialHandle": "@econciergerie"
+  },
+  "appDownload": {
+    "title": "Votre concierge digital au Maroc",
+    "description": "e-conciergerie.ma est bien plus qu'une simple plateforme — votre passerelle numérique vers tout ce que le Maroc a de meilleur à offrir.",
+    "appStore": "App Store",
+    "appStoreSubtitle": "Télécharger sur",
+    "googlePlay": "Google Play",
+    "googlePlaySubtitle": "Installer l'app"
+  },
+  "establishmentOffer": {
+    "heading": "Tu as un établissement ?",
+    "lead": "Abonne-toi pour seulement",
+    "price": "99 dh",
+    "pricePeriod": "par an",
+    "button": "Abonne maintenant et publier ton service"
+  },
+  "serviceProviders": {
+    "title": "Best Service Providers",
+    "subtitle": "Options les plus populaires parmi les voyageurs habitant au Maroc"
+  },
+  "trust": {
+    "title": "Des marques de confiance",
+    "subtitle": "Rejoignez des milliers d’utilisateurs qui s’appuient sur notre réseau au Maroc."
+  },
+  "features": {
+    "title": "Pensé pour le quotidien",
+    "subtitle": "Tout pour trouver, réserver et profiter de services fiables.",
+    "findServices": {
+      "title": "Trouvez facilement des services",
+      "description": "Parcourez les catégories et découvrez des prestataires près de chez vous en quelques gestes."
+    },
+    "bookQuickly": {
+      "title": "Réservez rapidement",
+      "description": "Demandez un créneau et validez les détails sans allers-retours interminables."
+    },
+    "trustedProviders": {
+      "title": "Prestataires de confiance",
+      "description": "Travaillez avec des partenaires sélectionnés pour leur qualité et leur fiabilité."
+    },
+    "allInOne": {
+      "title": "Tout au même endroit",
+      "description": "Suivez demandes, messages et mises à jour depuis une seule application."
+    }
+  },
+  "landingCta": {
+    "title": "Téléchargez l’application",
+    "description": "Installez E-conciergerie sur votre téléphone et emportez les meilleurs services du Maroc partout avec vous."
+  },
+  "loginPage": {
+    "title": "Connexion",
+    "description": "Saisissez votre email et votre mot de passe pour accéder à votre compte.",
+    "emailLabel": "Email",
+    "passwordLabel": "Mot de passe",
+    "submit": "Se connecter",
+    "submitting": "Connexion…",
+    "errorTitle": "Connexion impossible",
+    "signupPrompt": "Pas encore de compte ?",
+    "signupCta": "Créer un compte"
+  },
+  "signupPage": {
+    "title": "Inscription",
+    "description": "Créez un compte. Le mot de passe doit respecter les règles du serveur : majuscule, minuscule, chiffre, caractère spécial, 8 caractères minimum.",
+    "nomLabel": "Nom",
+    "prenomLabel": "Prénom",
+    "emailLabel": "Email",
+    "passwordLabel": "Mot de passe",
+    "confirmPasswordLabel": "Confirmer le mot de passe",
+    "submit": "S’inscrire",
+    "submitting": "Inscription…",
+    "errorTitle": "Inscription impossible",
+    "passwordMismatch": "Les mots de passe ne correspondent pas.",
+    "signupError": "Erreur d’inscription",
+    "successTitle": "Inscription réussie",
+    "successMessage": "Compte créé. Redirection vers la page de connexion…",
+    "loginPrompt": "Déjà un compte ?",
+    "loginCta": "Se connecter"
+  }
+}
