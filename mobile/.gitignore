@@ -1,0 +1,49 @@
+# -----------------------------------------------------------------------------
+# Mobile Expo / React Native — complète le .gitignore à la racine du monorepo.
+# Voir aussi ../.gitignore pour secrets, caches et docs perso.
+# -----------------------------------------------------------------------------
+
+# Dépendances
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Android / Kotlin
+.kotlin/
+
+# Fichiers sensibles ou de build natifs (clés, certificats)
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Metro
+.metro-health-check*
+
+# Débogage
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
+.DS_Store
+*.pem
+
+# Env local uniquement (les .env.example restent suivis si présents)
+.env*.local
+
+# TypeScript
+*.tsbuildinfo
+
+# Dossier exemple non utilisé
+app-example
+
+# Dossiers natifs générés (workflow Expo géré ; prébuild local)
+/ios
+/android
