@@ -10,6 +10,6 @@ import { RolesService } from './roles.service';
   ],
   controllers: [RolesController],
   providers: [RolesService],
-  exports: [MongooseModule],
+  exports: [MongooseModule, RolesService],
 })
 export class RolesModule {}

@@ -1,15 +1,24 @@
 /**
- * Schéma Mongoose pour la collection "users".
- * Définit la structure des documents utilisateur en base MongoDB.
+ * Modèle `User` → collection MongoDB `users`.
  *
- * Laravel : équivalent du modèle Eloquent User + migration create_users_table.
+ * Équivalent Laravel :
+ * - Migration : `users` avec `role_id` (clé étrangère vers `roles`), `nom`, `prenom`, `email` unique, etc.
+ * - Modèle : `belongsTo(Role::class)` sur `role_id`.
+ * - `populate('role')` ≈ `with('role')` ou `$user->role` en Eloquent.
+ *
+ * Différence SQL vs MongoDB : pas de contrainte FK en base ; l’ObjectId doit juste pointer vers un `_id` existant.
  */
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Types } from 'mongoose';
 
 @Schema({
-  timestamps: true, // Ajoute createdAt et updatedAt automatiquement (comme $table->timestamps())
+  timestamps: true, // comme $table->timestamps() → created_at, updated_at
 })
 export class User {
+  /** Laravel : foreignId('role_id')->constrained('roles') — ici champ `role` = ObjectId vers Role. */
+  @Prop({ type: Types.ObjectId, ref: 'Role', required: true })
+  role: Types.ObjectId;
+
   // Champs obligatoires (required: true)
   @Prop({ required: true })
   nom: string;
@@ -21,7 +30,7 @@ export class User {
   @Prop({ required: true, unique: true, lowercase: true, trim: true })
   email: string;
 
-  // select: false = jamais inclus par défaut (comme $hidden en Laravel)
+  // select: false ≈ $hidden dans le modèle Laravel (pas chargé par défaut)
   @Prop({ required: true, select: false })
   password: string;
 

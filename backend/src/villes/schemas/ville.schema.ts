@@ -1,16 +1,22 @@
+/**
+ * Modèle `Ville` → collection `villes`.
+ *
+ * Équivalent Laravel : `belongsTo(Pays::class)` via `pays_id`.
+ * Un pays a plusieurs villes : `hasMany(Ville::class)`.
+ */
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import * as mongoose from 'mongoose';
+import { Types } from 'mongoose';
 
-@Schema()
+@Schema({
+  timestamps: true,
+})
 export class Ville {
-    @Prop({ required: true })
-    nom: string;
-    @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'Pays' })
-    pays: mongoose.Types.ObjectId;
-    @Prop({ required: false })
-    createdAt: Date;
-    @Prop({ required: false })
-    updatedAt: Date;
+  @Prop({ required: true, trim: true })
+  nom: string;
+
+  /** Laravel : foreignId('pays_id')->constrained('pays') — belongsTo(Pays). */
+  @Prop({ type: Types.ObjectId, ref: 'Pays', required: true })
+  pays: Types.ObjectId;
 }
 
 export const VilleSchema = SchemaFactory.createForClass(Ville);

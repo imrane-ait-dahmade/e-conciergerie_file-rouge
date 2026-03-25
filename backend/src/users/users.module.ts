@@ -7,14 +7,18 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
+import { Role, RoleSchema } from '../roles/schemas/role.schema';
+import { RolesModule } from '../roles/roles.module';
 import { User, UserSchema } from './schemas/user.schema';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 
 @Module({
   imports: [
+    RolesModule,
     MongooseModule.forFeature([
-      { name: User.name, schema: UserSchema }
+      { name: User.name, schema: UserSchema },
+      { name: Role.name, schema: RoleSchema },
     ]),
     JwtModule.registerAsync({
       imports: [ConfigModule],

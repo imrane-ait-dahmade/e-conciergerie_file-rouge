@@ -2,6 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/mongoose';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { Types } from 'mongoose';
+import { RolesService } from '../roles/roles.service';
 import { AuthService } from './auth.service';
 import { User } from '../users/schemas/user.schema';
 
@@ -14,7 +16,13 @@ describe('AuthService', () => {
         AuthService,
         { provide: getModelToken(User.name), useValue: {} },
         { provide: JwtService, useValue: {} },
-        { provide: ConfigService, useValue: { get: jest.fn() } },
+        { provide: ConfigService, useValue: { get: jest.fn(), getOrThrow: jest.fn() } },
+        {
+          provide: RolesService,
+          useValue: {
+            getClientRoleId: jest.fn().mockResolvedValue(new Types.ObjectId()),
+          },
+        },
       ],
     }).compile();
 

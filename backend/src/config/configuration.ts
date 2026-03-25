@@ -20,4 +20,21 @@ export default () => ({
   mail: {
     from: process.env.MAIL_FROM ?? 'noreply@localhost',
   },
+
+  /**
+   * Seed admin au démarrage (users/seeds/admin.seed.ts, appelé depuis UsersService).
+   * Variables : ADMIN_EMAIL, ADMIN_PASSWORD, ADMIN_NOM, ADMIN_PRENOM (voir .env.example).
+   */
+  adminSeed: {
+    // Pas de valeur par défaut : si vide, le seed ne crée rien (sécurité + pas de compte surprise).
+    email: process.env.ADMIN_EMAIL?.trim() ?? '',
+    password: process.env.ADMIN_PASSWORD ?? '',
+
+    /**
+     * Nom / prénom : facultatifs.
+     * Si absents ou vides → on utilise "Admin" et "Système" pour éviter un user sans nom en base.
+     */
+    nom: process.env.ADMIN_NOM?.trim() || 'Admin',
+    prenom: process.env.ADMIN_PRENOM?.trim() || 'Système',
+  },
 });

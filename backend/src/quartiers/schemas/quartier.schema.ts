@@ -1,16 +1,22 @@
+/**
+ * Modèle `Quartier` → collection `quartiers`.
+ *
+ * Équivalent Laravel : `belongsTo(Ville::class)` via `ville_id`.
+ * Une ville a plusieurs quartiers : `hasMany(Quartier::class)`.
+ */
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import * as mongoose from 'mongoose';
+import { Types } from 'mongoose';
 
-@Schema()
+@Schema({
+  timestamps: true,
+})
 export class Quartier {
-    @Prop({ required: true })
-    nom: string;
-    @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'Ville' })
-    ville: mongoose.Types.ObjectId;
-    @Prop({ required: false })
-    createdAt: Date;
-    @Prop({ required: false })
-    updatedAt: Date;
+  @Prop({ required: true, trim: true })
+  nom: string;
+
+  /** Laravel : foreignId('ville_id')->constrained('villes') — belongsTo(Ville). */
+  @Prop({ type: Types.ObjectId, ref: 'Ville', required: true })
+  ville: Types.ObjectId;
 }
 
 export const QuartierSchema = SchemaFactory.createForClass(Quartier);

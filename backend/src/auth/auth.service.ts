@@ -15,6 +15,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcryptjs';
 import * as jwt from 'jsonwebtoken';
+import { RolesService } from '../roles/roles.service';
 import { User } from '../users/schemas/user.schema';
 import { SignupDto } from '../users/dto/signup.dto';
 import { toSafeUserResponse } from '../users/utils/safe-user.mapper';
@@ -25,6 +26,7 @@ export class AuthService {
     @InjectModel(User.name) private readonly userModel: Model<User>,
     private readonly jwtService: JwtService,
     private readonly config: ConfigService,
+    private readonly rolesService: RolesService,
   ) {}
 
   /**
@@ -46,8 +48,10 @@ export class AuthService {
     // 2. Hasher le mot de passe (bcrypt, 10 rounds)
     const passwordHash = await bcrypt.hash(dto.password, 10);
 
+    const roleId = await this.rolesService.getClientRoleId();
+
     // 3. Sauvegarder l'utilisateur en base
-    const user = await this.userModel.create({
+    const created = await this.userModel.create({
       nom: dto.nom.trim(),
       prenom: dto.prenom.trim(),
       email,
@@ -55,7 +59,17 @@ export class AuthService {
       telephone: dto.telephone?.trim(),
       adresse: dto.adresse?.trim(),
       isActive: true,
+      role: roleId,
     });
+
+    const user = await this.userModel
+      .findById(created._id)
+      .populate('role')
+      .lean();
+
+    if (!user) {
+      throw new UnauthorizedException('Erreur lors de la création du compte');
+    }
 
     // 4. Retourner tokens + user (connexion automatique)
     return this.creerReponseLogin(user as unknown as Record<string, unknown> & { _id: unknown; email: string });
@@ -77,6 +91,7 @@ export class AuthService {
     const user = await this.userModel
       .findOne({ email: emailNorm })
       .select('+password')
+      .populate('role')
       .lean();
 
     if (!user) {
@@ -116,7 +131,11 @@ export class AuthService {
       throw new UnauthorizedException('Refresh token invalide');
     }
 
-    const user = await this.userModel.findById(payload.sub).select('+refreshTokenHash').lean();
+    const user = await this.userModel
+      .findById(payload.sub)
+      .select('+refreshTokenHash')
+      .populate('role')
+      .lean();
     if (!user) {
       throw new UnauthorizedException('Utilisateur introuvable');
     }
