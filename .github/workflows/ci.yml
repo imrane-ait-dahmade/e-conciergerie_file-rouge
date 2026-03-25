@@ -1,0 +1,117 @@
+# =============================================================================
+# Pipeline GitHub Actions — projet full-stack (soutenance / file rouge)
+# =============================================================================
+#
+# Rôle : à chaque push sur main/master ou à chaque pull request, GitHub exécute
+# automatiquement ce fichier. Il valide trois dossiers en parallèle : backend,
+# web, mobile.
+#
+# Les 4 étapes par partie (logique classique d’une CI simple) :
+#   1. Installation des dépendances (npm ci)
+#   2. Lint (qualité du code)
+#   3. Tests (Jest côté API ; optionnel sur web/mobile si pas de script test)
+#   4. Build ou équivalent (compilation Nest / Next ; TypeScript pour Expo)
+#
+# Ce n’est pas un déploiement automatique : aucune mise en production ici.
+# =============================================================================
+
+name: CI - Validation monorepo
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  # Permet de lancer la pipeline à la main depuis l’onglet Actions (utile en soutenance).
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: Backend NestJS
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      - name: 1. Installation des dépendances
+        run: npm ci
+
+      - name: 2. Lint
+        run: npm run lint
+
+      - name: 3. Tests unitaires
+        run: npm test
+
+      - name: 4. Build
+        run: npm run build
+
+  web:
+    name: Frontend Next.js
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: 1. Installation des dépendances
+        run: npm ci
+
+      - name: 2. Lint
+        run: npm run lint
+
+      # Pas de script "test" dans package.json web : cette étape est ignorée sans erreur.
+      # Quand vous ajouterez Jest/Vitest, le même job exécutera vos tests.
+      - name: 3. Tests (si script défini)
+        run: npm run test --if-present
+
+      - name: 4. Build
+        run: npm run build
+        env:
+          NEXT_PUBLIC_API_URL: http://127.0.0.1:3000
+
+  mobile:
+    name: Mobile Expo
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: mobile/package-lock.json
+
+      - name: 1. Installation des dépendances
+        run: npm ci
+
+      - name: 2. Lint
+        run: npm run lint
+
+      # Pas de tests Jest configurés ici : étape sans effet tant qu’il n’y a pas de script "test".
+      - name: 3. Tests (si script défini)
+        run: npm run test --if-present
+
+      # Pas de build natif iOS/Android en CI étudiante : on vérifie que TypeScript compile.
+      - name: 4. Build (vérification TypeScript)
+        run: npx tsc --noEmit

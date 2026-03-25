@@ -109,3 +109,5 @@ lerna-debug.log*
 *.jks
 *.p8
 *.mobileprovision
+
+replay-full-history.sh
