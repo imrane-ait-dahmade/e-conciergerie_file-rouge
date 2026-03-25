@@ -16,15 +16,6 @@ Projet de fin d’études : **API NestJS**, **site Next.js** et **application Re
 2. **Web** : copier `web/.env.local.example` vers `web/.env.local`, puis `npm install` et `npm run dev`.
 3. **Mobile** : définir `EXPO_PUBLIC_API_URL` (voir `mobile/.env.example`), puis `npm install` et `npm run start`.
 
-## Historique Git (reconstruction locale)
-
-Pour régénérer un historique propre avec des dates espacées, exécuter depuis la racine du dépôt :
-
-```bash
-bash replay-full-history.sh
-```
-
-**Attention** : ce script supprime l’historique Git local (dossier `.git`) et recrée des commits datés. Sauvegarder ou pousser vos branches avant de l’exécuter.
 
 ## CI / GitHub Actions
 
