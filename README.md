@@ -20,9 +20,3 @@ Projet de fin d’études : **API NestJS**, **site Next.js** et **application Re
 ## CI / GitHub Actions
 
 Le fichier `.github/workflows/ci.yml` lance **trois jobs en parallèle** (backend, web, mobile) : installation `npm ci`, lint, tests (ou équivalent), puis build (ou `tsc` pour le mobile). Vous pouvez aussi déclencher la pipeline **manuellement** depuis GitHub : onglet **Actions** → workflow **CI - Validation monorepo** → **Run workflow**.
-
-## Présentation type soutenance (résumé)
-
-- **Historique Git** : monorepo avec commits datés et messages clairs ; reconstruction possible avec `bash replay-full-history.sh` (à n’utiliser qu’en ayant sauvegardé le dépôt).
-- **`.gitignore`** : à la racine et dans chaque app — on ne versionne pas les secrets (`.env`), ni `node_modules`, ni dossiers de build.
-- **CI** : contrôle automatique de la qualité à chaque push/PR ; ce n’est **pas** un déploiement en production (pas de CD dans ce fichier).
