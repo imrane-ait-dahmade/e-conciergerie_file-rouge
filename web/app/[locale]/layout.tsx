@@ -1,12 +1,14 @@
 import { notFound } from "next/navigation";
-import { Header } from "@/components/layout/header";
-import { getDictionary } from "@/lib/get-dictionary";
 import { isLocale, locales } from "@/lib/i18n-config";
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }
 
+/**
+ * Layout racine des routes localisées : pas d’en-tête marketing ici.
+ * Le site public utilise le groupe `(public)` ; l’admin a son propre layout sous `/admin`.
+ */
 export default async function LocaleLayout({
   children,
   params,
@@ -17,15 +19,5 @@ export default async function LocaleLayout({
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
 
-  const dict = await getDictionary(locale);
-
-  return (
-    <div className="flex min-h-screen flex-col">
-      <Header
-        locale={locale}
-        dict={{ brand: dict.brand, login: dict.login, register: dict.register }}
-      />
-      <main className="flex-1 w-full">{children}</main>
-    </div>
-  );
+  return children;
 }

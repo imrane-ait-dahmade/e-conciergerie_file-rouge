@@ -48,14 +48,19 @@ export class RolesGuard implements CanActivate {
       .select('role')
       .lean();
 
-    const nomDuRole = userEnBase?.role && typeof userEnBase.role === 'object' && 'name' in userEnBase.role
-      ? (userEnBase.role as { name: string }).name
-      : null;
+    const nomDuRole =
+      userEnBase?.role &&
+      typeof userEnBase.role === 'object' &&
+      'name' in userEnBase.role
+        ? (userEnBase.role as { name: string }).name
+        : null;
 
     const aLeBonRole = nomDuRole && rolesRequis.includes(nomDuRole);
 
     if (!aLeBonRole) {
-      throw new ForbiddenException('Vous n\'avez pas les autorisations nécessaires');
+      throw new ForbiddenException(
+        "Vous n'avez pas les autorisations nécessaires",
+      );
     }
 
     return true;

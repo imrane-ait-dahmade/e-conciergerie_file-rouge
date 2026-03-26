@@ -2,7 +2,10 @@
  * HTML email templates for authentication flows.
  */
 
-export function buildVerificationEmailHtml(prenom: string, verificationLink: string): string {
+export function buildVerificationEmailHtml(
+  prenom: string,
+  verificationLink: string,
+): string {
   return `
 <!DOCTYPE html>
 <html>
@@ -40,7 +43,10 @@ export function buildVerificationEmailHtml(prenom: string, verificationLink: str
 `.trim();
 }
 
-export function buildResetPasswordEmailHtml(prenom: string, resetLink: string): string {
+export function buildResetPasswordEmailHtml(
+  prenom: string,
+  resetLink: string,
+): string {
   return `
 <!DOCTYPE html>
 <html>

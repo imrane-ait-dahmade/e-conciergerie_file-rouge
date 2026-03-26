@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
-import { Inter, Geist_Mono } from "next/font/google";
+import {
+  Inter,
+  Montserrat,
+  Overpass_Mono,
+  Poppins,
+} from "next/font/google";
 import { headers } from "next/headers";
+import { AntdRegistry } from "@ant-design/nextjs-registry";
 import {
   defaultLocale,
   isLocale,
@@ -15,9 +21,22 @@ const inter = Inter({
   display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
+  subsets: ["latin", "latin-ext"],
+  display: "swap",
+});
+
+const poppins = Poppins({
+  variable: "--font-poppins",
+  weight: ["400", "500", "600", "700"],
+  subsets: ["latin", "latin-ext"],
+  display: "swap",
+});
+
+const overpassMono = Overpass_Mono({
+  variable: "--font-overpass-mono",
+  subsets: ["latin", "latin-ext"],
   display: "swap",
 });
 
@@ -43,8 +62,14 @@ export default async function RootLayout({
       className="light"
       suppressHydrationWarning
     >
-      <body className={`${inter.variable} ${geistMono.variable} antialiased`}>
-        {children}
+      <body
+        className={`${inter.variable} ${montserrat.variable} ${poppins.variable} ${overpassMono.variable} antialiased min-h-dvh min-w-0`}
+      >
+        <AntdRegistry>
+          <div className="flex min-h-dvh min-w-0 flex-col gap-section">
+            {children}
+          </div>
+        </AntdRegistry>
       </body>
     </html>
   );

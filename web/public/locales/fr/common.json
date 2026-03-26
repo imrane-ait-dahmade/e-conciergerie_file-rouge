@@ -67,7 +67,11 @@
     "submitting": "Connexion…",
     "errorTitle": "Connexion impossible",
     "signupPrompt": "Pas encore de compte ?",
-    "signupCta": "Créer un compte"
+    "signupCta": "Créer un compte",
+    "oauthContinueWith": "ou continuer avec",
+    "oauthGoogleAriaLabel": "Se connecter avec Google",
+    "oauthAppleAriaLabel": "Se connecter avec Apple",
+    "oauthUnavailable": "La connexion avec Google ou Apple n’est pas encore configurée."
   },
   "signupPage": {
     "title": "Inscription",
@@ -85,6 +89,114 @@
     "successTitle": "Inscription réussie",
     "successMessage": "Compte créé. Redirection vers la page de connexion…",
     "loginPrompt": "Déjà un compte ?",
-    "loginCta": "Se connecter"
+    "loginCta": "Se connecter",
+    "oauthContinueWith": "ou continuer avec",
+    "oauthGoogleAriaLabel": "S’inscrire avec Google",
+    "oauthAppleAriaLabel": "S’inscrire avec Apple",
+    "oauthUnavailable": "L’inscription avec Google ou Apple n’est pas encore configurée.",
+    "wizardProgress": "Étape {current} sur {total}",
+    "wizardStepIdentity": "Identité",
+    "wizardStepEmail": "Email",
+    "wizardStepPassword": "Mot de passe",
+    "wizardNext": "Continuer",
+    "wizardBack": "Retour",
+    "wizardIdentityInvalid": "Indiquez au moins 2 caractères pour le nom et le prénom.",
+    "wizardEmailInvalid": "Adresse courriel invalide."
+  },
+  "dashboardSidebar": {
+    "management": "Mon espace",
+    "sectionGeneral": "Vue d’ensemble",
+    "sectionLocation": "Localisation",
+    "sectionActivity": "Activité",
+    "sectionAccount": "Compte",
+    "locationExplorer": "Explorateur",
+    "placeholderLead": "Cette section sera bientôt disponible.",
+    "overview": "Tableau de bord",
+    "activity": "Activité",
+    "reservations": "Réservations",
+    "favorites": "Favoris",
+    "settings": "Paramètres"
+  },
+  "adminSidebar": {
+    "title": "Administration",
+    "sectionGeneral": "Vue d’ensemble",
+    "sectionLocation": "Localisation",
+    "sectionManagement": "Gestion",
+    "sectionSystem": "Système",
+    "dashboard": "Tableau de bord",
+    "locationReferential": "Référentiel lieux",
+    "placeholderLead": "Cette section sera bientôt disponible.",
+    "users": "Utilisateurs",
+    "reservations": "Réservations",
+    "services": "Services",
+    "settings": "Paramètres"
+  },
+  "adminGeographie": {
+    "pageTitle": "Gestion géographique",
+    "pageDescription": "Consultez et préparez le référentiel pays, villes et quartiers. Les données affichées sont factices pour le moment.",
+    "tabPays": "Pays",
+    "tabVilles": "Villes",
+    "tabQuartiers": "Quartiers",
+    "mockDataNote": "Données d’exemple (Maroc) — à remplacer par l’API.",
+    "paysColumns": {
+      "codeIso2": "Code ISO-2",
+      "codeIso3": "Code ISO-3",
+      "nomFr": "Nom (FR)",
+      "nomNative": "Nom local",
+      "actif": "Statut",
+      "active": "Actif",
+      "inactive": "Inactif"
+    },
+    "villesColumns": {
+      "nom": "Ville",
+      "region": "Région",
+      "population": "Population",
+      "pays": "Pays"
+    },
+    "quartiersColumns": {
+      "nom": "Quartier",
+      "ville": "Ville",
+      "codePostal": "Code postal"
+    }
+  },
+  "dashboardStats": {
+    "pageIntro": "Vous êtes connecté. Voici un aperçu de votre activité.",
+    "sectionTitle": "Vue d’ensemble",
+    "sectionLead": "Résumé de votre activité sur E-conciergerie (données d’exemple).",
+    "kpiReservations": "Réservations actives",
+    "kpiFavorites": "Lieux enregistrés",
+    "kpiSearches": "Recherches ce mois-ci",
+    "chartByCategory": "Interactions par catégorie",
+    "chartActivity": "12 dernières semaines",
+    "chartDistribution": "Répartition de l’activité",
+    "mockNote": "Données illustratives — seront remplacées par vos statistiques réelles.",
+    "tooltipValue": "Valeur",
+    "categoryRestaurants": "Restauration",
+    "categoryLodging": "Hébergement",
+    "categoryTransport": "Transport",
+    "categoryWellness": "Bien-être",
+    "pieReservations": "Réservations",
+    "pieFavorites": "Favoris",
+    "pieMessages": "Messages"
+  },
+  "adminStats": {
+    "pageIntro": "Console d’administration — aperçu des indicateurs de la plateforme.",
+    "sectionTitle": "Indicateurs clés",
+    "sectionLead": "Chiffres et tendances (données d’exemple en attendant l’API).",
+    "kpiUsers": "Utilisateurs inscrits",
+    "kpiEstablishments": "Établissements référencés",
+    "kpiMonthlyBookings": "Réservations ce mois-ci",
+    "chartServicesByType": "Services publiés par type",
+    "chartVolumeTrend": "Volume d’activité (12 périodes)",
+    "chartTrafficMix": "Répartition du trafic",
+    "mockNote": "Données illustratives — à brancher sur votre backend.",
+    "tooltipValue": "Valeur",
+    "serviceLodging": "Hébergement",
+    "serviceDining": "Restauration",
+    "serviceLeisure": "Loisirs",
+    "serviceMobility": "Mobilité",
+    "pieUsers": "Sessions utilisateurs",
+    "pieBookings": "Réservations",
+    "pieListings": "Vues des fiches"
   }
 }

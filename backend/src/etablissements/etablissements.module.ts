@@ -5,7 +5,10 @@
  */
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Etablissement, EtablissementSchema } from './schemas/etablissement.schema';
+import {
+  Etablissement,
+  EtablissementSchema,
+} from './schemas/etablissement.schema';
 import { EtablissementsController } from './etablissements.controller';
 import { EtablissementsService } from './etablissements.service';
 

@@ -43,19 +43,21 @@ export class SignupDto {
     example: 'SecureP@ss123',
     minLength: 8,
     maxLength: 128,
-    description: 'Min 8 chars, 1 uppercase, 1 lowercase, 1 digit, 1 special char',
+    description:
+      'Min 8 chars, 1 uppercase, 1 lowercase, 1 digit, 1 special char',
   })
   @IsNotEmpty({ message: 'Le mot de passe est requis' })
   @IsString({ message: 'Le mot de passe doit être une chaîne de caractères' })
-  @MinLength(8, { message: 'Le mot de passe doit contenir au moins 8 caractères' })
-  @MaxLength(128, { message: 'Le mot de passe ne doit pas dépasser 128 caractères' })
-  @Matches(
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).*$/,
-    {
-      message:
-        'Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial',
-    },
-  )
+  @MinLength(8, {
+    message: 'Le mot de passe doit contenir au moins 8 caractères',
+  })
+  @MaxLength(128, {
+    message: 'Le mot de passe ne doit pas dépasser 128 caractères',
+  })
+  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).*$/, {
+    message:
+      'Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial',
+  })
   password: string;
 
   @ApiProperty({ example: '+33612345678', required: false, maxLength: 20 })

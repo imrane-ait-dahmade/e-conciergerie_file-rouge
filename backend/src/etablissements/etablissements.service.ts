@@ -3,7 +3,11 @@
  * - create : prestataire = utilisateur connecté
  * - update / delete : uniquement le propriétaire (prestataire)
  */
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as mongoose from 'mongoose';
@@ -14,7 +18,8 @@ import { UpdateEtablissementDto } from './dto/update-etablissement.dto';
 @Injectable()
 export class EtablissementsService {
   constructor(
-    @InjectModel(Etablissement.name) private etablissementModel: Model<Etablissement>,
+    @InjectModel(Etablissement.name)
+    private etablissementModel: Model<Etablissement>,
   ) {}
 
   /**
@@ -50,13 +55,21 @@ export class EtablissementsService {
   /**
    * Vérifier que l'utilisateur est le propriétaire (prestataire).
    */
-  private async verifierProprietaire(id: string, userId: string): Promise<void> {
-    const etablissement = await this.etablissementModel.findById(id).select('prestataire').lean();
+  private async verifierProprietaire(
+    id: string,
+    userId: string,
+  ): Promise<void> {
+    const etablissement = await this.etablissementModel
+      .findById(id)
+      .select('prestataire')
+      .lean();
     if (!etablissement) {
       throw new NotFoundException('Établissement introuvable');
     }
     if (String(etablissement.prestataire) !== userId) {
-      throw new ForbiddenException('Vous ne pouvez pas modifier cet établissement');
+      throw new ForbiddenException(
+        'Vous ne pouvez pas modifier cet établissement',
+      );
     }
   }
 

@@ -135,9 +135,7 @@ describe('Auth E2E', () => {
     });
 
     it('retourne 401 sans token', () => {
-      return request(app.getHttpServer())
-        .get('/users/profile')
-        .expect(401);
+      return request(app.getHttpServer()).get('/users/profile').expect(401);
     });
 
     it('retourne 401 avec un token invalide', () => {

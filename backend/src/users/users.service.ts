@@ -121,9 +121,13 @@ export class UsersService implements OnModuleInit {
       throw new UnauthorizedException('Email ou mot de passe incorrect');
     }
 
-    const payload = { email: user.email, sub: String(user._id), type: 'access' as const };
+    const payload = {
+      email: user.email,
+      sub: String(user._id),
+      type: 'access' as const,
+    };
     return {
       access_token: this.jwtService.sign(payload),
     };
-  } 
+  }
 }

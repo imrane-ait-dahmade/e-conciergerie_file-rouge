@@ -20,9 +20,11 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { getPostLoginHref } from "@/lib/auth-navigation";
 import type { CommonDictionary } from "@/lib/get-dictionary";
 import { login } from "@/lib/api";
 import { saveAccessToken } from "@/lib/auth-storage";
+import { AppleIcon, GoogleIcon } from "@/components/auth/oauth-provider-icons";
 
 type LoginFormProps = {
   locale: string;
@@ -39,6 +41,24 @@ export function LoginForm({ locale, signupHref, copy }: LoginFormProps) {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  function getOAuthUrl(provider: "google" | "apple"): string | undefined {
+    const raw =
+      provider === "google"
+        ? process.env.NEXT_PUBLIC_OAUTH_GOOGLE_URL
+        : process.env.NEXT_PUBLIC_OAUTH_APPLE_URL;
+    return typeof raw === "string" && raw.trim().length > 0 ? raw.trim() : undefined;
+  }
+
+  function handleOAuth(provider: "google" | "apple") {
+    setError(null);
+    const url = getOAuthUrl(provider);
+    if (url) {
+      window.location.assign(url);
+      return;
+    }
+    setError(copy.oauthUnavailable);
+  }
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
@@ -47,8 +67,8 @@ export function LoginForm({ locale, signupHref, copy }: LoginFormProps) {
       const data = await login({ email, password });
       // Jeton JWT pour les prochains appels API (solution provisoire)
       saveAccessToken(data.accessToken);
-      // Tableau de bord après connexion — remplace par `/${locale}` pour l’accueil
-      router.push(`/${locale}/dashboard`);
+      // Tableau de bord (voir `lib/auth-navigation.ts` pour cibler `/admin` à la place)
+      router.replace(getPostLoginHref(locale));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erreur de connexion");
     } finally {
@@ -60,13 +80,13 @@ export function LoginForm({ locale, signupHref, copy }: LoginFormProps) {
   const idPassword = `login-password-${locale}`;
 
   return (
-    <Card className="auth-card-shell auth-card-shell--narrow">
+    <Card className="auth-card-shell auth-card-shell--narrow ring-0">
       <CardHeader>
         <CardTitle className="auth-card__title">{copy.title}</CardTitle>
         <CardDescription className="auth-card__subtitle">{copy.description}</CardDescription>
       </CardHeader>
 
-      <form onSubmit={handleSubmit} noValidate>
+      <form onSubmit={handleSubmit} noValidate >
         <CardContent className="auth-form__body">
           {/* Erreur renvoyée par l’API (email / mot de passe, etc.) */}
           {error ? (
@@ -110,9 +130,41 @@ export function LoginForm({ locale, signupHref, copy }: LoginFormProps) {
               className="auth-form__input w-full"
             />
           </div>
+
+          <div className="auth-form__oauth-wrap">
+            <div className="auth-form__oauth-divider">
+              <span className="auth-form__oauth-line" aria-hidden />
+              <p className="auth-form__oauth-label">{copy.oauthContinueWith}</p>
+              <span className="auth-form__oauth-line" aria-hidden />
+            </div>
+            <div
+              className="auth-form__oauth"
+              role="group"
+              aria-label={copy.oauthContinueWith}
+            >
+              <button
+                type="button"
+                className="auth-form__oauth-btn"
+                aria-label={copy.oauthGoogleAriaLabel}
+                disabled={loading}
+                onClick={() => handleOAuth("google")}
+              >
+                <GoogleIcon className="size-6" />
+              </button>
+              <button
+                type="button"
+                className="auth-form__oauth-btn"
+                aria-label={copy.oauthAppleAriaLabel}
+                disabled={loading}
+                onClick={() => handleOAuth("apple")}
+              >
+                <AppleIcon className="size-6" />
+              </button>
+            </div>
+          </div>
         </CardContent>
 
-        <CardFooter className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <CardFooter className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
           {/* Bouton principal : même couleur accent que les CTA de la home (variables SCSS) */}
           <Button type="submit" disabled={loading} className="auth-form__submit">
             {loading ? copy.submitting : copy.submit}

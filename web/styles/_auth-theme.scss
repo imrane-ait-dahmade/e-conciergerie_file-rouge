@@ -50,23 +50,39 @@
 // --- Carte shadcn (login / signup) : bordure, ombre, séparation titre / corps -
 .auth-card-shell {
   width: 100%;
+  gap: $space-6 !important;
   background: $auth-card-bg;
   border: $auth-card-border-width solid $auth-card-border-color;
   border-radius: $auth-card-radius;
   box-shadow: $auth-card-shadow;
+  // Neutralise ring / coins shadcn (rounded-xl) pour rayon 4px cohérent
+  --tw-ring-shadow: 0 0 #0000;
+
+  &[data-slot="card"] {
+    border-radius: $auth-card-radius !important;
+    padding: 0 !important;
+  }
 
   [data-slot="card-header"] {
+    gap: $space-2;
+    padding-inline: $auth-card-padding-x !important;
+    padding-top: $auth-card-padding-y !important;
     padding-bottom: $auth-card-header-padding-bottom;
     border-bottom: $auth-header-separator-width solid $auth-header-separator-color;
+    border-radius: $auth-card-radius $auth-card-radius 0 0 !important;
   }
 
   [data-slot="card-content"] {
+    padding-inline: $auth-card-padding-x !important;
     padding-top: $auth-card-content-padding-top;
+    padding-bottom: $space-4;
   }
 
   [data-slot="card-footer"] {
+    padding: $space-6 !important;
     border-top: $auth-header-separator-width solid $auth-header-separator-color;
-    padding-top: $space-4;
+    background-color: transparent !important;
+    border-radius: 0 0 $auth-card-radius $auth-card-radius !important;
   }
 }
 
@@ -104,7 +120,7 @@
 
 .auth-card__title {
   margin: 0;
-  font-family: $font-family-sans;
+  font-family: $font-family-heading;
   font-size: $auth-title-size;
   font-weight: $auth-title-weight;
   letter-spacing: $auth-title-tracking;
@@ -153,6 +169,79 @@
   font-weight: $auth-label-weight;
   color: $auth-label-color;
   line-height: $line-height-snug;
+}
+
+// --- OAuth (Google / Apple) : icônes sous le formulaire email / mot de passe ----------
+.auth-form__oauth-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+  width: 100%;
+}
+
+.auth-form__oauth-divider {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  width: 100%;
+}
+
+.auth-form__oauth-line {
+  flex: 1;
+  min-width: 0;
+  height: 1px;
+  background-color: $auth-header-separator-color;
+}
+
+.auth-form__oauth-label {
+  flex-shrink: 0;
+  margin: 0;
+  font-size: $auth-footer-meta-size;
+  line-height: $line-height-normal;
+  color: $text-muted;
+}
+
+.auth-form__oauth {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: $space-4;
+}
+
+.auth-form__oauth-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border-radius: $radius-full;
+  border: 1px solid $border-default;
+  background-color: $auth-card-bg;
+  color: $text-primary;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease,
+    box-shadow 0.15s ease;
+
+  &:hover:not(:disabled) {
+    border-color: oklch(0.82 0.03 265);
+    box-shadow: $shadow-sm;
+  }
+
+  &:focus-visible {
+    outline: none;
+    border-color: $color-primary;
+    box-shadow: 0 0 0 $auth-input-focus-ring-width $auth-input-focus-ring-color;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
 }
 
 .auth-form__input {

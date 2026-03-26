@@ -10,18 +10,26 @@ describe('RolesService', () => {
     findOneAndUpdate: jest.fn().mockResolvedValue(undefined),
     find: jest.fn().mockReturnValue({
       sort: jest.fn().mockReturnValue({
-        lean: jest.fn().mockReturnValue({ exec: jest.fn().mockResolvedValue([]) }),
+        lean: jest
+          .fn()
+          .mockReturnValue({ exec: jest.fn().mockResolvedValue([]) }),
       }),
     }),
     findOne: jest.fn().mockReturnValue({
-      lean: jest.fn().mockReturnValue({ exec: jest.fn().mockResolvedValue(null) }),
+      lean: jest
+        .fn()
+        .mockReturnValue({ exec: jest.fn().mockResolvedValue(null) }),
     }),
     exists: jest.fn().mockResolvedValue(null),
     create: jest.fn(),
     findByIdAndUpdate: jest.fn().mockReturnValue({
-      lean: jest.fn().mockReturnValue({ exec: jest.fn().mockResolvedValue(null) }),
+      lean: jest
+        .fn()
+        .mockReturnValue({ exec: jest.fn().mockResolvedValue(null) }),
     }),
-    findByIdAndDelete: jest.fn().mockReturnValue({ exec: jest.fn().mockResolvedValue(null) }),
+    findByIdAndDelete: jest
+      .fn()
+      .mockReturnValue({ exec: jest.fn().mockResolvedValue(null) }),
   };
 
   beforeEach(async () => {

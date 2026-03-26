@@ -14,7 +14,9 @@ import { ROLE_NAMES, seedRoles } from './seeds/roles.seed';
 
 @Injectable()
 export class RolesService implements OnModuleInit {
-  constructor(@InjectModel(Role.name) private readonly roleModel: Model<Role>) {}
+  constructor(
+    @InjectModel(Role.name) private readonly roleModel: Model<Role>,
+  ) {}
 
   /** Au démarrage de l’app : garantit que admin / prestataire / client existent. */
   async onModuleInit(): Promise<void> {
@@ -25,7 +27,9 @@ export class RolesService implements OnModuleInit {
     return this.roleModel.find().sort({ name: 1 }).lean().exec();
   }
 
-  async findByName(name: string): Promise<(Role & { _id: Types.ObjectId }) | null> {
+  async findByName(
+    name: string,
+  ): Promise<(Role & { _id: Types.ObjectId }) | null> {
     return this.roleModel
       .findOne({ name: name.toLowerCase().trim() })
       .lean()
@@ -66,7 +70,9 @@ export class RolesService implements OnModuleInit {
         id,
         {
           ...(dto.label !== undefined && { label: dto.label?.trim() }),
-          ...(dto.name !== undefined && { name: dto.name.toLowerCase().trim() }),
+          ...(dto.name !== undefined && {
+            name: dto.name.toLowerCase().trim(),
+          }),
         },
         { new: true },
       )

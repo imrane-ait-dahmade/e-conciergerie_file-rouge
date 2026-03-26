@@ -8,7 +8,12 @@ describe('RolesController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [RolesController],
-      providers: [{ provide: RolesService, useValue: { findAll: jest.fn().mockResolvedValue([]) } }],
+      providers: [
+        {
+          provide: RolesService,
+          useValue: { findAll: jest.fn().mockResolvedValue([]) },
+        },
+      ],
     }).compile();
 
     controller = module.get<RolesController>(RolesController);

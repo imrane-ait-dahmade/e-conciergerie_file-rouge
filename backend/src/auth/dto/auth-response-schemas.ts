@@ -37,7 +37,9 @@ export class SignupResponseSchema {
   @ApiProperty({ example: 'jean.dupont@example.com' })
   email: string;
 
-  @ApiProperty({ example: 'Compte créé. Un email de vérification vous a été envoyé.' })
+  @ApiProperty({
+    example: 'Compte créé. Un email de vérification vous a été envoyé.',
+  })
   message: string;
 }
 
@@ -52,6 +54,9 @@ export class VerifyEmailResponseSchema {
 
 /** Swagger schema for forgot-password and logout responses */
 export class MessageResponseSchema {
-  @ApiProperty({ example: 'Si cet email est enregistré, vous recevrez un lien de réinitialisation.' })
+  @ApiProperty({
+    example:
+      'Si cet email est enregistré, vous recevrez un lien de réinitialisation.',
+  })
   message: string;
 }

@@ -23,7 +23,11 @@ export class MailService {
    * Sends email verification link to the user.
    * Link format: {FRONTEND_URL}/verify-email?token={token}
    */
-  async sendVerificationEmail(email: string, prenom: string, token: string): Promise<void> {
+  async sendVerificationEmail(
+    email: string,
+    prenom: string,
+    token: string,
+  ): Promise<void> {
     const verificationLink = `${this.frontendUrl}/verify-email?token=${encodeURIComponent(token)}`;
     const html = buildVerificationEmailHtml(prenom, verificationLink);
 
@@ -39,7 +43,11 @@ export class MailService {
    * Sends password reset link to the user.
    * Link format: {FRONTEND_URL}/reset-password?token={token}
    */
-  async sendResetPasswordEmail(email: string, prenom: string, token: string): Promise<void> {
+  async sendResetPasswordEmail(
+    email: string,
+    prenom: string,
+    token: string,
+  ): Promise<void> {
     const resetLink = `${this.frontendUrl}/reset-password?token=${encodeURIComponent(token)}`;
     const html = buildResetPasswordEmailHtml(prenom, resetLink);
 

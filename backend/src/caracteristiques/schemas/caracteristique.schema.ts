@@ -22,4 +22,5 @@ export class Caracteristique {
   etablissement?: Types.ObjectId;
 }
 
-export const CaracteristiqueSchema = SchemaFactory.createForClass(Caracteristique);
+export const CaracteristiqueSchema =
+  SchemaFactory.createForClass(Caracteristique);

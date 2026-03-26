@@ -16,7 +16,10 @@ describe('AuthService', () => {
         AuthService,
         { provide: getModelToken(User.name), useValue: {} },
         { provide: JwtService, useValue: {} },
-        { provide: ConfigService, useValue: { get: jest.fn(), getOrThrow: jest.fn() } },
+        {
+          provide: ConfigService,
+          useValue: { get: jest.fn(), getOrThrow: jest.fn() },
+        },
         {
           provide: RolesService,
           useValue: {

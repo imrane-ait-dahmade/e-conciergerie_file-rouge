@@ -1,5 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import type { IMailAdapter, SendMailOptions } from '../interfaces/mail-adapter.interface';
+import type {
+  IMailAdapter,
+  SendMailOptions,
+} from '../interfaces/mail-adapter.interface';
 
 /**
  * Logs emails to console. Use for development or until a real provider is configured.

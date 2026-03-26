@@ -76,6 +76,7 @@
   --app-shadow-lg: #{$shadow-lg};
 
   --app-font-sans: #{$font-family-sans};
+  --app-font-heading: #{$font-family-heading};
   --app-font-mono: #{$font-family-mono};
   --app-text-base: #{$font-size-base};
   --app-leading-normal: #{$line-height-normal};
@@ -89,6 +90,9 @@
   --app-figma-link-blue: #{$color-figma-link-blue};
   --app-figma-cta-yellow: #{$color-figma-cta-yellow};
 }
+
+// Sidebars Ant Design (dashboard / admin) : états actif / survol dans `globals.css`
+// via var(--primary), var(--muted-foreground), var(--muted) — alignés thème shadcn (.dark / .light).
 
 // --- Reset léger (le préflight Tailwind dans globals.css couvre déjà beaucoup) ---
 *,

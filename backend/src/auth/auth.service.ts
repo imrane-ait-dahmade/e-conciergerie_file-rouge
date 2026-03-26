@@ -72,7 +72,12 @@ export class AuthService {
     }
 
     // 4. Retourner tokens + user (connexion automatique)
-    return this.creerReponseLogin(user as unknown as Record<string, unknown> & { _id: unknown; email: string });
+    return this.creerReponseLogin(
+      user as unknown as Record<string, unknown> & {
+        _id: unknown;
+        email: string;
+      },
+    );
   }
 
   /**
@@ -109,7 +114,12 @@ export class AuthService {
     }
 
     // 3-6. Générer tokens, sauvegarder refresh hash, retourner réponse
-    return this.creerReponseLogin(user as unknown as Record<string, unknown> & { _id: unknown; email: string });
+    return this.creerReponseLogin(
+      user as unknown as Record<string, unknown> & {
+        _id: unknown;
+        email: string;
+      },
+    );
   }
 
   /**
@@ -141,7 +151,9 @@ export class AuthService {
     }
 
     if (!user.refreshTokenHash) {
-      throw new UnauthorizedException('Session expirée. Veuillez vous reconnecter.');
+      throw new UnauthorizedException(
+        'Session expirée. Veuillez vous reconnecter.',
+      );
     }
 
     // Vérifier que le refresh token correspond à celui stocké
@@ -151,7 +163,12 @@ export class AuthService {
     }
 
     // Nouvelle paire de tokens (rotation)
-    return this.creerReponseLogin(user as unknown as Record<string, unknown> & { _id: unknown; email: string });
+    return this.creerReponseLogin(
+      user as unknown as Record<string, unknown> & {
+        _id: unknown;
+        email: string;
+      },
+    );
   }
 
   /**
@@ -173,7 +190,9 @@ export class AuthService {
    * - Sauvegarde le hash du refresh token en base
    * - Retourne { accessToken, refreshToken, user } (user sans password ni tokens)
    */
-  private async creerReponseLogin(user: Record<string, unknown> & { _id: unknown; email: string }) {
+  private async creerReponseLogin(
+    user: Record<string, unknown> & { _id: unknown; email: string },
+  ) {
     const userId = String(user._id);
     const payload = { email: user.email, sub: userId, type: 'access' as const };
 

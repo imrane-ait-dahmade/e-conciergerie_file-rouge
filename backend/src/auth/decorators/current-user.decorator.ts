@@ -12,7 +12,10 @@ import type { RequestUser } from '../jwt.strategy';
  *   @CurrentUser('userId') id  → string (l'id uniquement)
  */
 export const CurrentUser = createParamDecorator(
-  (propriete: keyof RequestUser | undefined, ctx: ExecutionContext): RequestUser | string => {
+  (
+    propriete: keyof RequestUser | undefined,
+    ctx: ExecutionContext,
+  ): RequestUser | string => {
     const request = ctx.switchToHttp().getRequest();
     const user = request.user as RequestUser;
 

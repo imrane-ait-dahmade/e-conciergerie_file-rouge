@@ -21,4 +21,5 @@ export class ServicePicture {
   ordre?: number;
 }
 
-export const ServicePictureSchema = SchemaFactory.createForClass(ServicePicture);
+export const ServicePictureSchema =
+  SchemaFactory.createForClass(ServicePicture);

@@ -27,7 +27,10 @@ export class EtablissementsController {
   /** Créer : protégé. prestataire = utilisateur connecté. */
   @Post()
   @UseGuards(JwtAuthGuard)
-  create(@Body() dto: CreateEtablissementDto, @Req() req: { user: RequestUser }) {
+  create(
+    @Body() dto: CreateEtablissementDto,
+    @Req() req: { user: RequestUser },
+  ) {
     return this.service.create(dto, req.user.userId);
   }
 

@@ -22,16 +22,11 @@ async function bootstrap() {
   );
 
   // CORS : le front Next.js (ex. http://localhost:3000) appelle l’API sur un autre port (ex. 3001)
-  const frontendUrl = (process.env.FRONTEND_URL ?? 'http://localhost:3001').replace(
-    /\/$/,
-    '',
-  );
+  const frontendUrl = (
+    process.env.FRONTEND_URL ?? 'http://localhost:3001'
+  ).replace(/\/$/, '');
   const allowedOrigins = [
-    ...new Set([  
-      frontendUrl,
-      'http://localhost:3001',
-      'http://127.0.0.1:3001',
-    ]),
+    ...new Set([frontendUrl, 'http://localhost:3001', 'http://127.0.0.1:3001']),
   ];
 
   app.enableCors({
@@ -51,7 +46,9 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('E-Conciergerie API')
-    .setDescription('API documentation for E-Conciergerie backend. Auth endpoints support signup, login, email verification, password reset, and token refresh.')
+    .setDescription(
+      'API documentation for E-Conciergerie backend. Auth endpoints support signup, login, email verification, password reset, and token refresh.',
+    )
     .setVersion('1.0')
     .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' })
     .build();

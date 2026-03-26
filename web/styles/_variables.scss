@@ -139,8 +139,9 @@ $shadow-lg:
 // 7) Typographie
 // -----------------------------------------------------------------------------
 
-$font-family-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-$font-family-mono: var(--font-geist-mono), ui-monospace, monospace;
+$font-family-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+$font-family-heading: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
+$font-family-mono: var(--font-overpass-mono), ui-monospace, monospace;
 
 $font-size-xs: 0.75rem;
 $font-size-sm: 0.875rem;
@@ -190,14 +191,18 @@ $auth-page-padding-y-lg: $space-10;
 
 $auth-header-separator-color: $border-default;
 $auth-header-separator-width: 1px;
-$auth-card-header-padding-bottom: $space-5;
-$auth-card-content-padding-top: $space-5;
+$auth-card-header-padding-bottom: $space-4;
+$auth-card-content-padding-top: $space-4;
 
 $auth-card-bg: $background-card;
 $auth-card-border-color: rgb(226 232 240 / 0.85);
 $auth-card-border-width: 1px;
-$auth-card-radius: $radius-xl;
-$auth-card-shadow: $shadow-lg;
+// Carte / champs / CTA : rayon un peu plus doux (8px, grille 8px)
+$auth-card-radius: $radius-md;
+$auth-card-shadow:
+  0 1px 2px rgb(15 23 42 / 0.06),
+  0 4px 16px rgb(15 23 42 / 0.08),
+  0 0 0 1px rgb(226 232 240 / 0.9);
 $auth-card-padding-x: $space-6;
 $auth-card-padding-y: $space-6;
 $auth-card-max-width: $layout-auth-max-width;
@@ -221,7 +226,7 @@ $auth-footer-meta-size: $font-size-sm;
 
 $auth-alert-padding-x: $space-4;
 $auth-alert-padding-y: $space-3;
-$auth-alert-radius: $radius-md;
+$auth-alert-radius: 0.25rem;
 $auth-alert-font-size: $font-size-sm;
 $auth-alert-border-width: 1px;
 
@@ -237,7 +242,7 @@ $auth-label-size: $font-size-sm;
 $auth-label-weight: $font-weight-medium;
 $auth-label-color: $text-primary;
 $auth-input-min-height: 2.5rem;
-$auth-input-radius: $radius-md;
+$auth-input-radius: $radius-full;
 $auth-input-border: 1px solid $border-default;
 $auth-input-bg: rgb(255 255 255 / 0.85);
 $auth-input-padding-x: $space-3;
@@ -248,7 +253,9 @@ $auth-button-min-height: 2.5rem;
 $auth-button-radius: $radius-md;
 $auth-button-padding-x: $space-6;
 $auth-button-font-weight: $font-weight-semibold;
-$auth-button-shadow: 0 1px 2px rgb(30 58 138 / 0.15);
+$auth-button-shadow:
+  0 1px 2px rgb(30 58 138 / 0.12),
+  0 2px 8px rgb(245 158 11 / 0.22);
 $auth-button-bg: $accent;
 $auth-button-bg-hover: $accent-hover;
 $auth-button-color: $text-on-accent;

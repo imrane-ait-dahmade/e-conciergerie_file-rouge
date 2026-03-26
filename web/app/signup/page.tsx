@@ -9,14 +9,12 @@ export default async function SignupPage() {
   const dict = await getDictionary(defaultLocale);
 
   return (
-    <div className="auth-page">
-      <div className="auth-page__inner auth-page__inner--wide">
-        <SignupForm
+    <div className="auth-page__inner auth-page__inner--wide">
+      <SignupForm
           locale={defaultLocale}
           loginHref="/login"
           copy={dict.signupPage}
         />
-      </div>
     </div>
   );
 }

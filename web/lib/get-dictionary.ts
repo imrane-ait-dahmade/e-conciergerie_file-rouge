@@ -70,6 +70,12 @@ export type CommonDictionary = {
     errorTitle: string;
     signupPrompt: string;
     signupCta: string;
+    /** Ligne au-dessus des boutons Google / Apple */
+    oauthContinueWith: string;
+    oauthGoogleAriaLabel: string;
+    oauthAppleAriaLabel: string;
+    /** Affiché si les URLs OAuth ne sont pas configurées */
+    oauthUnavailable: string;
   };
   /** Textes page d’inscription */
   signupPage: {
@@ -91,6 +97,120 @@ export type CommonDictionary = {
     successMessage: string;
     loginPrompt: string;
     loginCta: string;
+    oauthContinueWith: string;
+    oauthGoogleAriaLabel: string;
+    oauthAppleAriaLabel: string;
+    oauthUnavailable: string;
+    /** Wizard inscription — placeholders {current} et {total} */
+    wizardProgress: string;
+    wizardStepIdentity: string;
+    wizardStepEmail: string;
+    wizardStepPassword: string;
+    wizardNext: string;
+    wizardBack: string;
+    wizardIdentityInvalid: string;
+    wizardEmailInvalid: string;
+  };
+  /** Libellés barre latérale espace connecté `/[locale]/dashboard` */
+  dashboardSidebar: {
+    management: string;
+    sectionGeneral: string;
+    sectionLocation: string;
+    sectionActivity: string;
+    sectionAccount: string;
+    locationExplorer: string;
+    placeholderLead: string;
+    overview: string;
+    activity: string;
+    reservations: string;
+    favorites: string;
+    settings: string;
+  };
+  /** Libellés barre latérale `/[locale]/admin` */
+  adminSidebar: {
+    title: string;
+    sectionGeneral: string;
+    sectionLocation: string;
+    sectionManagement: string;
+    sectionSystem: string;
+    dashboard: string;
+    locationReferential: string;
+    placeholderLead: string;
+    users: string;
+    reservations: string;
+    services: string;
+    settings: string;
+  };
+  /** Gestion géographique — `/[locale]/admin/geographie` */
+  adminGeographie: {
+    pageTitle: string;
+    pageDescription: string;
+    tabPays: string;
+    tabVilles: string;
+    tabQuartiers: string;
+    mockDataNote: string;
+    paysColumns: {
+      codeIso2: string;
+      codeIso3: string;
+      nomFr: string;
+      nomNative: string;
+      actif: string;
+      active: string;
+      inactive: string;
+    };
+    villesColumns: {
+      nom: string;
+      region: string;
+      population: string;
+      pays: string;
+    };
+    quartiersColumns: {
+      nom: string;
+      ville: string;
+      codePostal: string;
+    };
+  };
+  /** Statistiques & graphiques — `/[locale]/dashboard` */
+  dashboardStats: {
+    pageIntro: string;
+    sectionTitle: string;
+    sectionLead: string;
+    kpiReservations: string;
+    kpiFavorites: string;
+    kpiSearches: string;
+    chartByCategory: string;
+    chartActivity: string;
+    chartDistribution: string;
+    mockNote: string;
+    tooltipValue: string;
+    categoryRestaurants: string;
+    categoryLodging: string;
+    categoryTransport: string;
+    categoryWellness: string;
+    pieReservations: string;
+    pieFavorites: string;
+    pieMessages: string;
+  };
+  /** Statistiques admin — `/[locale]/admin` */
+  adminStats: {
+    pageIntro: string;
+    sectionTitle: string;
+    sectionLead: string;
+    kpiUsers: string;
+    kpiEstablishments: string;
+    kpiMonthlyBookings: string;
+    chartServicesByType: string;
+    chartVolumeTrend: string;
+    chartTrafficMix: string;
+    mockNote: string;
+    tooltipValue: string;
+    serviceLodging: string;
+    serviceDining: string;
+    serviceLeisure: string;
+    serviceMobility: string;
+    pieUsers: string;
+    pieBookings: string;
+    pieListings: string;
   };
 };
 
@@ -165,6 +285,10 @@ const DEFAULT_COMMON_DICTIONARY: CommonDictionary = {
     errorTitle: "Could not sign in",
     signupPrompt: "No account yet?",
     signupCta: "Create an account",
+    oauthContinueWith: "or continue with",
+    oauthGoogleAriaLabel: "Sign in with Google",
+    oauthAppleAriaLabel: "Sign in with Apple",
+    oauthUnavailable: "Social sign-in is not configured yet.",
   },
   signupPage: {
     title: "Create an account",
@@ -184,6 +308,115 @@ const DEFAULT_COMMON_DICTIONARY: CommonDictionary = {
     successMessage: "Account created. Redirecting to sign in…",
     loginPrompt: "Already have an account?",
     loginCta: "Sign in",
+    oauthContinueWith: "or continue with",
+    oauthGoogleAriaLabel: "Sign up with Google",
+    oauthAppleAriaLabel: "Sign up with Apple",
+    oauthUnavailable: "Social sign-up is not configured yet.",
+    wizardProgress: "Step {current} of {total}",
+    wizardStepIdentity: "Identity",
+    wizardStepEmail: "Email",
+    wizardStepPassword: "Password",
+    wizardNext: "Continue",
+    wizardBack: "Back",
+    wizardIdentityInvalid: "Enter at least 2 characters for first and last name.",
+    wizardEmailInvalid: "Enter a valid email address.",
+  },
+  dashboardSidebar: {
+    management: "My space",
+    sectionGeneral: "Overview",
+    sectionLocation: "Location",
+    sectionActivity: "Activity",
+    sectionAccount: "Account",
+    locationExplorer: "Explore",
+    placeholderLead: "This section will be available soon.",
+    overview: "Overview",
+    activity: "Activity",
+    reservations: "Bookings",
+    favorites: "Favorites",
+    settings: "Settings",
+  },
+  adminSidebar: {
+    title: "Administration",
+    sectionGeneral: "Overview",
+    sectionLocation: "Location",
+    sectionManagement: "Management",
+    sectionSystem: "System",
+    dashboard: "Dashboard",
+    locationReferential: "Places & areas",
+    placeholderLead: "This section will be available soon.",
+    users: "Users",
+    reservations: "Bookings",
+    services: "Services",
+    settings: "Settings",
+  },
+  adminGeographie: {
+    pageTitle: "Geography management",
+    pageDescription:
+      "Browse and prepare the country, city, and neighborhood reference data. Content is sample data for now.",
+    tabPays: "Countries",
+    tabVilles: "Cities",
+    tabQuartiers: "Neighborhoods",
+    mockDataNote: "Sample data (Morocco) — will be replaced by the API.",
+    paysColumns: {
+      codeIso2: "ISO-2 code",
+      codeIso3: "ISO-3 code",
+      nomFr: "Name (FR)",
+      nomNative: "Local name",
+      actif: "Status",
+      active: "Active",
+      inactive: "Inactive",
+    },
+    villesColumns: {
+      nom: "City",
+      region: "Region",
+      population: "Population",
+      pays: "Country",
+    },
+    quartiersColumns: {
+      nom: "Neighborhood",
+      ville: "City",
+      codePostal: "Postal code",
+    },
+  },
+  dashboardStats: {
+    pageIntro: "You're signed in. Below is a snapshot of your activity.",
+    sectionTitle: "Your overview",
+    sectionLead: "Summary of your activity on E-conciergerie (sample data).",
+    kpiReservations: "Active bookings",
+    kpiFavorites: "Saved places",
+    kpiSearches: "Searches this month",
+    chartByCategory: "Interactions by category",
+    chartActivity: "Last 12 weeks",
+    chartDistribution: "Activity breakdown",
+    mockNote: "Illustrative data — will be replaced by your real stats.",
+    tooltipValue: "Count",
+    categoryRestaurants: "Food & dining",
+    categoryLodging: "Stays",
+    categoryTransport: "Transport",
+    categoryWellness: "Wellness",
+    pieReservations: "Bookings",
+    pieFavorites: "Favorites",
+    pieMessages: "Messages",
+  },
+  adminStats: {
+    pageIntro: "Admin console — snapshot of platform metrics.",
+    sectionTitle: "Platform overview",
+    sectionLead: "Key figures and trends (sample data for now).",
+    kpiUsers: "Registered users",
+    kpiEstablishments: "Listed establishments",
+    kpiMonthlyBookings: "Bookings this month",
+    chartServicesByType: "Published services by type",
+    chartVolumeTrend: "Transaction volume (12 periods)",
+    chartTrafficMix: "Traffic mix",
+    mockNote: "Illustrative data — connect your API later.",
+    tooltipValue: "Value",
+    serviceLodging: "Lodging",
+    serviceDining: "Dining",
+    serviceLeisure: "Leisure",
+    serviceMobility: "Mobility",
+    pieUsers: "User sessions",
+    pieBookings: "Bookings",
+    pieListings: "Listings views",
   },
 };
 
@@ -218,6 +451,14 @@ function normalizeDictionary(value: unknown): CommonDictionary {
   const landingCta = asRecord(root.landingCta);
   const loginPage = asRecord(root.loginPage);
   const signupPage = asRecord(root.signupPage);
+  const dashboardSidebar = asRecord(root.dashboardSidebar);
+  const adminSidebar = asRecord(root.adminSidebar);
+  const adminGeographie = asRecord(root.adminGeographie);
+  const paysColumns = asRecord(adminGeographie.paysColumns);
+  const villesColumns = asRecord(adminGeographie.villesColumns);
+  const quartiersColumns = asRecord(adminGeographie.quartiersColumns);
+  const dashboardStats = asRecord(root.dashboardStats);
+  const adminStats = asRecord(root.adminStats);
 
   return {
     brand: asString(root.brand, DEFAULT_COMMON_DICTIONARY.brand),
@@ -355,6 +596,22 @@ function normalizeDictionary(value: unknown): CommonDictionary {
         loginPage.signupCta,
         DEFAULT_COMMON_DICTIONARY.loginPage.signupCta
       ),
+      oauthContinueWith: asString(
+        loginPage.oauthContinueWith,
+        DEFAULT_COMMON_DICTIONARY.loginPage.oauthContinueWith
+      ),
+      oauthGoogleAriaLabel: asString(
+        loginPage.oauthGoogleAriaLabel,
+        DEFAULT_COMMON_DICTIONARY.loginPage.oauthGoogleAriaLabel
+      ),
+      oauthAppleAriaLabel: asString(
+        loginPage.oauthAppleAriaLabel,
+        DEFAULT_COMMON_DICTIONARY.loginPage.oauthAppleAriaLabel
+      ),
+      oauthUnavailable: asString(
+        loginPage.oauthUnavailable,
+        DEFAULT_COMMON_DICTIONARY.loginPage.oauthUnavailable
+      ),
     },
     signupPage: {
       title: asString(signupPage.title, DEFAULT_COMMON_DICTIONARY.signupPage.title),
@@ -414,6 +671,372 @@ function normalizeDictionary(value: unknown): CommonDictionary {
       loginCta: asString(
         signupPage.loginCta,
         DEFAULT_COMMON_DICTIONARY.signupPage.loginCta
+      ),
+      oauthContinueWith: asString(
+        signupPage.oauthContinueWith,
+        DEFAULT_COMMON_DICTIONARY.signupPage.oauthContinueWith
+      ),
+      oauthGoogleAriaLabel: asString(
+        signupPage.oauthGoogleAriaLabel,
+        DEFAULT_COMMON_DICTIONARY.signupPage.oauthGoogleAriaLabel
+      ),
+      oauthAppleAriaLabel: asString(
+        signupPage.oauthAppleAriaLabel,
+        DEFAULT_COMMON_DICTIONARY.signupPage.oauthAppleAriaLabel
+      ),
+      oauthUnavailable: asString(
+        signupPage.oauthUnavailable,
+        DEFAULT_COMMON_DICTIONARY.signupPage.oauthUnavailable
+      ),
+      wizardProgress: asString(
+        signupPage.wizardProgress,
+        DEFAULT_COMMON_DICTIONARY.signupPage.wizardProgress
+      ),
+      wizardStepIdentity: asString(
+        signupPage.wizardStepIdentity,
+        DEFAULT_COMMON_DICTIONARY.signupPage.wizardStepIdentity
+      ),
+      wizardStepEmail: asString(
+        signupPage.wizardStepEmail,
+        DEFAULT_COMMON_DICTIONARY.signupPage.wizardStepEmail
+      ),
+      wizardStepPassword: asString(
+        signupPage.wizardStepPassword,
+        DEFAULT_COMMON_DICTIONARY.signupPage.wizardStepPassword
+      ),
+      wizardNext: asString(
+        signupPage.wizardNext,
+        DEFAULT_COMMON_DICTIONARY.signupPage.wizardNext
+      ),
+      wizardBack: asString(
+        signupPage.wizardBack,
+        DEFAULT_COMMON_DICTIONARY.signupPage.wizardBack
+      ),
+      wizardIdentityInvalid: asString(
+        signupPage.wizardIdentityInvalid,
+        DEFAULT_COMMON_DICTIONARY.signupPage.wizardIdentityInvalid
+      ),
+      wizardEmailInvalid: asString(
+        signupPage.wizardEmailInvalid,
+        DEFAULT_COMMON_DICTIONARY.signupPage.wizardEmailInvalid
+      ),
+    },
+    dashboardSidebar: {
+      management: asString(
+        dashboardSidebar.management,
+        DEFAULT_COMMON_DICTIONARY.dashboardSidebar.management
+      ),
+      sectionGeneral: asString(
+        dashboardSidebar.sectionGeneral,
+        DEFAULT_COMMON_DICTIONARY.dashboardSidebar.sectionGeneral
+      ),
+      sectionLocation: asString(
+        dashboardSidebar.sectionLocation,
+        DEFAULT_COMMON_DICTIONARY.dashboardSidebar.sectionLocation
+      ),
+      sectionActivity: asString(
+        dashboardSidebar.sectionActivity,
+        DEFAULT_COMMON_DICTIONARY.dashboardSidebar.sectionActivity
+      ),
+      sectionAccount: asString(
+        dashboardSidebar.sectionAccount,
+        DEFAULT_COMMON_DICTIONARY.dashboardSidebar.sectionAccount
+      ),
+      locationExplorer: asString(
+        dashboardSidebar.locationExplorer,
+        DEFAULT_COMMON_DICTIONARY.dashboardSidebar.locationExplorer
+      ),
+      placeholderLead: asString(
+        dashboardSidebar.placeholderLead,
+        DEFAULT_COMMON_DICTIONARY.dashboardSidebar.placeholderLead
+      ),
+      overview: asString(
+        dashboardSidebar.overview,
+        DEFAULT_COMMON_DICTIONARY.dashboardSidebar.overview
+      ),
+      activity: asString(
+        dashboardSidebar.activity,
+        DEFAULT_COMMON_DICTIONARY.dashboardSidebar.activity
+      ),
+      reservations: asString(
+        dashboardSidebar.reservations,
+        DEFAULT_COMMON_DICTIONARY.dashboardSidebar.reservations
+      ),
+      favorites: asString(
+        dashboardSidebar.favorites,
+        DEFAULT_COMMON_DICTIONARY.dashboardSidebar.favorites
+      ),
+      settings: asString(
+        dashboardSidebar.settings,
+        DEFAULT_COMMON_DICTIONARY.dashboardSidebar.settings
+      ),
+    },
+    adminSidebar: {
+      title: asString(adminSidebar.title, DEFAULT_COMMON_DICTIONARY.adminSidebar.title),
+      sectionGeneral: asString(
+        adminSidebar.sectionGeneral,
+        DEFAULT_COMMON_DICTIONARY.adminSidebar.sectionGeneral
+      ),
+      sectionLocation: asString(
+        adminSidebar.sectionLocation,
+        DEFAULT_COMMON_DICTIONARY.adminSidebar.sectionLocation
+      ),
+      sectionManagement: asString(
+        adminSidebar.sectionManagement,
+        DEFAULT_COMMON_DICTIONARY.adminSidebar.sectionManagement
+      ),
+      sectionSystem: asString(
+        adminSidebar.sectionSystem,
+        DEFAULT_COMMON_DICTIONARY.adminSidebar.sectionSystem
+      ),
+      dashboard: asString(
+        adminSidebar.dashboard,
+        DEFAULT_COMMON_DICTIONARY.adminSidebar.dashboard
+      ),
+      locationReferential: asString(
+        adminSidebar.locationReferential,
+        DEFAULT_COMMON_DICTIONARY.adminSidebar.locationReferential
+      ),
+      placeholderLead: asString(
+        adminSidebar.placeholderLead,
+        DEFAULT_COMMON_DICTIONARY.adminSidebar.placeholderLead
+      ),
+      users: asString(adminSidebar.users, DEFAULT_COMMON_DICTIONARY.adminSidebar.users),
+      reservations: asString(
+        adminSidebar.reservations,
+        DEFAULT_COMMON_DICTIONARY.adminSidebar.reservations
+      ),
+      services: asString(
+        adminSidebar.services,
+        DEFAULT_COMMON_DICTIONARY.adminSidebar.services
+      ),
+      settings: asString(
+        adminSidebar.settings,
+        DEFAULT_COMMON_DICTIONARY.adminSidebar.settings
+      ),
+    },
+    adminGeographie: {
+      pageTitle: asString(
+        adminGeographie.pageTitle,
+        DEFAULT_COMMON_DICTIONARY.adminGeographie.pageTitle
+      ),
+      pageDescription: asString(
+        adminGeographie.pageDescription,
+        DEFAULT_COMMON_DICTIONARY.adminGeographie.pageDescription
+      ),
+      tabPays: asString(adminGeographie.tabPays, DEFAULT_COMMON_DICTIONARY.adminGeographie.tabPays),
+      tabVilles: asString(
+        adminGeographie.tabVilles,
+        DEFAULT_COMMON_DICTIONARY.adminGeographie.tabVilles
+      ),
+      tabQuartiers: asString(
+        adminGeographie.tabQuartiers,
+        DEFAULT_COMMON_DICTIONARY.adminGeographie.tabQuartiers
+      ),
+      mockDataNote: asString(
+        adminGeographie.mockDataNote,
+        DEFAULT_COMMON_DICTIONARY.adminGeographie.mockDataNote
+      ),
+      paysColumns: {
+        codeIso2: asString(
+          paysColumns.codeIso2,
+          DEFAULT_COMMON_DICTIONARY.adminGeographie.paysColumns.codeIso2
+        ),
+        codeIso3: asString(
+          paysColumns.codeIso3,
+          DEFAULT_COMMON_DICTIONARY.adminGeographie.paysColumns.codeIso3
+        ),
+        nomFr: asString(
+          paysColumns.nomFr,
+          DEFAULT_COMMON_DICTIONARY.adminGeographie.paysColumns.nomFr
+        ),
+        nomNative: asString(
+          paysColumns.nomNative,
+          DEFAULT_COMMON_DICTIONARY.adminGeographie.paysColumns.nomNative
+        ),
+        actif: asString(
+          paysColumns.actif,
+          DEFAULT_COMMON_DICTIONARY.adminGeographie.paysColumns.actif
+        ),
+        active: asString(
+          paysColumns.active,
+          DEFAULT_COMMON_DICTIONARY.adminGeographie.paysColumns.active
+        ),
+        inactive: asString(
+          paysColumns.inactive,
+          DEFAULT_COMMON_DICTIONARY.adminGeographie.paysColumns.inactive
+        ),
+      },
+      villesColumns: {
+        nom: asString(
+          villesColumns.nom,
+          DEFAULT_COMMON_DICTIONARY.adminGeographie.villesColumns.nom
+        ),
+        region: asString(
+          villesColumns.region,
+          DEFAULT_COMMON_DICTIONARY.adminGeographie.villesColumns.region
+        ),
+        population: asString(
+          villesColumns.population,
+          DEFAULT_COMMON_DICTIONARY.adminGeographie.villesColumns.population
+        ),
+        pays: asString(
+          villesColumns.pays,
+          DEFAULT_COMMON_DICTIONARY.adminGeographie.villesColumns.pays
+        ),
+      },
+      quartiersColumns: {
+        nom: asString(
+          quartiersColumns.nom,
+          DEFAULT_COMMON_DICTIONARY.adminGeographie.quartiersColumns.nom
+        ),
+        ville: asString(
+          quartiersColumns.ville,
+          DEFAULT_COMMON_DICTIONARY.adminGeographie.quartiersColumns.ville
+        ),
+        codePostal: asString(
+          quartiersColumns.codePostal,
+          DEFAULT_COMMON_DICTIONARY.adminGeographie.quartiersColumns.codePostal
+        ),
+      },
+    },
+    dashboardStats: {
+      pageIntro: asString(
+        dashboardStats.pageIntro,
+        DEFAULT_COMMON_DICTIONARY.dashboardStats.pageIntro
+      ),
+      sectionTitle: asString(
+        dashboardStats.sectionTitle,
+        DEFAULT_COMMON_DICTIONARY.dashboardStats.sectionTitle
+      ),
+      sectionLead: asString(
+        dashboardStats.sectionLead,
+        DEFAULT_COMMON_DICTIONARY.dashboardStats.sectionLead
+      ),
+      kpiReservations: asString(
+        dashboardStats.kpiReservations,
+        DEFAULT_COMMON_DICTIONARY.dashboardStats.kpiReservations
+      ),
+      kpiFavorites: asString(
+        dashboardStats.kpiFavorites,
+        DEFAULT_COMMON_DICTIONARY.dashboardStats.kpiFavorites
+      ),
+      kpiSearches: asString(
+        dashboardStats.kpiSearches,
+        DEFAULT_COMMON_DICTIONARY.dashboardStats.kpiSearches
+      ),
+      chartByCategory: asString(
+        dashboardStats.chartByCategory,
+        DEFAULT_COMMON_DICTIONARY.dashboardStats.chartByCategory
+      ),
+      chartActivity: asString(
+        dashboardStats.chartActivity,
+        DEFAULT_COMMON_DICTIONARY.dashboardStats.chartActivity
+      ),
+      chartDistribution: asString(
+        dashboardStats.chartDistribution,
+        DEFAULT_COMMON_DICTIONARY.dashboardStats.chartDistribution
+      ),
+      mockNote: asString(
+        dashboardStats.mockNote,
+        DEFAULT_COMMON_DICTIONARY.dashboardStats.mockNote
+      ),
+      tooltipValue: asString(
+        dashboardStats.tooltipValue,
+        DEFAULT_COMMON_DICTIONARY.dashboardStats.tooltipValue
+      ),
+      categoryRestaurants: asString(
+        dashboardStats.categoryRestaurants,
+        DEFAULT_COMMON_DICTIONARY.dashboardStats.categoryRestaurants
+      ),
+      categoryLodging: asString(
+        dashboardStats.categoryLodging,
+        DEFAULT_COMMON_DICTIONARY.dashboardStats.categoryLodging
+      ),
+      categoryTransport: asString(
+        dashboardStats.categoryTransport,
+        DEFAULT_COMMON_DICTIONARY.dashboardStats.categoryTransport
+      ),
+      categoryWellness: asString(
+        dashboardStats.categoryWellness,
+        DEFAULT_COMMON_DICTIONARY.dashboardStats.categoryWellness
+      ),
+      pieReservations: asString(
+        dashboardStats.pieReservations,
+        DEFAULT_COMMON_DICTIONARY.dashboardStats.pieReservations
+      ),
+      pieFavorites: asString(
+        dashboardStats.pieFavorites,
+        DEFAULT_COMMON_DICTIONARY.dashboardStats.pieFavorites
+      ),
+      pieMessages: asString(
+        dashboardStats.pieMessages,
+        DEFAULT_COMMON_DICTIONARY.dashboardStats.pieMessages
+      ),
+    },
+    adminStats: {
+      pageIntro: asString(
+        adminStats.pageIntro,
+        DEFAULT_COMMON_DICTIONARY.adminStats.pageIntro
+      ),
+      sectionTitle: asString(
+        adminStats.sectionTitle,
+        DEFAULT_COMMON_DICTIONARY.adminStats.sectionTitle
+      ),
+      sectionLead: asString(
+        adminStats.sectionLead,
+        DEFAULT_COMMON_DICTIONARY.adminStats.sectionLead
+      ),
+      kpiUsers: asString(adminStats.kpiUsers, DEFAULT_COMMON_DICTIONARY.adminStats.kpiUsers),
+      kpiEstablishments: asString(
+        adminStats.kpiEstablishments,
+        DEFAULT_COMMON_DICTIONARY.adminStats.kpiEstablishments
+      ),
+      kpiMonthlyBookings: asString(
+        adminStats.kpiMonthlyBookings,
+        DEFAULT_COMMON_DICTIONARY.adminStats.kpiMonthlyBookings
+      ),
+      chartServicesByType: asString(
+        adminStats.chartServicesByType,
+        DEFAULT_COMMON_DICTIONARY.adminStats.chartServicesByType
+      ),
+      chartVolumeTrend: asString(
+        adminStats.chartVolumeTrend,
+        DEFAULT_COMMON_DICTIONARY.adminStats.chartVolumeTrend
+      ),
+      chartTrafficMix: asString(
+        adminStats.chartTrafficMix,
+        DEFAULT_COMMON_DICTIONARY.adminStats.chartTrafficMix
+      ),
+      mockNote: asString(adminStats.mockNote, DEFAULT_COMMON_DICTIONARY.adminStats.mockNote),
+      tooltipValue: asString(
+        adminStats.tooltipValue,
+        DEFAULT_COMMON_DICTIONARY.adminStats.tooltipValue
+      ),
+      serviceLodging: asString(
+        adminStats.serviceLodging,
+        DEFAULT_COMMON_DICTIONARY.adminStats.serviceLodging
+      ),
+      serviceDining: asString(
+        adminStats.serviceDining,
+        DEFAULT_COMMON_DICTIONARY.adminStats.serviceDining
+      ),
+      serviceLeisure: asString(
+        adminStats.serviceLeisure,
+        DEFAULT_COMMON_DICTIONARY.adminStats.serviceLeisure
+      ),
+      serviceMobility: asString(
+        adminStats.serviceMobility,
+        DEFAULT_COMMON_DICTIONARY.adminStats.serviceMobility
+      ),
+      pieUsers: asString(adminStats.pieUsers, DEFAULT_COMMON_DICTIONARY.adminStats.pieUsers),
+      pieBookings: asString(
+        adminStats.pieBookings,
+        DEFAULT_COMMON_DICTIONARY.adminStats.pieBookings
+      ),
+      pieListings: asString(
+        adminStats.pieListings,
+        DEFAULT_COMMON_DICTIONARY.adminStats.pieListings
       ),
     },
   };

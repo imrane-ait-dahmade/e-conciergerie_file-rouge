@@ -51,7 +51,7 @@ export async function seedInitialAdmin(
     email,
     password: passwordHash,
     isActive: true,
-    role: adminRole._id as Types.ObjectId,
+    role: adminRole._id,
   });
 
   logger?.log(`Seed admin : compte créé pour ${email}.`);

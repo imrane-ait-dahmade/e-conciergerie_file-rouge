@@ -1,6 +1,12 @@
 import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
-import { ApiBearerAuth, ApiExtraModels, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiExtraModels,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login_user.dto';
 import type { ProfileResponseDto } from './dto/profile-response.dto';
@@ -19,13 +25,17 @@ export class UsersController {
 
   @Post('create')
   @Throttle({ default: { limit: 10, ttl: 60000 } })
-  async CreateUser(@Body() createUserDto: CreateUserDto): Promise<SafeUserResponse> {
+  async CreateUser(
+    @Body() createUserDto: CreateUserDto,
+  ): Promise<SafeUserResponse> {
     return this.usersService.CreateUser(createUserDto);
   }
 
   @Post('login')
   @Throttle({ default: { limit: 10, ttl: 60000 } })
-  async Login(@Body() loginDto: LoginUserDto): Promise<{ access_token: string }> {
+  async Login(
+    @Body() loginDto: LoginUserDto,
+  ): Promise<{ access_token: string }> {
     return this.usersService.Login(loginDto);
   }
 
@@ -38,9 +48,14 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Profil utilisateur' })
-  @ApiResponse({ status: 200, schema: { $ref: getSchemaPath(ProfileResponseSchema) } })
+  @ApiResponse({
+    status: 200,
+    schema: { $ref: getSchemaPath(ProfileResponseSchema) },
+  })
   @ApiResponse({ status: 401, description: 'Token manquant ou invalide' })
-  async getProfile(@Req() req: { user: RequestUser }): Promise<ProfileResponseDto> {
+  async getProfile(
+    @Req() req: { user: RequestUser },
+  ): Promise<ProfileResponseDto> {
     return this.usersService.getProfile(req.user.userId);
   }
 }

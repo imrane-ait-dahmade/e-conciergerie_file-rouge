@@ -114,15 +114,21 @@ describe('EtablissementsService', () => {
 
       const result = await service.findOne('507f1f77bcf86cd799439011');
 
-      expect(mockModel.findById).toHaveBeenCalledWith('507f1f77bcf86cd799439011');
+      expect(mockModel.findById).toHaveBeenCalledWith(
+        '507f1f77bcf86cd799439011',
+      );
       expect(result).toEqual(mockEtablissement);
     });
 
     it('doit lancer NotFoundException si non trouvé', async () => {
       mockModel.findById.mockReturnValue(mockResolve(null));
 
-      await expect(service.findOne('id inexistant')).rejects.toThrow(NotFoundException);
-      await expect(service.findOne('id inexistant')).rejects.toThrow('Établissement introuvable');
+      await expect(service.findOne('id inexistant')).rejects.toThrow(
+        NotFoundException,
+      );
+      await expect(service.findOne('id inexistant')).rejects.toThrow(
+        'Établissement introuvable',
+      );
     });
   });
 
@@ -134,7 +140,11 @@ describe('EtablissementsService', () => {
       );
       const dto = { nom: 'Nouveau nom' };
 
-      const result = await service.update('507f1f77bcf86cd799439011', dto, userId);
+      const result = await service.update(
+        '507f1f77bcf86cd799439011',
+        dto,
+        userId,
+      );
 
       expect(mockModel.findByIdAndUpdate).toHaveBeenCalledWith(
         '507f1f77bcf86cd799439011',
@@ -165,7 +175,11 @@ describe('EtablissementsService', () => {
       mockModel.findById.mockReturnValue(mockSelectLean(null));
 
       await expect(
-        service.update('507f00000000000000000000', { nom: 'Test' }, '507f1f77bcf86cd799439012'),
+        service.update(
+          '507f00000000000000000000',
+          { nom: 'Test' },
+          '507f1f77bcf86cd799439012',
+        ),
       ).rejects.toThrow(NotFoundException);
     });
   });

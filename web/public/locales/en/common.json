@@ -67,7 +67,11 @@
     "submitting": "Signing in…",
     "errorTitle": "Could not sign in",
     "signupPrompt": "No account yet?",
-    "signupCta": "Create an account"
+    "signupCta": "Create an account",
+    "oauthContinueWith": "or continue with",
+    "oauthGoogleAriaLabel": "Sign in with Google",
+    "oauthAppleAriaLabel": "Sign in with Apple",
+    "oauthUnavailable": "Google or Apple sign-in is not configured yet."
   },
   "signupPage": {
     "title": "Sign up",
@@ -85,6 +89,114 @@
     "successTitle": "Success",
     "successMessage": "Account created. Redirecting to sign in…",
     "loginPrompt": "Already have an account?",
-    "loginCta": "Sign in"
+    "loginCta": "Sign in",
+    "oauthContinueWith": "or continue with",
+    "oauthGoogleAriaLabel": "Sign up with Google",
+    "oauthAppleAriaLabel": "Sign up with Apple",
+    "oauthUnavailable": "Google or Apple sign-up is not configured yet.",
+    "wizardProgress": "Step {current} of {total}",
+    "wizardStepIdentity": "Identity",
+    "wizardStepEmail": "Email",
+    "wizardStepPassword": "Password",
+    "wizardNext": "Continue",
+    "wizardBack": "Back",
+    "wizardIdentityInvalid": "Enter at least 2 characters for first and last name.",
+    "wizardEmailInvalid": "Enter a valid email address."
+  },
+  "dashboardSidebar": {
+    "management": "My space",
+    "sectionGeneral": "Overview",
+    "sectionLocation": "Location",
+    "sectionActivity": "Activity",
+    "sectionAccount": "Account",
+    "locationExplorer": "Explore",
+    "placeholderLead": "This section will be available soon.",
+    "overview": "Dashboard",
+    "activity": "Activity",
+    "reservations": "Bookings",
+    "favorites": "Favorites",
+    "settings": "Settings"
+  },
+  "adminSidebar": {
+    "title": "Administration",
+    "sectionGeneral": "Overview",
+    "sectionLocation": "Location",
+    "sectionManagement": "Management",
+    "sectionSystem": "System",
+    "dashboard": "Dashboard",
+    "locationReferential": "Places & areas",
+    "placeholderLead": "This section will be available soon.",
+    "users": "Users",
+    "reservations": "Bookings",
+    "services": "Services",
+    "settings": "Settings"
+  },
+  "adminGeographie": {
+    "pageTitle": "Geography management",
+    "pageDescription": "Browse and prepare the country, city, and neighborhood reference data. Content is sample data for now.",
+    "tabPays": "Countries",
+    "tabVilles": "Cities",
+    "tabQuartiers": "Neighborhoods",
+    "mockDataNote": "Sample data (Morocco) — will be replaced by the API.",
+    "paysColumns": {
+      "codeIso2": "ISO-2 code",
+      "codeIso3": "ISO-3 code",
+      "nomFr": "Name (FR)",
+      "nomNative": "Local name",
+      "actif": "Status",
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "villesColumns": {
+      "nom": "City",
+      "region": "Region",
+      "population": "Population",
+      "pays": "Country"
+    },
+    "quartiersColumns": {
+      "nom": "Neighborhood",
+      "ville": "City",
+      "codePostal": "Postal code"
+    }
+  },
+  "dashboardStats": {
+    "pageIntro": "You're signed in. Below is a snapshot of your activity.",
+    "sectionTitle": "Overview",
+    "sectionLead": "Summary of your activity on E-conciergerie (sample data).",
+    "kpiReservations": "Active bookings",
+    "kpiFavorites": "Saved places",
+    "kpiSearches": "Searches this month",
+    "chartByCategory": "Interactions by category",
+    "chartActivity": "Last 12 weeks",
+    "chartDistribution": "Activity breakdown",
+    "mockNote": "Illustrative data — will be replaced by your real stats.",
+    "tooltipValue": "Count",
+    "categoryRestaurants": "Food & dining",
+    "categoryLodging": "Stays",
+    "categoryTransport": "Transport",
+    "categoryWellness": "Wellness",
+    "pieReservations": "Bookings",
+    "pieFavorites": "Favorites",
+    "pieMessages": "Messages"
+  },
+  "adminStats": {
+    "pageIntro": "Admin console — snapshot of platform metrics.",
+    "sectionTitle": "Key metrics",
+    "sectionLead": "Figures and trends (sample data until the API is connected).",
+    "kpiUsers": "Registered users",
+    "kpiEstablishments": "Listed establishments",
+    "kpiMonthlyBookings": "Bookings this month",
+    "chartServicesByType": "Published services by type",
+    "chartVolumeTrend": "Activity volume (12 periods)",
+    "chartTrafficMix": "Traffic mix",
+    "mockNote": "Illustrative data — connect your backend later.",
+    "tooltipValue": "Value",
+    "serviceLodging": "Lodging",
+    "serviceDining": "Dining",
+    "serviceLeisure": "Leisure",
+    "serviceMobility": "Mobility",
+    "pieUsers": "User sessions",
+    "pieBookings": "Bookings",
+    "pieListings": "Listing views"
   }
 }

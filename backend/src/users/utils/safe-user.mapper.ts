@@ -1,8 +1,6 @@
 import type { SafeUserResponse } from './safe-user.types';
 
-function mapRole(
-  role: unknown,
-): SafeUserResponse['role'] {
+function mapRole(role: unknown): SafeUserResponse['role'] {
   if (!role || typeof role !== 'object') {
     return undefined;
   }
@@ -21,7 +19,9 @@ function mapRole(
  * Transforme un document User en objet sûr pour le client (sans mot de passe ni tokens).
  * Laravel : équivalent de $user->makeHidden(['password']) puis retour de l'objet.
  */
-export function toSafeUserResponse(user: Record<string, unknown>): SafeUserResponse {
+export function toSafeUserResponse(
+  user: Record<string, unknown>,
+): SafeUserResponse {
   return {
     id: String(user?._id ?? ''),
     nom: String(user?.nom ?? ''),
