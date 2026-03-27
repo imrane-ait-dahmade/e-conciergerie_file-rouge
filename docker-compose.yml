@@ -1,0 +1,20 @@
+# MinIO en local (stockage type S3) + console web.
+# Les identifiants par défaut sont volontairement simples : UNIQUEMENT pour le développement.
+#
+# Démarrer depuis la racine du projet : docker compose up -d
+services:
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    ports:
+      - '9000:9000' # API S3 (utilisée par ton backend)
+      - '9001:9001' # Console (tableau de bord dans le navigateur)
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+  
+volumes:
+  minio_data:

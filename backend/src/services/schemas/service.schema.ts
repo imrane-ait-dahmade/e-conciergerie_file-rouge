@@ -15,6 +15,10 @@ export class Service {
   /** Établissement qui propose ce service. */
   @Prop({ type: Types.ObjectId, ref: 'Etablissement', required: true })
   etablissement: Types.ObjectId;
+
+  /** Secteur métier (domaine) — optionnel en base pour compatibilité ; requis à la création via l’API. */
+  @Prop({ type: Types.ObjectId, ref: 'Domaine', required: false })
+  domaine?: Types.ObjectId;
 }
 
 export const ServiceSchema = SchemaFactory.createForClass(Service);

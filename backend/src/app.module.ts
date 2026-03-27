@@ -15,9 +15,9 @@ import { PaysModule } from './pays/pays.module';
 import { VillesModule } from './villes/villes.module';
 import { QuartiersModule } from './quartiers/quartiers.module';
 import { UploadsModule } from './uploads/uploads.module';
-import { Domaine, DomaineSchema } from './domaines/schemas/domaine.schema';
-import { Service, ServiceSchema } from './services/schemas/service.schema';
-import { Caracteristique, CaracteristiqueSchema } from './caracteristiques/schemas/caracteristique.schema';
+import { DomaineModule } from './domaines/domaine.module';
+import { ServiceModule } from './services/service.module';
+import { CaracteristiqueModule } from './caracteristiques/caracteristique.module';
 import { Favori, FavoriSchema } from './favoris/schemas/favori.schema';
 import { Avis, AvisSchema } from './avis/schemas/avis.schema';
 import { Reservation, ReservationSchema } from './reservations/schemas/reservation.schema';
@@ -71,9 +71,6 @@ import {
     }),
     // Schémas métier sans module dédié : enregistrement Mongoose ici (fichiers *.schema.ts uniquement).
     MongooseModule.forFeature([
-      { name: Domaine.name, schema: DomaineSchema },
-      { name: Service.name, schema: ServiceSchema },
-      { name: Caracteristique.name, schema: CaracteristiqueSchema },
       { name: Favori.name, schema: FavoriSchema },
       { name: Avis.name, schema: AvisSchema },
       { name: Reservation.name, schema: ReservationSchema },
@@ -100,6 +97,9 @@ import {
     VillesModule,
     QuartiersModule,
     UploadsModule,
+    DomaineModule,
+    ServiceModule,
+    CaracteristiqueModule,
   ],
   controllers: [AppController],
   providers: [
