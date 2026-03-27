@@ -4,18 +4,21 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CreateQuartierDto } from './dto/create-quartier.dto';
+import { ListQuartiersQueryDto } from './dto/list-quartiers-query.dto';
 import { UpdateQuartierDto } from './dto/update-quartier.dto';
 import { QuartiersService } from './quartiers.service';
 
 @ApiTags('Quartiers')
-@Controller('quartiers')
+@Controller(['quartiers', 'districts'])
 export class QuartiersController {
   constructor(private readonly quartiersService: QuartiersService) {}
 
@@ -28,9 +31,11 @@ export class QuartiersController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Lister les quartiers' })
-  findAll() {
-    return this.quartiersService.findAll();
+  @ApiOperation({
+    summary: 'Lister les quartiers (paginé ; filtre optionnel ?cityId=)',
+  })
+  findAll(@Query() query: ListQuartiersQueryDto) {
+    return this.quartiersService.findAll(query);
   }
 
   @Get(':id')
@@ -40,9 +45,10 @@ export class QuartiersController {
   }
 
   @Put(':id')
+  @Patch(':id')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Mettre à jour un quartier' })
+  @ApiOperation({ summary: 'Mettre à jour un quartier (PUT ou PATCH)' })
   update(@Param('id') id: string, @Body() dto: UpdateQuartierDto) {
     return this.quartiersService.update(id, dto);
   }

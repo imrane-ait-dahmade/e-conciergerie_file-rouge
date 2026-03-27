@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { Ville } from '../villes/schemas/ville.schema';
 import { CreateQuartierDto } from './dto/create-quartier.dto';
+import { ListQuartiersQueryDto } from './dto/list-quartiers-query.dto';
 import { UpdateQuartierDto } from './dto/update-quartier.dto';
 import { Quartier } from './schemas/quartier.schema';
 
@@ -36,12 +37,28 @@ export class QuartiersService {
     } as const;
   }
 
-  async findAll() {
-    return this.quartierModel
-      .find()
-      .populate(this.villePopulate())
-      .sort({ nom: 1 })
-      .exec();
+  async findAll(query?: ListQuartiersQueryDto) {
+    const page = query?.page != null && query.page > 0 ? query.page : 1;
+    const limit = Math.min(
+      query?.limit != null && query.limit > 0 ? query.limit : 20,
+      100,
+    );
+    const skip = (page - 1) * limit;
+    const filter: Record<string, unknown> = {};
+    if (query?.cityId) {
+      filter.ville = new Types.ObjectId(query.cityId);
+    }
+    const [data, total] = await Promise.all([
+      this.quartierModel
+        .find(filter)
+        .populate(this.villePopulate())
+        .sort({ nom: 1 })
+        .skip(skip)
+        .limit(limit)
+        .exec(),
+      this.quartierModel.countDocuments(filter).exec(),
+    ]);
+    return { data, total, page, limit };
   }
 
   async findOne(id: string) {

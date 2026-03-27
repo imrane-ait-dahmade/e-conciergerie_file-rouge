@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 import { Ville } from '../villes/schemas/ville.schema';
 import { CreatePaysDto } from './dto/create-pays.dto';
 import { UpdatePaysDto } from './dto/update-pays.dto';
@@ -25,8 +26,18 @@ export class PaysService {
     return this.paysModel.create(payload);
   }
 
-  async findAll() {
-    return this.paysModel.find().sort({ nom: 1 }).exec();
+  async findAll(query?: PaginationQueryDto) {
+    const page = query?.page != null && query.page > 0 ? query.page : 1;
+    const limit = Math.min(
+      query?.limit != null && query.limit > 0 ? query.limit : 20,
+      100,
+    );
+    const skip = (page - 1) * limit;
+    const [data, total] = await Promise.all([
+      this.paysModel.find().sort({ nom: 1 }).skip(skip).limit(limit).exec(),
+      this.paysModel.countDocuments().exec(),
+    ]);
+    return { data, total, page, limit };
   }
 
   async findOne(id: string) {

@@ -13,5 +13,5 @@ export default async function AdminGeographiePage({
 
   const dict = await getDictionary(locale);
 
-  return <AdminGeographieSection labels={dict.adminGeographie} locale={locale} />;
+  return <AdminGeographieSection labels={dict.adminGeographie} />;
 }

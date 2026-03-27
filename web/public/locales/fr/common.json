@@ -133,30 +133,47 @@
   },
   "adminGeographie": {
     "pageTitle": "Gestion géographique",
-    "pageDescription": "Consultez et préparez le référentiel pays, villes et quartiers. Les données affichées sont factices pour le moment.",
+    "pageDescription": "Gérer les pays, villes et quartiers",
     "tabPays": "Pays",
     "tabVilles": "Villes",
     "tabQuartiers": "Quartiers",
-    "mockDataNote": "Données d’exemple (Maroc) — à remplacer par l’API.",
+    "mockDataNote": "Listes chargées depuis l’API.",
+    "deleteConfirmTitle": "Supprimer cet enregistrement ?",
+    "deleteConfirmDescription": "Cette action est irréversible.",
+    "deleteConfirmOk": "Supprimer",
+    "deleteConfirmCancel": "Annuler",
+    "deleteSuccess": "Suppression effectuée.",
+    "toolbar": {
+      "searchPlaceholder": "Rechercher…",
+      "filter": "Filtres",
+      "listPays": "Liste des pays",
+      "listVilles": "Liste des villes",
+      "listQuartiers": "Liste des quartiers",
+      "addPays": "Ajouter un pays",
+      "addVille": "Ajouter une ville",
+      "addQuartier": "Ajouter un quartier"
+    },
     "paysColumns": {
-      "codeIso2": "Code ISO-2",
-      "codeIso3": "Code ISO-3",
-      "nomFr": "Nom (FR)",
-      "nomNative": "Nom local",
-      "actif": "Statut",
-      "active": "Actif",
-      "inactive": "Inactif"
+      "nom": "Nom",
+      "codeIso": "Code ISO",
+      "actions": "Actions",
+      "modify": "Modifier",
+      "delete": "Supprimer"
     },
     "villesColumns": {
-      "nom": "Ville",
-      "region": "Région",
-      "population": "Population",
-      "pays": "Pays"
+      "nom": "Nom",
+      "pays": "Pays",
+      "actions": "Actions",
+      "modify": "Modifier",
+      "delete": "Supprimer"
     },
     "quartiersColumns": {
-      "nom": "Quartier",
+      "nom": "Nom",
       "ville": "Ville",
-      "codePostal": "Code postal"
+      "pays": "Pays",
+      "actions": "Actions",
+      "modify": "Modifier",
+      "delete": "Supprimer"
     }
   },
   "dashboardStats": {

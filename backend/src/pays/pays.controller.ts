@@ -4,18 +4,21 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 import { CreatePaysDto } from './dto/create-pays.dto';
 import { UpdatePaysDto } from './dto/update-pays.dto';
 import { PaysService } from './pays.service';
 
 @ApiTags('Pays')
-@Controller('pays')
+@Controller(['pays', 'countries'])
 export class PaysController {
   constructor(private readonly paysService: PaysService) {}
 
@@ -28,9 +31,9 @@ export class PaysController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Lister les pays' })
-  findAll() {
-    return this.paysService.findAll();
+  @ApiOperation({ summary: 'Lister les pays (paginé : ?page=&limit=)' })
+  findAll(@Query() query: PaginationQueryDto) {
+    return this.paysService.findAll(query);
   }
 
   @Get(':id')
@@ -40,9 +43,10 @@ export class PaysController {
   }
 
   @Put(':id')
+  @Patch(':id')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Mettre à jour un pays' })
+  @ApiOperation({ summary: 'Mettre à jour un pays (PUT ou PATCH)' })
   update(@Param('id') id: string, @Body() dto: UpdatePaysDto) {
     return this.paysService.update(id, dto);
   }

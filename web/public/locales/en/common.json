@@ -133,30 +133,47 @@
   },
   "adminGeographie": {
     "pageTitle": "Geography management",
-    "pageDescription": "Browse and prepare the country, city, and neighborhood reference data. Content is sample data for now.",
+    "pageDescription": "Manage countries, cities, and neighborhoods",
     "tabPays": "Countries",
     "tabVilles": "Cities",
     "tabQuartiers": "Neighborhoods",
-    "mockDataNote": "Sample data (Morocco) — will be replaced by the API.",
+    "mockDataNote": "Lists are loaded from the API.",
+    "deleteConfirmTitle": "Delete this record?",
+    "deleteConfirmDescription": "This action cannot be undone.",
+    "deleteConfirmOk": "Delete",
+    "deleteConfirmCancel": "Cancel",
+    "deleteSuccess": "Deleted successfully.",
+    "toolbar": {
+      "searchPlaceholder": "Search…",
+      "filter": "Filters",
+      "listPays": "Country list",
+      "listVilles": "City list",
+      "listQuartiers": "Neighborhood list",
+      "addPays": "Add country",
+      "addVille": "Add city",
+      "addQuartier": "Add neighborhood"
+    },
     "paysColumns": {
-      "codeIso2": "ISO-2 code",
-      "codeIso3": "ISO-3 code",
-      "nomFr": "Name (FR)",
-      "nomNative": "Local name",
-      "actif": "Status",
-      "active": "Active",
-      "inactive": "Inactive"
+      "nom": "Name",
+      "codeIso": "ISO code",
+      "actions": "Actions",
+      "modify": "Edit",
+      "delete": "Delete"
     },
     "villesColumns": {
-      "nom": "City",
-      "region": "Region",
-      "population": "Population",
-      "pays": "Country"
+      "nom": "Name",
+      "pays": "Country",
+      "actions": "Actions",
+      "modify": "Edit",
+      "delete": "Delete"
     },
     "quartiersColumns": {
-      "nom": "Neighborhood",
+      "nom": "Name",
       "ville": "City",
-      "codePostal": "Postal code"
+      "pays": "Country",
+      "actions": "Actions",
+      "modify": "Edit",
+      "delete": "Delete"
     }
   },
   "dashboardStats": {

@@ -133,30 +133,47 @@
   },
   "adminGeographie": {
     "pageTitle": "إدارة الجغرافيا",
-    "pageDescription": "استعرض وأعد بيانات الدول والمدن والأحياء. المحتوى المعروض تجريبي حالياً.",
+    "pageDescription": "إدارة الدول والمدن والأحياء",
     "tabPays": "الدول",
     "tabVilles": "المدن",
     "tabQuartiers": "الأحياء",
-    "mockDataNote": "بيانات تجريبية (المغرب) — ستُستبدل لاحقاً بواجهة البرمجة.",
+    "mockDataNote": "القوائم تُحمَّل من واجهة البرمجة.",
+    "deleteConfirmTitle": "حذف هذا السجل؟",
+    "deleteConfirmDescription": "لا يمكن التراجع عن هذا الإجراء.",
+    "deleteConfirmOk": "حذف",
+    "deleteConfirmCancel": "إلغاء",
+    "deleteSuccess": "تم الحذف.",
+    "toolbar": {
+      "searchPlaceholder": "بحث…",
+      "filter": "عوامل التصفية",
+      "listPays": "قائمة الدول",
+      "listVilles": "قائمة المدن",
+      "listQuartiers": "قائمة الأحياء",
+      "addPays": "إضافة دولة",
+      "addVille": "إضافة مدينة",
+      "addQuartier": "إضافة حي"
+    },
     "paysColumns": {
-      "codeIso2": "رمز ISO-2",
-      "codeIso3": "رمز ISO-3",
-      "nomFr": "الاسم (فرنسي)",
-      "nomNative": "الاسم المحلي",
-      "actif": "الحالة",
-      "active": "نشط",
-      "inactive": "غير نشط"
+      "nom": "الاسم",
+      "codeIso": "رمز ISO",
+      "actions": "إجراءات",
+      "modify": "تعديل",
+      "delete": "حذف"
     },
     "villesColumns": {
-      "nom": "المدينة",
-      "region": "الجهة",
-      "population": "السكان",
-      "pays": "الدولة"
+      "nom": "الاسم",
+      "pays": "الدولة",
+      "actions": "إجراءات",
+      "modify": "تعديل",
+      "delete": "حذف"
     },
     "quartiersColumns": {
-      "nom": "الحي",
+      "nom": "الاسم",
       "ville": "المدينة",
-      "codePostal": "الرمز البريدي"
+      "pays": "الدولة",
+      "actions": "إجراءات",
+      "modify": "تعديل",
+      "delete": "حذف"
     }
   },
   "dashboardStats": {

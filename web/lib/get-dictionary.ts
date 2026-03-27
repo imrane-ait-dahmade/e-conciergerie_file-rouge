@@ -149,25 +149,42 @@ export type CommonDictionary = {
     tabVilles: string;
     tabQuartiers: string;
     mockDataNote: string;
+    deleteConfirmTitle: string;
+    deleteConfirmDescription: string;
+    deleteConfirmOk: string;
+    deleteConfirmCancel: string;
+    deleteSuccess: string;
+    toolbar: {
+      searchPlaceholder: string;
+      filter: string;
+      listPays: string;
+      listVilles: string;
+      listQuartiers: string;
+      addPays: string;
+      addVille: string;
+      addQuartier: string;
+    };
     paysColumns: {
-      codeIso2: string;
-      codeIso3: string;
-      nomFr: string;
-      nomNative: string;
-      actif: string;
-      active: string;
-      inactive: string;
+      nom: string;
+      codeIso: string;
+      actions: string;
+      modify: string;
+      delete: string;
     };
     villesColumns: {
       nom: string;
-      region: string;
-      population: string;
       pays: string;
+      actions: string;
+      modify: string;
+      delete: string;
     };
     quartiersColumns: {
       nom: string;
       ville: string;
-      codePostal: string;
+      pays: string;
+      actions: string;
+      modify: string;
+      delete: string;
     };
   };
   /** Statistiques & graphiques — `/[locale]/dashboard` */
@@ -351,31 +368,47 @@ const DEFAULT_COMMON_DICTIONARY: CommonDictionary = {
   },
   adminGeographie: {
     pageTitle: "Geography management",
-    pageDescription:
-      "Browse and prepare the country, city, and neighborhood reference data. Content is sample data for now.",
+    pageDescription: "Manage countries, cities, and neighborhoods.",
     tabPays: "Countries",
     tabVilles: "Cities",
     tabQuartiers: "Neighborhoods",
-    mockDataNote: "Sample data (Morocco) — will be replaced by the API.",
+    mockDataNote: "Lists are loaded from the API.",
+    deleteConfirmTitle: "Delete this record?",
+    deleteConfirmDescription: "This action cannot be undone.",
+    deleteConfirmOk: "Delete",
+    deleteConfirmCancel: "Cancel",
+    deleteSuccess: "Deleted successfully.",
+    toolbar: {
+      searchPlaceholder: "Search…",
+      filter: "Filters",
+      listPays: "Country list",
+      listVilles: "City list",
+      listQuartiers: "Neighborhood list",
+      addPays: "Add country",
+      addVille: "Add city",
+      addQuartier: "Add neighborhood",
+    },
     paysColumns: {
-      codeIso2: "ISO-2 code",
-      codeIso3: "ISO-3 code",
-      nomFr: "Name (FR)",
-      nomNative: "Local name",
-      actif: "Status",
-      active: "Active",
-      inactive: "Inactive",
+      nom: "Name",
+      codeIso: "ISO code",
+      actions: "Actions",
+      modify: "Edit",
+      delete: "Delete",
     },
     villesColumns: {
-      nom: "City",
-      region: "Region",
-      population: "Population",
+      nom: "Name",
       pays: "Country",
+      actions: "Actions",
+      modify: "Edit",
+      delete: "Delete",
     },
     quartiersColumns: {
-      nom: "Neighborhood",
+      nom: "Name",
       ville: "City",
-      codePostal: "Postal code",
+      pays: "Country",
+      actions: "Actions",
+      modify: "Edit",
+      delete: "Delete",
     },
   },
   dashboardStats: {
@@ -454,6 +487,7 @@ function normalizeDictionary(value: unknown): CommonDictionary {
   const dashboardSidebar = asRecord(root.dashboardSidebar);
   const adminSidebar = asRecord(root.adminSidebar);
   const adminGeographie = asRecord(root.adminGeographie);
+  const geographieToolbar = asRecord(adminGeographie.toolbar);
   const paysColumns = asRecord(adminGeographie.paysColumns);
   const villesColumns = asRecord(adminGeographie.villesColumns);
   const quartiersColumns = asRecord(adminGeographie.quartiersColumns);
@@ -837,34 +871,77 @@ function normalizeDictionary(value: unknown): CommonDictionary {
         adminGeographie.mockDataNote,
         DEFAULT_COMMON_DICTIONARY.adminGeographie.mockDataNote
       ),
+      deleteConfirmTitle: asString(
+        adminGeographie.deleteConfirmTitle,
+        DEFAULT_COMMON_DICTIONARY.adminGeographie.deleteConfirmTitle
+      ),
+      deleteConfirmDescription: asString(
+        adminGeographie.deleteConfirmDescription,
+        DEFAULT_COMMON_DICTIONARY.adminGeographie.deleteConfirmDescription
+      ),
+      deleteConfirmOk: asString(
+        adminGeographie.deleteConfirmOk,
+        DEFAULT_COMMON_DICTIONARY.adminGeographie.deleteConfirmOk
+      ),
+      deleteConfirmCancel: asString(
+        adminGeographie.deleteConfirmCancel,
+        DEFAULT_COMMON_DICTIONARY.adminGeographie.deleteConfirmCancel
+      ),
+      deleteSuccess: asString(
+        adminGeographie.deleteSuccess,
+        DEFAULT_COMMON_DICTIONARY.adminGeographie.deleteSuccess
+      ),
+      toolbar: {
+        searchPlaceholder: asString(
+          geographieToolbar.searchPlaceholder,
+          DEFAULT_COMMON_DICTIONARY.adminGeographie.toolbar.searchPlaceholder
+        ),
+        filter: asString(
+          geographieToolbar.filter,
+          DEFAULT_COMMON_DICTIONARY.adminGeographie.toolbar.filter
+        ),
+        listPays: asString(
+          geographieToolbar.listPays,
+          DEFAULT_COMMON_DICTIONARY.adminGeographie.toolbar.listPays
+        ),
+        listVilles: asString(
+          geographieToolbar.listVilles,
+          DEFAULT_COMMON_DICTIONARY.adminGeographie.toolbar.listVilles
+        ),
+        listQuartiers: asString(
+          geographieToolbar.listQuartiers,
+          DEFAULT_COMMON_DICTIONARY.adminGeographie.toolbar.listQuartiers
+        ),
+        addPays: asString(
+          geographieToolbar.addPays,
+          DEFAULT_COMMON_DICTIONARY.adminGeographie.toolbar.addPays
+        ),
+        addVille: asString(
+          geographieToolbar.addVille,
+          DEFAULT_COMMON_DICTIONARY.adminGeographie.toolbar.addVille
+        ),
+        addQuartier: asString(
+          geographieToolbar.addQuartier,
+          DEFAULT_COMMON_DICTIONARY.adminGeographie.toolbar.addQuartier
+        ),
+      },
       paysColumns: {
-        codeIso2: asString(
-          paysColumns.codeIso2,
-          DEFAULT_COMMON_DICTIONARY.adminGeographie.paysColumns.codeIso2
+        nom: asString(paysColumns.nom, DEFAULT_COMMON_DICTIONARY.adminGeographie.paysColumns.nom),
+        codeIso: asString(
+          paysColumns.codeIso,
+          DEFAULT_COMMON_DICTIONARY.adminGeographie.paysColumns.codeIso
         ),
-        codeIso3: asString(
-          paysColumns.codeIso3,
-          DEFAULT_COMMON_DICTIONARY.adminGeographie.paysColumns.codeIso3
+        actions: asString(
+          paysColumns.actions,
+          DEFAULT_COMMON_DICTIONARY.adminGeographie.paysColumns.actions
         ),
-        nomFr: asString(
-          paysColumns.nomFr,
-          DEFAULT_COMMON_DICTIONARY.adminGeographie.paysColumns.nomFr
+        modify: asString(
+          paysColumns.modify,
+          DEFAULT_COMMON_DICTIONARY.adminGeographie.paysColumns.modify
         ),
-        nomNative: asString(
-          paysColumns.nomNative,
-          DEFAULT_COMMON_DICTIONARY.adminGeographie.paysColumns.nomNative
-        ),
-        actif: asString(
-          paysColumns.actif,
-          DEFAULT_COMMON_DICTIONARY.adminGeographie.paysColumns.actif
-        ),
-        active: asString(
-          paysColumns.active,
-          DEFAULT_COMMON_DICTIONARY.adminGeographie.paysColumns.active
-        ),
-        inactive: asString(
-          paysColumns.inactive,
-          DEFAULT_COMMON_DICTIONARY.adminGeographie.paysColumns.inactive
+        delete: asString(
+          paysColumns.delete,
+          DEFAULT_COMMON_DICTIONARY.adminGeographie.paysColumns.delete
         ),
       },
       villesColumns: {
@@ -872,17 +949,21 @@ function normalizeDictionary(value: unknown): CommonDictionary {
           villesColumns.nom,
           DEFAULT_COMMON_DICTIONARY.adminGeographie.villesColumns.nom
         ),
-        region: asString(
-          villesColumns.region,
-          DEFAULT_COMMON_DICTIONARY.adminGeographie.villesColumns.region
-        ),
-        population: asString(
-          villesColumns.population,
-          DEFAULT_COMMON_DICTIONARY.adminGeographie.villesColumns.population
-        ),
         pays: asString(
           villesColumns.pays,
           DEFAULT_COMMON_DICTIONARY.adminGeographie.villesColumns.pays
+        ),
+        actions: asString(
+          villesColumns.actions,
+          DEFAULT_COMMON_DICTIONARY.adminGeographie.villesColumns.actions
+        ),
+        modify: asString(
+          villesColumns.modify,
+          DEFAULT_COMMON_DICTIONARY.adminGeographie.villesColumns.modify
+        ),
+        delete: asString(
+          villesColumns.delete,
+          DEFAULT_COMMON_DICTIONARY.adminGeographie.villesColumns.delete
         ),
       },
       quartiersColumns: {
@@ -894,9 +975,21 @@ function normalizeDictionary(value: unknown): CommonDictionary {
           quartiersColumns.ville,
           DEFAULT_COMMON_DICTIONARY.adminGeographie.quartiersColumns.ville
         ),
-        codePostal: asString(
-          quartiersColumns.codePostal,
-          DEFAULT_COMMON_DICTIONARY.adminGeographie.quartiersColumns.codePostal
+        pays: asString(
+          quartiersColumns.pays,
+          DEFAULT_COMMON_DICTIONARY.adminGeographie.quartiersColumns.pays
+        ),
+        actions: asString(
+          quartiersColumns.actions,
+          DEFAULT_COMMON_DICTIONARY.adminGeographie.quartiersColumns.actions
+        ),
+        modify: asString(
+          quartiersColumns.modify,
+          DEFAULT_COMMON_DICTIONARY.adminGeographie.quartiersColumns.modify
+        ),
+        delete: asString(
+          quartiersColumns.delete,
+          DEFAULT_COMMON_DICTIONARY.adminGeographie.quartiersColumns.delete
         ),
       },
     },

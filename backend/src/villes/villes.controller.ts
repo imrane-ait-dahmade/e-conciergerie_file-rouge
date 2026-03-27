@@ -4,18 +4,21 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CreateVilleDto } from './dto/create-ville.dto';
+import { ListVillesQueryDto } from './dto/list-villes-query.dto';
 import { UpdateVilleDto } from './dto/update-ville.dto';
 import { VillesService } from './villes.service';
 
 @ApiTags('Villes')
-@Controller('villes')
+@Controller(['villes', 'cities'])
 export class VillesController {
   constructor(private readonly villesService: VillesService) {}
 
@@ -28,9 +31,9 @@ export class VillesController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Lister les villes' })
-  findAll() {
-    return this.villesService.findAll();
+  @ApiOperation({ summary: 'Lister les villes (paginé ; filtre optionnel ?countryId=)' })
+  findAll(@Query() query: ListVillesQueryDto) {
+    return this.villesService.findAll(query);
   }
 
   @Get(':id')
@@ -40,9 +43,10 @@ export class VillesController {
   }
 
   @Put(':id')
+  @Patch(':id')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Mettre à jour une ville' })
+  @ApiOperation({ summary: 'Mettre à jour une ville (PUT ou PATCH)' })
   update(@Param('id') id: string, @Body() dto: UpdateVilleDto) {
     return this.villesService.update(id, dto);
   }
