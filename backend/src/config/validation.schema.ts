@@ -36,4 +36,13 @@ export const validationSchema = Joi.object({
 
   // Mail
   MAIL_FROM: Joi.string().email().default('noreply@localhost'),
+
+  // MinIO (uploads) — défauts alignés sur docker-compose.yml (racine du repo)
+  MINIO_ENDPOINT: Joi.string().default('localhost'),
+  MINIO_PORT: Joi.string().pattern(/^\d+$/).default('9000'),
+  MINIO_USE_SSL: Joi.string().valid('true', 'false').default('false'),
+  MINIO_ACCESS_KEY: Joi.string().default('minioadmin'),
+  MINIO_SECRET_KEY: Joi.string().default('minioadmin'),
+  MINIO_BUCKET: Joi.string().default('uploads'),
+  MINIO_PUBLIC_URL: Joi.string().uri().default('http://localhost:9000'),
 });

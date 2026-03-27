@@ -14,6 +14,7 @@ import { EtablissementsModule } from './etablissements/etablissements.module';
 import { PaysModule } from './pays/pays.module';
 import { VillesModule } from './villes/villes.module';
 import { QuartiersModule } from './quartiers/quartiers.module';
+import { UploadsModule } from './uploads/uploads.module';
 import { Domaine, DomaineSchema } from './domaines/schemas/domaine.schema';
 import { Service, ServiceSchema } from './services/schemas/service.schema';
 import { Caracteristique, CaracteristiqueSchema } from './caracteristiques/schemas/caracteristique.schema';
@@ -98,6 +99,7 @@ import {
     PaysModule,
     VillesModule,
     QuartiersModule,
+    UploadsModule,
   ],
   controllers: [AppController],
   providers: [

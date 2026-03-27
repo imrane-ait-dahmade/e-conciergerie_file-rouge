@@ -21,9 +21,20 @@ export default () => ({
     from: process.env.MAIL_FROM ?? 'noreply@localhost',
   },
 
+  /** MinIO (S3). Défauts = docker-compose.yml à la racine (dev). */
+  minio: {
+    endpoint: process.env.MINIO_ENDPOINT ?? 'localhost',
+    port: parseInt(process.env.MINIO_PORT ?? '9000', 10),
+    useSsl: process.env.MINIO_USE_SSL === 'true',
+    accessKey: process.env.MINIO_ACCESS_KEY ?? 'minioadmin',
+    secretKey: process.env.MINIO_SECRET_KEY ?? 'minioadmin',
+    bucket: process.env.MINIO_BUCKET ?? 'uploads',
+    publicUrl: process.env.MINIO_PUBLIC_URL ?? 'http://localhost:9000',
+  },
+
   /**
-   * Seed admin au démarrage (users/seeds/admin.seed.ts, appelé depuis UsersService).
-   * Variables : ADMIN_EMAIL, ADMIN_PASSWORD, ADMIN_NOM, ADMIN_PRENOM (voir .env.example).
+   * Seed admin au démarrage (users/seeds/admin.seed.ts, UsersService).
+   * Variables : ADMIN_EMAIL, ADMIN_PASSWORD, ADMIN_NOM, ADMIN_PRENOM (.env.example).
    */
   adminSeed: {
     // Pas de valeur par défaut : si vide, le seed ne crée rien (sécurité + pas de compte surprise).
