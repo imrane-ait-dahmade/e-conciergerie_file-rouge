@@ -137,6 +137,9 @@ export type CommonDictionary = {
     locationReferential: string;
     placeholderLead: string;
     users: string;
+    etablissements: string;
+    /** Services du catalogue assignés à un établissement */
+    etablissementServices: string;
     reservations: string;
     services: string;
     settings: string;
@@ -186,6 +189,205 @@ export type CommonDictionary = {
       modify: string;
       delete: string;
     };
+  };
+  /** Utilisateurs — `/[locale]/admin/users` */
+  adminUsers: {
+    pageTitle: string;
+    pageDescription: string;
+    searchPlaceholder: string;
+    addUser: string;
+    colNom: string;
+    colPrenom: string;
+    colEmail: string;
+    colRole: string;
+    colStatut: string;
+    colDateCreation: string;
+    colActions: string;
+    statutActive: string;
+    statutInactive: string;
+    actionEdit: string;
+    actionDelete: string;
+    deleteConfirmTitle: string;
+    deleteConfirmDescription: string;
+    deleteConfirmOk: string;
+    deleteConfirmCancel: string;
+    deleteSuccess: string;
+    statusUpdated: string;
+    formCreateTitle: string;
+    formEditTitle: string;
+    formNom: string;
+    formPrenom: string;
+    formEmail: string;
+    formPassword: string;
+    formPasswordEditHint: string;
+    /** Règles affichées à la création (complexité mot de passe API). */
+    formPasswordRules: string;
+    formRole: string;
+    formTelephone: string;
+    formAdresse: string;
+    formCancel: string;
+    formSave: string;
+    roleClient: string;
+    rolePrestataire: string;
+    roleAdmin: string;
+    loadError: string;
+    retry: string;
+    empty: string;
+    loading: string;
+  };
+  /** Établissements — `/[locale]/admin/etablissements` */
+  adminEtablissements: {
+    pageTitle: string;
+    pageDescription: string;
+    searchPlaceholder: string;
+    addEtablissement: string;
+    colNom: string;
+    colOwner: string;
+    colVille: string;
+    colQuartier: string;
+    colStatut: string;
+    colDateCreation: string;
+    colActions: string;
+    statutActive: string;
+    statutInactive: string;
+    actionEdit: string;
+    actionDelete: string;
+    deleteConfirmTitle: string;
+    deleteConfirmDescription: string;
+    deleteConfirmOk: string;
+    deleteConfirmCancel: string;
+    deleteSuccess: string;
+    statusUpdated: string;
+    formCreateTitle: string;
+    formEditTitle: string;
+    formNom: string;
+    formDescription: string;
+    formPrestataire: string;
+    formVille: string;
+    formQuartier: string;
+    formQuartierNeedVille: string;
+    formTelephone: string;
+    formEmail: string;
+    formAdresse: string;
+    formIsActive: string;
+    formCancel: string;
+    formSave: string;
+    selectPlaceholder: string;
+    loadError: string;
+    retry: string;
+    empty: string;
+    loading: string;
+    /** Si la liste des prestataires est vide. */
+    noPrestataireAccounts: string;
+  };
+  /** Assignations catalogue ↔ établissements — `/[locale]/admin/etablissement-services` */
+  adminEtablissementServices: {
+    pageTitle: string;
+    pageDescription: string;
+    searchPlaceholder: string;
+    addAssignment: string;
+    colEtablissement: string;
+    colService: string;
+    colDomaine: string;
+    colStatut: string;
+    colPrix: string;
+    colCommentaire: string;
+    colDateCreation: string;
+    colActions: string;
+    statutActive: string;
+    statutInactive: string;
+    actionEdit: string;
+    actionDelete: string;
+    deleteConfirmTitle: string;
+    deleteConfirmDescription: string;
+    deleteConfirmOk: string;
+    deleteConfirmCancel: string;
+    deleteSuccess: string;
+    formCreateTitle: string;
+    formEditTitle: string;
+    formEtablissement: string;
+    formService: string;
+    formPrix: string;
+    formCommentaire: string;
+    formCancel: string;
+    formSave: string;
+    selectPlaceholder: string;
+    serviceOptionDisabled: string;
+    prixPlaceholder: string;
+    commentairePlaceholder: string;
+    prixInvalid: string;
+    saveSuccess: string;
+    editHint: string;
+    loadError: string;
+    loading: string;
+    empty: string;
+    loadErrorOptions: string;
+  };
+  /** Catalogue offres — `/[locale]/admin/services` */
+  adminServicesCatalog: {
+    pageTitle: string;
+    pageSubtitle: string;
+    mockNote: string;
+    tabDomaines: string;
+    tabServices: string;
+    tabCaracteristiques: string;
+    domainesCardTitle: string;
+    domainesCardDescription: string;
+    servicesCardTitle: string;
+    servicesCardDescription: string;
+    caracteristiquesCardTitle: string;
+    caracteristiquesCardDescription: string;
+    colNom: string;
+    colDescription: string;
+    colLibelle: string;
+    colValeur: string;
+    colEtablissement: string;
+    colDomaine: string;
+    colLinked: string;
+    domainesSearchPlaceholder: string;
+    domainesAddButton: string;
+    colStatut: string;
+    colDateCreation: string;
+    colActions: string;
+    statutActive: string;
+    statutInactive: string;
+    actionEdit: string;
+    actionDelete: string;
+    domainesMockEditMessage: string;
+    domainesMockDeleteConfirm: string;
+    domainesToolbarFilter: string;
+    domainesEmpty: string;
+    servicesSearchPlaceholder: string;
+    servicesAddButton: string;
+    servicesMockEditMessage: string;
+    servicesMockDeleteConfirm: string;
+    servicesToolbarFilter: string;
+    servicesEmpty: string;
+    colType: string;
+    caracteristiqueTypeService: string;
+    caracteristiqueTypeEstablishment: string;
+    caracteristiqueTypeGeneral: string;
+    caracteristiquesSearchPlaceholder: string;
+    caracteristiquesAddButton: string;
+    caracteristiquesMockEditMessage: string;
+    caracteristiquesMockDeleteConfirm: string;
+    caracteristiquesToolbarFilter: string;
+    caracteristiquesEmpty: string;
+    deleteConfirmTitle: string;
+    deleteConfirmDescription: string;
+    deleteConfirmOk: string;
+    deleteConfirmCancel: string;
+    loadingList: string;
+    loadErrorList: string;
+    formCancel: string;
+    formSave: string;
+    selectPlaceholder: string;
+    domaineModalCreate: string;
+    domaineModalEdit: string;
+    serviceModalCreate: string;
+    serviceModalEdit: string;
+    caracteristiqueModalCreate: string;
+    caracteristiqueModalEdit: string;
   };
   /** Statistiques & graphiques — `/[locale]/dashboard` */
   dashboardStats: {
@@ -362,6 +564,8 @@ const DEFAULT_COMMON_DICTIONARY: CommonDictionary = {
     locationReferential: "Places & areas",
     placeholderLead: "This section will be available soon.",
     users: "Users",
+    etablissements: "Establishments",
+    etablissementServices: "Establishment services",
     reservations: "Bookings",
     services: "Services",
     settings: "Settings",
@@ -410,6 +614,200 @@ const DEFAULT_COMMON_DICTIONARY: CommonDictionary = {
       modify: "Edit",
       delete: "Delete",
     },
+  },
+  adminUsers: {
+    pageTitle: "Users",
+    pageDescription: "Manage accounts, roles, and access.",
+    searchPlaceholder: "Search by name or email…",
+    addUser: "Add user",
+    colNom: "Last name",
+    colPrenom: "First name",
+    colEmail: "Email",
+    colRole: "Role",
+    colStatut: "Status",
+    colDateCreation: "Created",
+    colActions: "Actions",
+    statutActive: "Active",
+    statutInactive: "Inactive",
+    actionEdit: "Edit",
+    actionDelete: "Delete",
+    deleteConfirmTitle: "Delete this user?",
+    deleteConfirmDescription: "This cannot be undone if the server allows deletion.",
+    deleteConfirmOk: "Delete",
+    deleteConfirmCancel: "Cancel",
+    deleteSuccess: "User deleted.",
+    statusUpdated: "Status updated.",
+    formCreateTitle: "Add user",
+    formEditTitle: "Edit user",
+    formNom: "Last name",
+    formPrenom: "First name",
+    formEmail: "Email",
+    formPassword: "Password",
+    formPasswordEditHint: "Leave blank to keep the current password.",
+    formPasswordRules:
+      "At least 8 characters, with uppercase, lowercase, number, and special character (API rules).",
+    formRole: "Role",
+    formTelephone: "Phone",
+    formAdresse: "Address",
+    formCancel: "Cancel",
+    formSave: "Save",
+    roleClient: "Client",
+    rolePrestataire: "Provider",
+    roleAdmin: "Administrator",
+    loadError: "Could not load users.",
+    retry: "Retry",
+    empty: "No users match your search.",
+    loading: "Loading users…",
+  },
+  adminEtablissements: {
+    pageTitle: "Establishments",
+    pageDescription: "Manage places, owners, and visibility.",
+    searchPlaceholder: "Search by name, city, owner…",
+    addEtablissement: "Add establishment",
+    colNom: "Name",
+    colOwner: "Owner (provider)",
+    colVille: "City",
+    colQuartier: "District",
+    colStatut: "Status",
+    colDateCreation: "Created",
+    colActions: "Actions",
+    statutActive: "Visible",
+    statutInactive: "Hidden",
+    actionEdit: "Edit",
+    actionDelete: "Delete",
+    deleteConfirmTitle: "Delete this establishment?",
+    deleteConfirmDescription: "Only allowed if no bookings or linked data exist.",
+    deleteConfirmOk: "Delete",
+    deleteConfirmCancel: "Cancel",
+    deleteSuccess: "Establishment deleted.",
+    statusUpdated: "Status updated.",
+    formCreateTitle: "Add establishment",
+    formEditTitle: "Edit establishment",
+    formNom: "Name",
+    formDescription: "Description",
+    formPrestataire: "Owner (provider account)",
+    formVille: "City",
+    formQuartier: "District",
+    formQuartierNeedVille: "Choose a city first to filter districts.",
+    formTelephone: "Phone",
+    formEmail: "Email",
+    formAdresse: "Address",
+    formIsActive: "Visible on the site",
+    formCancel: "Cancel",
+    formSave: "Save",
+    selectPlaceholder: "Select…",
+    loadError: "Could not load establishments.",
+    retry: "Retry",
+    empty: "No establishments match your search.",
+    loading: "Loading establishments…",
+    noPrestataireAccounts: "No provider accounts yet. Create one under Users.",
+  },
+  adminEtablissementServices: {
+    pageTitle: "Establishment services",
+    pageDescription: "Assign catalog services to establishments (price and notes per link).",
+    searchPlaceholder: "Search by establishment, service, domain…",
+    addAssignment: "Add assignment",
+    colEtablissement: "Establishment",
+    colService: "Service",
+    colDomaine: "Domain",
+    colStatut: "Status",
+    colPrix: "Price",
+    colCommentaire: "Comment",
+    colDateCreation: "Created",
+    colActions: "Actions",
+    statutActive: "Visible",
+    statutInactive: "Hidden",
+    actionEdit: "Edit",
+    actionDelete: "Delete",
+    deleteConfirmTitle: "Remove this assignment?",
+    deleteConfirmDescription: "The catalog service will no longer be offered for this establishment.",
+    deleteConfirmOk: "Delete",
+    deleteConfirmCancel: "Cancel",
+    deleteSuccess: "Assignment removed.",
+    formCreateTitle: "Assign a catalog service",
+    formEditTitle: "Edit assignment",
+    formEtablissement: "Establishment",
+    formService: "Catalog service",
+    formPrix: "Price (optional)",
+    formCommentaire: "Comment (optional)",
+    formCancel: "Cancel",
+    formSave: "Save",
+    selectPlaceholder: "Select…",
+    serviceOptionDisabled: "Already assigned for this establishment",
+    prixPlaceholder: "e.g. 150",
+    commentairePlaceholder: "Internal note or conditions…",
+    prixInvalid: "Enter a valid positive number.",
+    saveSuccess: "Saved.",
+    editHint: "Only price and comment can be changed. To change establishment or service, remove and create a new assignment.",
+    loadError: "Could not load assignments.",
+    loading: "Loading…",
+    empty: "No assignments match your search.",
+    loadErrorOptions: "Could not load establishments or catalog services.",
+  },
+  adminServicesCatalog: {
+    pageTitle: "Service catalog",
+    pageSubtitle: "Manage activity domains, establishment services, and their characteristics.",
+    mockNote: "",
+    tabDomaines: "Domains",
+    tabServices: "Services",
+    tabCaracteristiques: "Characteristics",
+    domainesCardTitle: "Domains",
+    domainesCardDescription: "Sectors and activity types (e.g. lodging, dining).",
+    servicesCardTitle: "Services",
+    servicesCardDescription: "Offers linked to an establishment and a domain.",
+    caracteristiquesCardTitle: "Characteristics",
+    caracteristiquesCardDescription: "Descriptive labels, optionally linked to a service type.",
+    colNom: "Name",
+    colDescription: "Description",
+    colLibelle: "Label",
+    colValeur: "Value",
+    colEtablissement: "Establishment",
+    colDomaine: "Domain",
+    colLinked: "Linked to",
+    domainesSearchPlaceholder: "Search domains…",
+    domainesAddButton: "Add domain",
+    colStatut: "Status",
+    colDateCreation: "Created",
+    colActions: "Actions",
+    statutActive: "Active",
+    statutInactive: "Inactive",
+    actionEdit: "Edit",
+    actionDelete: "Delete",
+    domainesMockEditMessage: "Demo only — hook up the form later.",
+    domainesMockDeleteConfirm: "Remove this row from the demo list?",
+    domainesToolbarFilter: "Filters",
+    domainesEmpty: "No results.",
+    servicesSearchPlaceholder: "Search services…",
+    servicesAddButton: "Add service",
+    servicesMockEditMessage: "Demo only — hook up the form later.",
+    servicesMockDeleteConfirm: "Remove this row from the demo list?",
+    servicesToolbarFilter: "Filters",
+    servicesEmpty: "No results.",
+    colType: "Type",
+    caracteristiqueTypeService: "Service",
+    caracteristiqueTypeEstablishment: "Establishment",
+    caracteristiqueTypeGeneral: "General",
+    caracteristiquesSearchPlaceholder: "Search characteristics…",
+    caracteristiquesAddButton: "Add characteristic",
+    caracteristiquesMockEditMessage: "Demo only — hook up the form later.",
+    caracteristiquesMockDeleteConfirm: "Remove this row from the demo list?",
+    caracteristiquesToolbarFilter: "Filters",
+    caracteristiquesEmpty: "No results.",
+    deleteConfirmTitle: "Confirm deletion?",
+    deleteConfirmDescription: "This cannot be undone. ",
+    deleteConfirmOk: "Delete",
+    deleteConfirmCancel: "Cancel",
+    loadingList: "Loading…",
+    loadErrorList: "Could not load data.",
+    formCancel: "Cancel",
+    formSave: "Save",
+    selectPlaceholder: "Select…",
+    domaineModalCreate: "Add domain",
+    domaineModalEdit: "Edit domain",
+    serviceModalCreate: "Add service",
+    serviceModalEdit: "Edit service",
+    caracteristiqueModalCreate: "Add characteristic",
+    caracteristiqueModalEdit: "Edit characteristic",
   },
   dashboardStats: {
     pageIntro: "You're signed in. Below is a snapshot of your activity.",
@@ -487,6 +885,10 @@ function normalizeDictionary(value: unknown): CommonDictionary {
   const dashboardSidebar = asRecord(root.dashboardSidebar);
   const adminSidebar = asRecord(root.adminSidebar);
   const adminGeographie = asRecord(root.adminGeographie);
+  const adminUsers = asRecord(root.adminUsers);
+  const adminEtablissements = asRecord(root.adminEtablissements);
+  const adminEtablissementServices = asRecord(root.adminEtablissementServices);
+  const adminServicesCatalog = asRecord(root.adminServicesCatalog);
   const geographieToolbar = asRecord(adminGeographie.toolbar);
   const paysColumns = asRecord(adminGeographie.paysColumns);
   const villesColumns = asRecord(adminGeographie.villesColumns);
@@ -836,6 +1238,14 @@ function normalizeDictionary(value: unknown): CommonDictionary {
         DEFAULT_COMMON_DICTIONARY.adminSidebar.placeholderLead
       ),
       users: asString(adminSidebar.users, DEFAULT_COMMON_DICTIONARY.adminSidebar.users),
+      etablissements: asString(
+        adminSidebar.etablissements,
+        DEFAULT_COMMON_DICTIONARY.adminSidebar.etablissements
+      ),
+      etablissementServices: asString(
+        adminSidebar.etablissementServices,
+        DEFAULT_COMMON_DICTIONARY.adminSidebar.etablissementServices
+      ),
       reservations: asString(
         adminSidebar.reservations,
         DEFAULT_COMMON_DICTIONARY.adminSidebar.reservations
@@ -992,6 +1402,724 @@ function normalizeDictionary(value: unknown): CommonDictionary {
           DEFAULT_COMMON_DICTIONARY.adminGeographie.quartiersColumns.delete
         ),
       },
+    },
+    adminUsers: {
+      pageTitle: asString(
+        adminUsers.pageTitle,
+        DEFAULT_COMMON_DICTIONARY.adminUsers.pageTitle
+      ),
+      pageDescription: asString(
+        adminUsers.pageDescription,
+        DEFAULT_COMMON_DICTIONARY.adminUsers.pageDescription
+      ),
+      searchPlaceholder: asString(
+        adminUsers.searchPlaceholder,
+        DEFAULT_COMMON_DICTIONARY.adminUsers.searchPlaceholder
+      ),
+      addUser: asString(adminUsers.addUser, DEFAULT_COMMON_DICTIONARY.adminUsers.addUser),
+      colNom: asString(adminUsers.colNom, DEFAULT_COMMON_DICTIONARY.adminUsers.colNom),
+      colPrenom: asString(
+        adminUsers.colPrenom,
+        DEFAULT_COMMON_DICTIONARY.adminUsers.colPrenom
+      ),
+      colEmail: asString(adminUsers.colEmail, DEFAULT_COMMON_DICTIONARY.adminUsers.colEmail),
+      colRole: asString(adminUsers.colRole, DEFAULT_COMMON_DICTIONARY.adminUsers.colRole),
+      colStatut: asString(
+        adminUsers.colStatut,
+        DEFAULT_COMMON_DICTIONARY.adminUsers.colStatut
+      ),
+      colDateCreation: asString(
+        adminUsers.colDateCreation,
+        DEFAULT_COMMON_DICTIONARY.adminUsers.colDateCreation
+      ),
+      colActions: asString(
+        adminUsers.colActions,
+        DEFAULT_COMMON_DICTIONARY.adminUsers.colActions
+      ),
+      statutActive: asString(
+        adminUsers.statutActive,
+        DEFAULT_COMMON_DICTIONARY.adminUsers.statutActive
+      ),
+      statutInactive: asString(
+        adminUsers.statutInactive,
+        DEFAULT_COMMON_DICTIONARY.adminUsers.statutInactive
+      ),
+      actionEdit: asString(
+        adminUsers.actionEdit,
+        DEFAULT_COMMON_DICTIONARY.adminUsers.actionEdit
+      ),
+      actionDelete: asString(
+        adminUsers.actionDelete,
+        DEFAULT_COMMON_DICTIONARY.adminUsers.actionDelete
+      ),
+      deleteConfirmTitle: asString(
+        adminUsers.deleteConfirmTitle,
+        DEFAULT_COMMON_DICTIONARY.adminUsers.deleteConfirmTitle
+      ),
+      deleteConfirmDescription: asString(
+        adminUsers.deleteConfirmDescription,
+        DEFAULT_COMMON_DICTIONARY.adminUsers.deleteConfirmDescription
+      ),
+      deleteConfirmOk: asString(
+        adminUsers.deleteConfirmOk,
+        DEFAULT_COMMON_DICTIONARY.adminUsers.deleteConfirmOk
+      ),
+      deleteConfirmCancel: asString(
+        adminUsers.deleteConfirmCancel,
+        DEFAULT_COMMON_DICTIONARY.adminUsers.deleteConfirmCancel
+      ),
+      deleteSuccess: asString(
+        adminUsers.deleteSuccess,
+        DEFAULT_COMMON_DICTIONARY.adminUsers.deleteSuccess
+      ),
+      statusUpdated: asString(
+        adminUsers.statusUpdated,
+        DEFAULT_COMMON_DICTIONARY.adminUsers.statusUpdated
+      ),
+      formCreateTitle: asString(
+        adminUsers.formCreateTitle,
+        DEFAULT_COMMON_DICTIONARY.adminUsers.formCreateTitle
+      ),
+      formEditTitle: asString(
+        adminUsers.formEditTitle,
+        DEFAULT_COMMON_DICTIONARY.adminUsers.formEditTitle
+      ),
+      formNom: asString(adminUsers.formNom, DEFAULT_COMMON_DICTIONARY.adminUsers.formNom),
+      formPrenom: asString(
+        adminUsers.formPrenom,
+        DEFAULT_COMMON_DICTIONARY.adminUsers.formPrenom
+      ),
+      formEmail: asString(
+        adminUsers.formEmail,
+        DEFAULT_COMMON_DICTIONARY.adminUsers.formEmail
+      ),
+      formPassword: asString(
+        adminUsers.formPassword,
+        DEFAULT_COMMON_DICTIONARY.adminUsers.formPassword
+      ),
+      formPasswordEditHint: asString(
+        adminUsers.formPasswordEditHint,
+        DEFAULT_COMMON_DICTIONARY.adminUsers.formPasswordEditHint
+      ),
+      formPasswordRules: asString(
+        adminUsers.formPasswordRules,
+        DEFAULT_COMMON_DICTIONARY.adminUsers.formPasswordRules
+      ),
+      formRole: asString(adminUsers.formRole, DEFAULT_COMMON_DICTIONARY.adminUsers.formRole),
+      formTelephone: asString(
+        adminUsers.formTelephone,
+        DEFAULT_COMMON_DICTIONARY.adminUsers.formTelephone
+      ),
+      formAdresse: asString(
+        adminUsers.formAdresse,
+        DEFAULT_COMMON_DICTIONARY.adminUsers.formAdresse
+      ),
+      formCancel: asString(
+        adminUsers.formCancel,
+        DEFAULT_COMMON_DICTIONARY.adminUsers.formCancel
+      ),
+      formSave: asString(adminUsers.formSave, DEFAULT_COMMON_DICTIONARY.adminUsers.formSave),
+      roleClient: asString(
+        adminUsers.roleClient,
+        DEFAULT_COMMON_DICTIONARY.adminUsers.roleClient
+      ),
+      rolePrestataire: asString(
+        adminUsers.rolePrestataire,
+        DEFAULT_COMMON_DICTIONARY.adminUsers.rolePrestataire
+      ),
+      roleAdmin: asString(
+        adminUsers.roleAdmin,
+        DEFAULT_COMMON_DICTIONARY.adminUsers.roleAdmin
+      ),
+      loadError: asString(
+        adminUsers.loadError,
+        DEFAULT_COMMON_DICTIONARY.adminUsers.loadError
+      ),
+      retry: asString(adminUsers.retry, DEFAULT_COMMON_DICTIONARY.adminUsers.retry),
+      empty: asString(adminUsers.empty, DEFAULT_COMMON_DICTIONARY.adminUsers.empty),
+      loading: asString(adminUsers.loading, DEFAULT_COMMON_DICTIONARY.adminUsers.loading),
+    },
+    adminEtablissements: {
+      pageTitle: asString(
+        adminEtablissements.pageTitle,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissements.pageTitle
+      ),
+      pageDescription: asString(
+        adminEtablissements.pageDescription,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissements.pageDescription
+      ),
+      searchPlaceholder: asString(
+        adminEtablissements.searchPlaceholder,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissements.searchPlaceholder
+      ),
+      addEtablissement: asString(
+        adminEtablissements.addEtablissement,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissements.addEtablissement
+      ),
+      colNom: asString(
+        adminEtablissements.colNom,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissements.colNom
+      ),
+      colOwner: asString(
+        adminEtablissements.colOwner,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissements.colOwner
+      ),
+      colVille: asString(
+        adminEtablissements.colVille,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissements.colVille
+      ),
+      colQuartier: asString(
+        adminEtablissements.colQuartier,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissements.colQuartier
+      ),
+      colStatut: asString(
+        adminEtablissements.colStatut,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissements.colStatut
+      ),
+      colDateCreation: asString(
+        adminEtablissements.colDateCreation,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissements.colDateCreation
+      ),
+      colActions: asString(
+        adminEtablissements.colActions,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissements.colActions
+      ),
+      statutActive: asString(
+        adminEtablissements.statutActive,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissements.statutActive
+      ),
+      statutInactive: asString(
+        adminEtablissements.statutInactive,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissements.statutInactive
+      ),
+      actionEdit: asString(
+        adminEtablissements.actionEdit,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissements.actionEdit
+      ),
+      actionDelete: asString(
+        adminEtablissements.actionDelete,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissements.actionDelete
+      ),
+      deleteConfirmTitle: asString(
+        adminEtablissements.deleteConfirmTitle,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissements.deleteConfirmTitle
+      ),
+      deleteConfirmDescription: asString(
+        adminEtablissements.deleteConfirmDescription,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissements.deleteConfirmDescription
+      ),
+      deleteConfirmOk: asString(
+        adminEtablissements.deleteConfirmOk,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissements.deleteConfirmOk
+      ),
+      deleteConfirmCancel: asString(
+        adminEtablissements.deleteConfirmCancel,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissements.deleteConfirmCancel
+      ),
+      deleteSuccess: asString(
+        adminEtablissements.deleteSuccess,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissements.deleteSuccess
+      ),
+      statusUpdated: asString(
+        adminEtablissements.statusUpdated,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissements.statusUpdated
+      ),
+      formCreateTitle: asString(
+        adminEtablissements.formCreateTitle,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissements.formCreateTitle
+      ),
+      formEditTitle: asString(
+        adminEtablissements.formEditTitle,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissements.formEditTitle
+      ),
+      formNom: asString(
+        adminEtablissements.formNom,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissements.formNom
+      ),
+      formDescription: asString(
+        adminEtablissements.formDescription,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissements.formDescription
+      ),
+      formPrestataire: asString(
+        adminEtablissements.formPrestataire,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissements.formPrestataire
+      ),
+      formVille: asString(
+        adminEtablissements.formVille,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissements.formVille
+      ),
+      formQuartier: asString(
+        adminEtablissements.formQuartier,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissements.formQuartier
+      ),
+      formQuartierNeedVille: asString(
+        adminEtablissements.formQuartierNeedVille,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissements.formQuartierNeedVille
+      ),
+      formTelephone: asString(
+        adminEtablissements.formTelephone,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissements.formTelephone
+      ),
+      formEmail: asString(
+        adminEtablissements.formEmail,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissements.formEmail
+      ),
+      formAdresse: asString(
+        adminEtablissements.formAdresse,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissements.formAdresse
+      ),
+      formIsActive: asString(
+        adminEtablissements.formIsActive,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissements.formIsActive
+      ),
+      formCancel: asString(
+        adminEtablissements.formCancel,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissements.formCancel
+      ),
+      formSave: asString(
+        adminEtablissements.formSave,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissements.formSave
+      ),
+      selectPlaceholder: asString(
+        adminEtablissements.selectPlaceholder,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissements.selectPlaceholder
+      ),
+      loadError: asString(
+        adminEtablissements.loadError,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissements.loadError
+      ),
+      retry: asString(
+        adminEtablissements.retry,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissements.retry
+      ),
+      empty: asString(
+        adminEtablissements.empty,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissements.empty
+      ),
+      loading: asString(
+        adminEtablissements.loading,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissements.loading
+      ),
+      noPrestataireAccounts: asString(
+        adminEtablissements.noPrestataireAccounts,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissements.noPrestataireAccounts
+      ),
+    },
+    adminEtablissementServices: {
+      pageTitle: asString(
+        adminEtablissementServices.pageTitle,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissementServices.pageTitle
+      ),
+      pageDescription: asString(
+        adminEtablissementServices.pageDescription,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissementServices.pageDescription
+      ),
+      searchPlaceholder: asString(
+        adminEtablissementServices.searchPlaceholder,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissementServices.searchPlaceholder
+      ),
+      addAssignment: asString(
+        adminEtablissementServices.addAssignment,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissementServices.addAssignment
+      ),
+      colEtablissement: asString(
+        adminEtablissementServices.colEtablissement,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissementServices.colEtablissement
+      ),
+      colService: asString(
+        adminEtablissementServices.colService,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissementServices.colService
+      ),
+      colDomaine: asString(
+        adminEtablissementServices.colDomaine,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissementServices.colDomaine
+      ),
+      colStatut: asString(
+        adminEtablissementServices.colStatut,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissementServices.colStatut
+      ),
+      colPrix: asString(
+        adminEtablissementServices.colPrix,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissementServices.colPrix
+      ),
+      colCommentaire: asString(
+        adminEtablissementServices.colCommentaire,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissementServices.colCommentaire
+      ),
+      colDateCreation: asString(
+        adminEtablissementServices.colDateCreation,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissementServices.colDateCreation
+      ),
+      colActions: asString(
+        adminEtablissementServices.colActions,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissementServices.colActions
+      ),
+      statutActive: asString(
+        adminEtablissementServices.statutActive,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissementServices.statutActive
+      ),
+      statutInactive: asString(
+        adminEtablissementServices.statutInactive,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissementServices.statutInactive
+      ),
+      actionEdit: asString(
+        adminEtablissementServices.actionEdit,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissementServices.actionEdit
+      ),
+      actionDelete: asString(
+        adminEtablissementServices.actionDelete,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissementServices.actionDelete
+      ),
+      deleteConfirmTitle: asString(
+        adminEtablissementServices.deleteConfirmTitle,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissementServices.deleteConfirmTitle
+      ),
+      deleteConfirmDescription: asString(
+        adminEtablissementServices.deleteConfirmDescription,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissementServices.deleteConfirmDescription
+      ),
+      deleteConfirmOk: asString(
+        adminEtablissementServices.deleteConfirmOk,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissementServices.deleteConfirmOk
+      ),
+      deleteConfirmCancel: asString(
+        adminEtablissementServices.deleteConfirmCancel,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissementServices.deleteConfirmCancel
+      ),
+      deleteSuccess: asString(
+        adminEtablissementServices.deleteSuccess,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissementServices.deleteSuccess
+      ),
+      formCreateTitle: asString(
+        adminEtablissementServices.formCreateTitle,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissementServices.formCreateTitle
+      ),
+      formEditTitle: asString(
+        adminEtablissementServices.formEditTitle,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissementServices.formEditTitle
+      ),
+      formEtablissement: asString(
+        adminEtablissementServices.formEtablissement,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissementServices.formEtablissement
+      ),
+      formService: asString(
+        adminEtablissementServices.formService,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissementServices.formService
+      ),
+      formPrix: asString(
+        adminEtablissementServices.formPrix,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissementServices.formPrix
+      ),
+      formCommentaire: asString(
+        adminEtablissementServices.formCommentaire,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissementServices.formCommentaire
+      ),
+      formCancel: asString(
+        adminEtablissementServices.formCancel,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissementServices.formCancel
+      ),
+      formSave: asString(
+        adminEtablissementServices.formSave,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissementServices.formSave
+      ),
+      selectPlaceholder: asString(
+        adminEtablissementServices.selectPlaceholder,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissementServices.selectPlaceholder
+      ),
+      serviceOptionDisabled: asString(
+        adminEtablissementServices.serviceOptionDisabled,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissementServices.serviceOptionDisabled
+      ),
+      prixPlaceholder: asString(
+        adminEtablissementServices.prixPlaceholder,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissementServices.prixPlaceholder
+      ),
+      commentairePlaceholder: asString(
+        adminEtablissementServices.commentairePlaceholder,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissementServices.commentairePlaceholder
+      ),
+      prixInvalid: asString(
+        adminEtablissementServices.prixInvalid,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissementServices.prixInvalid
+      ),
+      saveSuccess: asString(
+        adminEtablissementServices.saveSuccess,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissementServices.saveSuccess
+      ),
+      editHint: asString(
+        adminEtablissementServices.editHint,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissementServices.editHint
+      ),
+      loadError: asString(
+        adminEtablissementServices.loadError,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissementServices.loadError
+      ),
+      loading: asString(
+        adminEtablissementServices.loading,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissementServices.loading
+      ),
+      empty: asString(
+        adminEtablissementServices.empty,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissementServices.empty
+      ),
+      loadErrorOptions: asString(
+        adminEtablissementServices.loadErrorOptions,
+        DEFAULT_COMMON_DICTIONARY.adminEtablissementServices.loadErrorOptions
+      ),
+    },
+    adminServicesCatalog: {
+      pageTitle: asString(
+        adminServicesCatalog.pageTitle,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.pageTitle
+      ),
+      pageSubtitle: asString(
+        adminServicesCatalog.pageSubtitle,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.pageSubtitle
+      ),
+      mockNote: asString(
+        adminServicesCatalog.mockNote,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.mockNote
+      ),
+      tabDomaines: asString(
+        adminServicesCatalog.tabDomaines,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.tabDomaines
+      ),
+      tabServices: asString(
+        adminServicesCatalog.tabServices,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.tabServices
+      ),
+      tabCaracteristiques: asString(
+        adminServicesCatalog.tabCaracteristiques,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.tabCaracteristiques
+      ),
+      domainesCardTitle: asString(
+        adminServicesCatalog.domainesCardTitle,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.domainesCardTitle
+      ),
+      domainesCardDescription: asString(
+        adminServicesCatalog.domainesCardDescription,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.domainesCardDescription
+      ),
+      servicesCardTitle: asString(
+        adminServicesCatalog.servicesCardTitle,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.servicesCardTitle
+      ),
+      servicesCardDescription: asString(
+        adminServicesCatalog.servicesCardDescription,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.servicesCardDescription
+      ),
+      caracteristiquesCardTitle: asString(
+        adminServicesCatalog.caracteristiquesCardTitle,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.caracteristiquesCardTitle
+      ),
+      caracteristiquesCardDescription: asString(
+        adminServicesCatalog.caracteristiquesCardDescription,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.caracteristiquesCardDescription
+      ),
+      colNom: asString(
+        adminServicesCatalog.colNom,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.colNom
+      ),
+      colDescription: asString(
+        adminServicesCatalog.colDescription,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.colDescription
+      ),
+      colLibelle: asString(
+        adminServicesCatalog.colLibelle,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.colLibelle
+      ),
+      colValeur: asString(
+        adminServicesCatalog.colValeur,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.colValeur
+      ),
+      colEtablissement: asString(
+        adminServicesCatalog.colEtablissement,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.colEtablissement
+      ),
+      colDomaine: asString(
+        adminServicesCatalog.colDomaine,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.colDomaine
+      ),
+      colLinked: asString(
+        adminServicesCatalog.colLinked,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.colLinked
+      ),
+      domainesSearchPlaceholder: asString(
+        adminServicesCatalog.domainesSearchPlaceholder,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.domainesSearchPlaceholder
+      ),
+      domainesAddButton: asString(
+        adminServicesCatalog.domainesAddButton,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.domainesAddButton
+      ),
+      colStatut: asString(
+        adminServicesCatalog.colStatut,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.colStatut
+      ),
+      colDateCreation: asString(
+        adminServicesCatalog.colDateCreation,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.colDateCreation
+      ),
+      colActions: asString(
+        adminServicesCatalog.colActions,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.colActions
+      ),
+      statutActive: asString(
+        adminServicesCatalog.statutActive,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.statutActive
+      ),
+      statutInactive: asString(
+        adminServicesCatalog.statutInactive,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.statutInactive
+      ),
+      actionEdit: asString(
+        adminServicesCatalog.actionEdit,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.actionEdit
+      ),
+      actionDelete: asString(
+        adminServicesCatalog.actionDelete,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.actionDelete
+      ),
+      domainesMockEditMessage: asString(
+        adminServicesCatalog.domainesMockEditMessage,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.domainesMockEditMessage
+      ),
+      domainesMockDeleteConfirm: asString(
+        adminServicesCatalog.domainesMockDeleteConfirm,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.domainesMockDeleteConfirm
+      ),
+      domainesToolbarFilter: asString(
+        adminServicesCatalog.domainesToolbarFilter,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.domainesToolbarFilter
+      ),
+      domainesEmpty: asString(
+        adminServicesCatalog.domainesEmpty,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.domainesEmpty
+      ),
+      servicesSearchPlaceholder: asString(
+        adminServicesCatalog.servicesSearchPlaceholder,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.servicesSearchPlaceholder
+      ),
+      servicesAddButton: asString(
+        adminServicesCatalog.servicesAddButton,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.servicesAddButton
+      ),
+      servicesMockEditMessage: asString(
+        adminServicesCatalog.servicesMockEditMessage,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.servicesMockEditMessage
+      ),
+      servicesMockDeleteConfirm: asString(
+        adminServicesCatalog.servicesMockDeleteConfirm,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.servicesMockDeleteConfirm
+      ),
+      servicesToolbarFilter: asString(
+        adminServicesCatalog.servicesToolbarFilter,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.servicesToolbarFilter
+      ),
+      servicesEmpty: asString(
+        adminServicesCatalog.servicesEmpty,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.servicesEmpty
+      ),
+      colType: asString(
+        adminServicesCatalog.colType,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.colType
+      ),
+      caracteristiqueTypeService: asString(
+        adminServicesCatalog.caracteristiqueTypeService,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.caracteristiqueTypeService
+      ),
+      caracteristiqueTypeEstablishment: asString(
+        adminServicesCatalog.caracteristiqueTypeEstablishment,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.caracteristiqueTypeEstablishment
+      ),
+      caracteristiqueTypeGeneral: asString(
+        adminServicesCatalog.caracteristiqueTypeGeneral,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.caracteristiqueTypeGeneral
+      ),
+      caracteristiquesSearchPlaceholder: asString(
+        adminServicesCatalog.caracteristiquesSearchPlaceholder,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.caracteristiquesSearchPlaceholder
+      ),
+      caracteristiquesAddButton: asString(
+        adminServicesCatalog.caracteristiquesAddButton,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.caracteristiquesAddButton
+      ),
+      caracteristiquesMockEditMessage: asString(
+        adminServicesCatalog.caracteristiquesMockEditMessage,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.caracteristiquesMockEditMessage
+      ),
+      caracteristiquesMockDeleteConfirm: asString(
+        adminServicesCatalog.caracteristiquesMockDeleteConfirm,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.caracteristiquesMockDeleteConfirm
+      ),
+      caracteristiquesToolbarFilter: asString(
+        adminServicesCatalog.caracteristiquesToolbarFilter,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.caracteristiquesToolbarFilter
+      ),
+      caracteristiquesEmpty: asString(
+        adminServicesCatalog.caracteristiquesEmpty,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.caracteristiquesEmpty
+      ),
+      deleteConfirmTitle: asString(
+        adminServicesCatalog.deleteConfirmTitle,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.deleteConfirmTitle
+      ),
+      deleteConfirmDescription: asString(
+        adminServicesCatalog.deleteConfirmDescription,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.deleteConfirmDescription
+      ),
+      deleteConfirmOk: asString(
+        adminServicesCatalog.deleteConfirmOk,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.deleteConfirmOk
+      ),
+      deleteConfirmCancel: asString(
+        adminServicesCatalog.deleteConfirmCancel,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.deleteConfirmCancel
+      ),
+      loadingList: asString(
+        adminServicesCatalog.loadingList,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.loadingList
+      ),
+      loadErrorList: asString(
+        adminServicesCatalog.loadErrorList,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.loadErrorList
+      ),
+      formCancel: asString(
+        adminServicesCatalog.formCancel,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.formCancel
+      ),
+      formSave: asString(
+        adminServicesCatalog.formSave,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.formSave
+      ),
+      selectPlaceholder: asString(
+        adminServicesCatalog.selectPlaceholder,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.selectPlaceholder
+      ),
+      domaineModalCreate: asString(
+        adminServicesCatalog.domaineModalCreate,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.domaineModalCreate
+      ),
+      domaineModalEdit: asString(
+        adminServicesCatalog.domaineModalEdit,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.domaineModalEdit
+      ),
+      serviceModalCreate: asString(
+        adminServicesCatalog.serviceModalCreate,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.serviceModalCreate
+      ),
+      serviceModalEdit: asString(
+        adminServicesCatalog.serviceModalEdit,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.serviceModalEdit
+      ),
+      caracteristiqueModalCreate: asString(
+        adminServicesCatalog.caracteristiqueModalCreate,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.caracteristiqueModalCreate
+      ),
+      caracteristiqueModalEdit: asString(
+        adminServicesCatalog.caracteristiqueModalEdit,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.caracteristiqueModalEdit
+      ),
     },
     dashboardStats: {
       pageIntro: asString(

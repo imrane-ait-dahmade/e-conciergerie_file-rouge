@@ -8,23 +8,19 @@ import {
 } from 'class-validator';
 
 export class CreateServiceDto {
-  @ApiProperty({ example: 'Chambre double' })
+  @ApiProperty({ example: 'Hôtelier' })
   @IsNotEmpty({ message: 'Le nom est requis' })
   @IsString()
   @MaxLength(200)
   nom: string;
 
-  @ApiPropertyOptional({ example: 'Vue mer, petit-déjeuner inclus' })
+  @ApiPropertyOptional({ example: 'Offres liées aux hôtels et résidences hôtelières' })
   @IsOptional()
   @IsString()
   @MaxLength(2000)
   description?: string;
 
-  @ApiProperty({ description: 'ObjectId de l’établissement' })
-  @IsMongoId({ message: 'Identifiant établissement invalide' })
-  etablissement: string;
-
-  @ApiProperty({ description: 'ObjectId du domaine (doit exister en base)' })
+  @ApiProperty({ description: 'ObjectId du domaine (ex. hébergement, restauration)' })
   @IsMongoId({ message: 'Identifiant domaine invalide' })
   domaine: string;
 }

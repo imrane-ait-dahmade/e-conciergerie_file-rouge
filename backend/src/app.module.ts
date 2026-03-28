@@ -18,6 +18,7 @@ import { UploadsModule } from './uploads/uploads.module';
 import { DomaineModule } from './domaines/domaine.module';
 import { ServiceModule } from './services/service.module';
 import { CaracteristiqueModule } from './caracteristiques/caracteristique.module';
+import { EtablissementServicesModule } from './etablissement-services/etablissement-services.module';
 import { Favori, FavoriSchema } from './favoris/schemas/favori.schema';
 import { Avis, AvisSchema } from './avis/schemas/avis.schema';
 import { Reservation, ReservationSchema } from './reservations/schemas/reservation.schema';
@@ -27,10 +28,6 @@ import { Media, MediaSchema } from './media/schemas/media.schema';
 import { Admin, AdminSchema } from './admins/schemas/admin.schema';
 import { Prestataire, PrestataireSchema } from './prestataires/schemas/prestataire.schema';
 import { Voyageur, VoyageurSchema } from './voyageurs/schemas/voyageur.schema';
-import {
-  EtablissementService,
-  EtablissementServiceSchema,
-} from './etablissement-services/schemas/etablissement-service.schema';
 import {
   EtablissementServiceCaracteristique,
   EtablissementServiceCaracteristiqueSchema,
@@ -80,7 +77,6 @@ import {
       { name: Admin.name, schema: AdminSchema },
       { name: Prestataire.name, schema: PrestataireSchema },
       { name: Voyageur.name, schema: VoyageurSchema },
-      { name: EtablissementService.name, schema: EtablissementServiceSchema },
       {
         name: EtablissementServiceCaracteristique.name,
         schema: EtablissementServiceCaracteristiqueSchema,
@@ -93,6 +89,7 @@ import {
     AuthModule,
     MailModule,
     EtablissementsModule,
+    EtablissementServicesModule,
     PaysModule,
     VillesModule,
     QuartiersModule,

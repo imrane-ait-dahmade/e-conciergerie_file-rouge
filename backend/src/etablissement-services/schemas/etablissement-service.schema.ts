@@ -1,9 +1,7 @@
 /**
- * Liaison établissement ↔ service (UML : table etablissement_service).
- * Sert à stocker des infos de pivot (ex. tarif) pour la paire.
- *
- * Le modèle Service a déjà un champ etablissement : la même paire doit rester cohérente
- * (même établissement sur le Service que sur cette ligne).
+ * Liaison établissement ↔ type de service (réf. Service).
+ * Le modèle `Service` décrit un type de prestation rattaché à un domaine (ex. hébergement) ;
+ * cette table relie un établissement concret à ce type (tarif, commentaire, etc.).
  * Collection : etablissement_services.
  */
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
@@ -29,3 +27,9 @@ export class EtablissementService {
 
 export const EtablissementServiceSchema =
   SchemaFactory.createForClass(EtablissementService);
+
+/** Un même type de service (catalogue) ne peut être assigné qu’une fois par établissement. */
+EtablissementServiceSchema.index(
+  { etablissement: 1, service: 1 },
+  { unique: true },
+);

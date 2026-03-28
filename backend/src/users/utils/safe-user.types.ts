@@ -20,3 +20,14 @@ export type SafeUserResponse = {
   createdAt?: Date;
   updatedAt?: Date;
 };
+
+/** Profil métier lié au rôle (collections voyageurs / prestataires / admins). */
+export type RoleProfileDto =
+  | { type: 'client'; preferences?: string }
+  | { type: 'prestataire'; raisonSociale?: string; siret?: string }
+  | { type: 'admin'; notes?: string };
+
+/** Détail admin : utilisateur sûr + profil de rôle si présent. */
+export type AdminUserDetailResponse = SafeUserResponse & {
+  profile: RoleProfileDto | null;
+};

@@ -67,8 +67,7 @@ export function LoginForm({ locale, signupHref, copy }: LoginFormProps) {
       const data = await login({ email, password });
       // Jeton JWT pour les prochains appels API (solution provisoire)
       saveAccessToken(data.accessToken);
-      // Tableau de bord (voir `lib/auth-navigation.ts` pour cibler `/admin` à la place)
-      router.replace(getPostLoginHref(locale));
+      router.replace(getPostLoginHref(locale, data.user));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erreur de connexion");
     } finally {

@@ -1,5 +1,6 @@
 /**
- * Service : prestation proposée par un établissement. Collection : services.
+ * Service : type de prestation rattaché à un domaine métier (ex. domaine « Hébergement »
+ * → services « Hôtelier », « Location courte durée », etc.). Collection : services.
  */
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
@@ -12,13 +13,9 @@ export class Service {
   @Prop({ required: false, trim: true })
   description?: string;
 
-  /** Établissement qui propose ce service. */
-  @Prop({ type: Types.ObjectId, ref: 'Etablissement', required: true })
-  etablissement: Types.ObjectId;
-
-  /** Secteur métier (domaine) — optionnel en base pour compatibilité ; requis à la création via l’API. */
-  @Prop({ type: Types.ObjectId, ref: 'Domaine', required: false })
-  domaine?: Types.ObjectId;
+  /** Secteur métier (ex. hébergement, restauration). */
+  @Prop({ type: Types.ObjectId, ref: 'Domaine', required: true })
+  domaine: Types.ObjectId;
 }
 
 export const ServiceSchema = SchemaFactory.createForClass(Service);

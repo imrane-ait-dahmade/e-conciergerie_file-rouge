@@ -10,6 +10,8 @@ import {
   DashboardOutlined,
   EnvironmentOutlined,
   TeamOutlined,
+  ShopOutlined,
+  LinkOutlined,
   CalendarOutlined,
   AppstoreOutlined,
   SettingOutlined,
@@ -31,6 +33,8 @@ export type AdminSidebarLabels = {
   dashboard: string;
   locationReferential: string;
   users: string;
+  etablissements: string;
+  etablissementServices: string;
   reservations: string;
   services: string;
   settings: string;
@@ -130,6 +134,18 @@ export function AdminSidebar({
           access.canViewUsers,
         ),
         createMenuItem(
+          `${base}/etablissements`,
+          labels.etablissements,
+          <ShopOutlined />,
+          access.canViewEtablissements,
+        ),
+        createMenuItem(
+          `${base}/etablissement-services`,
+          labels.etablissementServices,
+          <LinkOutlined />,
+          access.canViewEtablissementServices,
+        ),
+        createMenuItem(
           `${base}/reservations`,
           labels.reservations,
           <CalendarOutlined />,
@@ -162,6 +178,7 @@ export function AdminSidebar({
   }, [
     access.canViewDashboard,
     access.canViewLocation,
+    access.canViewEtablissements,
     access.canViewReservations,
     access.canViewServices,
     access.canViewSettings,
@@ -169,6 +186,8 @@ export function AdminSidebar({
     base,
     labels.dashboard,
     labels.locationReferential,
+    labels.etablissements,
+    labels.etablissementServices,
     labels.reservations,
     labels.sectionGeneral,
     labels.sectionLocation,

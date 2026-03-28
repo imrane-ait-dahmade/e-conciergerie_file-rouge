@@ -6,22 +6,16 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { DomaineService } from '../domaines/domaine.service';
-import { Etablissement } from '../etablissements/schemas/etablissement.schema';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
 import { Service } from './schemas/service.schema';
 
-const populatePaths = [
-  { path: 'domaine', select: 'nom description' },
-  { path: 'etablissement', select: 'nom adresse' },
-] as const;
+const populatePaths = [{ path: 'domaine', select: 'nom description' }] as const;
 
 @Injectable()
 export class ServiceService {
   constructor(
     @InjectModel(Service.name) private serviceModel: Model<Service>,
-    @InjectModel(Etablissement.name)
-    private etablissementModel: Model<Etablissement>,
     private domaineService: DomaineService,
   ) {}
 
@@ -31,28 +25,17 @@ export class ServiceService {
     }
   }
 
-  /** Vérifie que l’établissement existe. */
-  private async assertEtablissementExists(id: string): Promise<void> {
-    this.assertValidObjectId(id);
-    const doc = await this.etablissementModel.findById(id).lean().exec();
-    if (!doc) {
-      throw new NotFoundException(`Établissement introuvable (id: ${id})`);
-    }
-  }
-
   /** Vérifie que le domaine existe (réutilise le CRUD Domaine). */
   private async assertDomaineExists(id: string): Promise<void> {
     await this.domaineService.findOne(id);
   }
 
   async create(dto: CreateServiceDto) {
-    await this.assertEtablissementExists(dto.etablissement);
     await this.assertDomaineExists(dto.domaine);
 
     return this.serviceModel.create({
       nom: dto.nom.trim(),
       ...(dto.description !== undefined && { description: dto.description.trim() }),
-      etablissement: new Types.ObjectId(dto.etablissement),
       domaine: new Types.ObjectId(dto.domaine),
     });
   }
@@ -81,9 +64,6 @@ export class ServiceService {
 
   async update(id: string, dto: UpdateServiceDto) {
     await this.findOne(id);
-    if (dto.etablissement !== undefined) {
-      await this.assertEtablissementExists(dto.etablissement);
-    }
     if (dto.domaine !== undefined) {
       await this.assertDomaineExists(dto.domaine);
     }
@@ -94,9 +74,6 @@ export class ServiceService {
     }
     if (dto.description !== undefined) {
       update.description = dto.description.trim();
-    }
-    if (dto.etablissement !== undefined) {
-      update.etablissement = new Types.ObjectId(dto.etablissement);
     }
     if (dto.domaine !== undefined) {
       update.domaine = new Types.ObjectId(dto.domaine);

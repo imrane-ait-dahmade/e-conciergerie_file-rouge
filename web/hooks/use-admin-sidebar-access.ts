@@ -8,6 +8,8 @@ export function useAdminSidebarAccess() {
     canViewDashboard: true,
     canViewLocation: true,
     canViewUsers: true,
+    canViewEtablissements: true,
+    canViewEtablissementServices: true,
     canViewReservations: true,
     canViewServices: true,
     canViewSettings: true,
