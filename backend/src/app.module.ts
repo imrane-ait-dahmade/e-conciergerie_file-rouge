@@ -18,6 +18,10 @@ import { UploadsModule } from './uploads/uploads.module';
 import { DomaineModule } from './domaines/domaine.module';
 import { ServiceModule } from './services/service.module';
 import { CaracteristiqueModule } from './caracteristiques/caracteristique.module';
+import { ProviderEtablissementsModule } from './provider-etablissements/provider-etablissements.module';
+import { ProviderEstablishmentServicesModule } from './provider-establishment-services/provider-establishment-services.module';
+import { ProviderEtablissementServiceCaracteristiquesModule } from './provider-etablissement-service-caracteristiques/provider-etablissement-service-caracteristiques.module';
+import { ProviderDashboardModule } from './provider-dashboard/provider-dashboard.module';
 import { EtablissementServicesModule } from './etablissement-services/etablissement-services.module';
 import { Favori, FavoriSchema } from './favoris/schemas/favori.schema';
 import { Avis, AvisSchema } from './avis/schemas/avis.schema';
@@ -97,6 +101,10 @@ import {
     DomaineModule,
     ServiceModule,
     CaracteristiqueModule,
+    ProviderEtablissementsModule,
+    ProviderEstablishmentServicesModule,
+    ProviderEtablissementServiceCaracteristiquesModule,
+    ProviderDashboardModule,
   ],
   controllers: [AppController],
   providers: [

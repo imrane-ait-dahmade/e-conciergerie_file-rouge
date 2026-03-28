@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   ForbiddenException,
   Injectable,
   Logger,
@@ -8,12 +9,13 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Role } from '../roles/schemas/role.schema';
 import { RolesService } from '../roles/roles.service';
 import { seedInitialAdmin } from './seeds/admin.seed';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login_user.dto';
+import { UpdateOwnProfileDto } from './dto/update-own-profile.dto';
 import { User } from './schemas/user.schema';
 import type { ProfileResponseDto } from './dto/profile-response.dto';
 import { toSafeUserResponse } from './utils/safe-user.mapper';
@@ -45,6 +47,51 @@ export class UsersService implements OnModuleInit {
   async getProfile(userId: string): Promise<ProfileResponseDto> {
     const user = await this.userModel
       .findById(userId)
+      .populate('role')
+      .select('-password -refreshTokenHash')
+      .lean();
+
+    if (!user) {
+      throw new NotFoundException('Utilisateur introuvable');
+    }
+
+    return toSafeUserResponse(user as unknown as Record<string, unknown>);
+  }
+
+  /**
+   * Met à jour le profil de l’utilisateur connecté (hors mot de passe).
+   */
+  async updateOwnProfile(
+    userId: string,
+    dto: UpdateOwnProfileDto,
+  ): Promise<ProfileResponseDto> {
+    const update: Record<string, unknown> = {};
+    if (dto.nom !== undefined) update.nom = dto.nom.trim();
+    if (dto.prenom !== undefined) update.prenom = dto.prenom.trim();
+    if (dto.email !== undefined) {
+      const normalized = dto.email.toLowerCase().trim();
+      const taken = await this.userModel.exists({
+        email: normalized,
+        _id: { $ne: new Types.ObjectId(userId) },
+      });
+      if (taken) {
+        throw new ConflictException('Cet email est déjà utilisé');
+      }
+      update.email = normalized;
+    }
+    if (dto.telephone !== undefined) {
+      update.telephone = dto.telephone.trim() || undefined;
+    }
+    if (dto.adresse !== undefined) {
+      update.adresse = dto.adresse.trim() || undefined;
+    }
+
+    if (Object.keys(update).length === 0) {
+      return this.getProfile(userId);
+    }
+
+    const user = await this.userModel
+      .findByIdAndUpdate(userId, { $set: update }, { new: true })
       .populate('role')
       .select('-password -refreshTokenHash')
       .lean();

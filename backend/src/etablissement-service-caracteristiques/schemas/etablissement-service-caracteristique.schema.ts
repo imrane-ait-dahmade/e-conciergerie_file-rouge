@@ -27,3 +27,9 @@ export class EtablissementServiceCaracteristique {
 
 export const EtablissementServiceCaracteristiqueSchema =
   SchemaFactory.createForClass(EtablissementServiceCaracteristique);
+
+/** Une même offre ne peut pas avoir deux lignes avec le même libellé. */
+EtablissementServiceCaracteristiqueSchema.index(
+  { etablissementService: 1, libelle: 1 },
+  { unique: true },
+);

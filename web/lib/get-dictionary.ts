@@ -431,6 +431,236 @@ export type CommonDictionary = {
     pieBookings: string;
     pieListings: string;
   };
+  /** Barre latérale `/[locale]/prestataire` */
+  providerSidebar: {
+    title: string;
+    sectionGeneral: string;
+    sectionBusiness: string;
+    dashboard: string;
+    establishments: string;
+    establishmentServices: string;
+    caracteristiques: string;
+    medias: string;
+    statistics: string;
+    profile: string;
+  };
+  /** Accueil prestataire */
+  providerDashboard: {
+    pageTitle: string;
+    welcomeTitle: string;
+    welcomeLead: string;
+    statsSectionTitle: string;
+    cardEstablishments: string;
+    cardEstablishmentsHint: string;
+    cardActiveServices: string;
+    cardActiveServicesHint: string;
+    cardCaracteristiques: string;
+    cardCaracteristiquesHint: string;
+    cardReservations: string;
+    cardReservationsSoon: string;
+    cardReviews: string;
+    cardReviewsSoon: string;
+    recentTitle: string;
+    recentEmpty: string;
+    quickActionsTitle: string;
+    actionEstablishments: string;
+    actionServices: string;
+    actionStatistics: string;
+    actionProfile: string;
+    mockDataNote: string;
+    reservationStatus: string;
+    reviewRating: string;
+  };
+  /** Prestataire — `/[locale]/prestataire/etablissements` */
+  providerEtablissements: {
+    pageTitle: string;
+    pageDescription: string;
+    addButton: string;
+    colNom: string;
+    colVille: string;
+    colQuartier: string;
+    colStatut: string;
+    colCreated: string;
+    colActions: string;
+    statutActive: string;
+    statutInactive: string;
+    empty: string;
+    loadError: string;
+    retry: string;
+    loading: string;
+    formCreateTitle: string;
+    formEditTitle: string;
+    formNom: string;
+    formAdresse: string;
+    formDescription: string;
+    formTelephone: string;
+    formEmail: string;
+    formVille: string;
+    formQuartier: string;
+    formCancel: string;
+    formSave: string;
+    selectVille: string;
+    selectQuartier: string;
+    actionEdit: string;
+    saveError: string;
+    statusError: string;
+  };
+  /** Prestataire — `/[locale]/prestataire/services` */
+  providerEstablishmentServices: {
+    pageTitle: string;
+    pageDescription: string;
+    filterAll: string;
+    filterLabel: string;
+    addButton: string;
+    colEtablissement: string;
+    colService: string;
+    colDomaine: string;
+    colStatut: string;
+    colPrix: string;
+    colCommentaire: string;
+    colDateCreation: string;
+    colActions: string;
+    statutEtabActif: string;
+    statutEtabInactif: string;
+    empty: string;
+    loadError: string;
+    loadErrorRefs: string;
+    retry: string;
+    loading: string;
+    formCreateTitle: string;
+    formEditTitle: string;
+    formEtablissement: string;
+    formService: string;
+    formPrix: string;
+    formCommentaire: string;
+    formCancel: string;
+    formSave: string;
+    selectPlaceholder: string;
+    serviceOptionDisabled: string;
+    prixPlaceholder: string;
+    commentairePlaceholder: string;
+    prixInvalid: string;
+    editHint: string;
+    actionEdit: string;
+    actionDelete: string;
+    deleteConfirmTitle: string;
+    deleteConfirmDescription: string;
+    deleteConfirmOk: string;
+    deleteConfirmCancel: string;
+    saveError: string;
+    deleteError: string;
+    deleteSuccess: string;
+    noServiceAvailable: string;
+  };
+  /** Prestataire — `/[locale]/prestataire/caracteristiques` (caractéristiques d’offre) */
+  providerEstablishmentServiceCaracteristiques: {
+    pageTitle: string;
+    pageDescription: string;
+    filterEtabAll: string;
+    filterEtabLabel: string;
+    filterOfferAll: string;
+    filterOfferLabel: string;
+    addButton: string;
+    colEtablissement: string;
+    colService: string;
+    colLibelle: string;
+    colValeur: string;
+    colDateCreation: string;
+    colActions: string;
+    empty: string;
+    emptyNoOffers: string;
+    loadError: string;
+    loadErrorRefs: string;
+    retry: string;
+    loading: string;
+    formCreateTitle: string;
+    formEditTitle: string;
+    formOffer: string;
+    formValeur: string;
+    formLibelle: string;
+    formModeCatalog: string;
+    formModeFree: string;
+    formCatalogPick: string;
+    formCancel: string;
+    formSave: string;
+    selectPlaceholder: string;
+    valeurPlaceholder: string;
+    libellePlaceholder: string;
+    valeurRequired: string;
+    libelleRequired: string;
+    actionEdit: string;
+    actionDelete: string;
+    deleteConfirmTitle: string;
+    deleteConfirmDescription: string;
+    deleteConfirmOk: string;
+    deleteConfirmCancel: string;
+    saveError: string;
+    deleteError: string;
+    deleteSuccess: string;
+    conflictError: string;
+    editHint: string;
+    noCatalogLeft: string;
+  };
+  /** Prestataire — `/[locale]/prestataire/statistiques` */
+  providerStatistics: {
+    pageTitle: string;
+    pageDescription: string;
+    dataSourceNote: string;
+    generatedAt: string;
+    sectionKpis: string;
+    sectionByStatus: string;
+    sectionTrend: string;
+    trendPlaceholder: string;
+    chartEmpty: string;
+    sectionSummary: string;
+    summaryEstablishments: string;
+    sectionRecent: string;
+    recentEmpty: string;
+    sectionTopServices: string;
+    topServicesColService: string;
+    topServicesColCount: string;
+    extrasNote: string;
+    cardEstablishments: string;
+    cardEstablishmentsHint: string;
+    cardEstablishmentsActive: string;
+    cardEstablishmentsActiveHint: string;
+    cardServices: string;
+    cardServicesHint: string;
+    cardCaracteristiques: string;
+    cardCaracteristiquesHint: string;
+    cardReservations: string;
+    cardReservationsHint: string;
+    cardReviews: string;
+    cardReviewsHint: string;
+    statusDemandee: string;
+    statusConfirmee: string;
+    statusAnnulee: string;
+    statusTerminee: string;
+    reservationStatus: string;
+    reviewRating: string;
+  };
+  /** Prestataire — `/[locale]/prestataire/profil` */
+  providerProfile: {
+    pageTitle: string;
+    pageDescription: string;
+    cardTitle: string;
+    cardDescription: string;
+    fieldNom: string;
+    fieldPrenom: string;
+    fieldEmail: string;
+    fieldTelephone: string;
+    fieldAdresse: string;
+    roleLabel: string;
+    saveButton: string;
+    savingButton: string;
+    loadError: string;
+    saveError: string;
+    saveSuccess: string;
+    retry: string;
+    loading: string;
+    loginPrompt: string;
+    goToLogin: string;
+  };
 };
 
 const DEFAULT_COMMON_DICTIONARY: CommonDictionary = {
@@ -849,6 +1079,233 @@ const DEFAULT_COMMON_DICTIONARY: CommonDictionary = {
     pieBookings: "Bookings",
     pieListings: "Listings views",
   },
+  providerSidebar: {
+    title: "Provider space",
+    sectionGeneral: "General",
+    sectionBusiness: "Business",
+    dashboard: "Overview",
+    establishments: "My establishments",
+    establishmentServices: "Services",
+    caracteristiques: "Features",
+    medias: "Media",
+    statistics: "Statistics",
+    profile: "My profile",
+  },
+  providerDashboard: {
+    pageTitle: "Dashboard",
+    welcomeTitle: "Hello",
+    welcomeLead: "Sample overview until the API is connected.",
+    statsSectionTitle: "Key figures",
+    cardEstablishments: "My establishments",
+    cardEstablishmentsHint: "Total",
+    cardActiveServices: "Active services",
+    cardActiveServicesHint: "Offers on active establishments",
+    cardCaracteristiques: "Features",
+    cardCaracteristiquesHint: "Lines on your offers",
+    cardReservations: "Reservations",
+    cardReservationsSoon: "Soon",
+    cardReviews: "Reviews",
+    cardReviewsSoon: "Soon",
+    recentTitle: "Recent activity",
+    recentEmpty: "No recent activity.",
+    quickActionsTitle: "Shortcuts",
+    actionEstablishments: "My establishments",
+    actionServices: "Services",
+    actionStatistics: "Statistics",
+    actionProfile: "My profile",
+    mockDataNote: "Demo data — connect GET /provider/dashboard/overview.",
+    reservationStatus: "Status",
+    reviewRating: "Rating",
+  },
+  providerEtablissements: {
+    pageTitle: "My establishments",
+    pageDescription: "Manage your own establishment listings.",
+    addButton: "Add establishment",
+    colNom: "Name",
+    colVille: "City",
+    colQuartier: "District",
+    colStatut: "Status",
+    colCreated: "Created",
+    colActions: "Actions",
+    statutActive: "Active",
+    statutInactive: "Inactive",
+    empty: "No establishments yet.",
+    loadError: "Could not load establishments.",
+    retry: "Retry",
+    loading: "Loading…",
+    formCreateTitle: "New establishment",
+    formEditTitle: "Edit establishment",
+    formNom: "Name",
+    formAdresse: "Address",
+    formDescription: "Description",
+    formTelephone: "Phone",
+    formEmail: "Email",
+    formVille: "City",
+    formQuartier: "District",
+    formCancel: "Cancel",
+    formSave: "Save",
+    selectVille: "Select a city",
+    selectQuartier: "Select a district",
+    actionEdit: "Edit",
+    saveError: "Could not save.",
+    statusError: "Could not update status.",
+  },
+  providerEstablishmentServices: {
+    pageTitle: "Establishment services",
+    pageDescription: "Link catalog services to your establishments.",
+    filterAll: "All establishments",
+    filterLabel: "Filter by establishment",
+    addButton: "New assignment",
+    colEtablissement: "Establishment",
+    colService: "Service",
+    colDomaine: "Domain",
+    colStatut: "Estab. status",
+    colPrix: "Price",
+    colCommentaire: "Comment",
+    colDateCreation: "Created",
+    colActions: "Actions",
+    statutEtabActif: "Open",
+    statutEtabInactif: "Closed",
+    empty: "No assignments yet.",
+    loadError: "Could not load assignments.",
+    loadErrorRefs: "Could not load lists.",
+    retry: "Retry",
+    loading: "Loading…",
+    formCreateTitle: "Assign a service",
+    formEditTitle: "Edit assignment",
+    formEtablissement: "Establishment",
+    formService: "Catalog service",
+    formPrix: "Price (optional)",
+    formCommentaire: "Comment (optional)",
+    formCancel: "Cancel",
+    formSave: "Save",
+    selectPlaceholder: "Select…",
+    serviceOptionDisabled: "Already assigned",
+    prixPlaceholder: "e.g. 150",
+    commentairePlaceholder: "Note or conditions…",
+    prixInvalid: "Enter a valid positive number.",
+    editHint: "Only price and comment can be changed.",
+    actionEdit: "Edit",
+    actionDelete: "Remove",
+    deleteConfirmTitle: "Remove this assignment?",
+    deleteConfirmDescription: "The service will no longer be offered for this establishment.",
+    deleteConfirmOk: "Remove",
+    deleteConfirmCancel: "Cancel",
+    saveError: "Could not save.",
+    deleteError: "Could not remove.",
+    deleteSuccess: "Assignment removed.",
+    noServiceAvailable: "All catalog services are already assigned.",
+  },
+  providerEstablishmentServiceCaracteristiques: {
+    pageTitle: "Offer characteristics",
+    pageDescription:
+      "Add label/value lines for each establishment–service assignment. Catalog labels are suggestions only.",
+    filterEtabAll: "All establishments",
+    filterEtabLabel: "Establishment",
+    filterOfferAll: "All assigned services",
+    filterOfferLabel: "Assigned service",
+    addButton: "Add characteristic",
+    colEtablissement: "Establishment",
+    colService: "Service",
+    colLibelle: "Label",
+    colValeur: "Value",
+    colDateCreation: "Created",
+    colActions: "Actions",
+    empty: "No characteristics for the current filters.",
+    emptyNoOffers:
+      "Assign at least one catalog service to an establishment first (Services page).",
+    loadError: "Could not load characteristics.",
+    loadErrorRefs: "Could not load data.",
+    retry: "Retry",
+    loading: "Loading…",
+    formCreateTitle: "Add a characteristic",
+    formEditTitle: "Edit characteristic",
+    formOffer: "Establishment service",
+    formValeur: "Value",
+    formLibelle: "Label",
+    formModeCatalog: "From catalog",
+    formModeFree: "Custom label",
+    formCatalogPick: "Catalog label",
+    formCancel: "Cancel",
+    formSave: "Save",
+    selectPlaceholder: "Select…",
+    valeurPlaceholder: "e.g. Yes, 2, Included…",
+    libellePlaceholder: "Short label",
+    valeurRequired: "Value is required.",
+    libelleRequired: "Label is required.",
+    actionEdit: "Edit",
+    actionDelete: "Remove",
+    deleteConfirmTitle: "Remove this characteristic?",
+    deleteConfirmDescription: "It will no longer appear for this offer.",
+    deleteConfirmOk: "Remove",
+    deleteConfirmCancel: "Cancel",
+    saveError: "Could not save.",
+    deleteError: "Could not remove.",
+    deleteSuccess: "Characteristic removed.",
+    conflictError: "A characteristic with this label already exists for this offer.",
+    editHint: "You can change the label and the value.",
+    noCatalogLeft: "All catalog labels are already used for this offer — use a custom label.",
+  },
+  providerStatistics: {
+    pageTitle: "Statistics",
+    pageDescription:
+      "Key figures for your activity. Charts and top services use sample data until the API exposes them.",
+    dataSourceNote:
+      "Figures come from GET /provider/dashboard/overview when you are signed in; trend and top services are illustrative.",
+    generatedAt: "Updated:",
+    sectionKpis: "Overview",
+    sectionByStatus: "Reservations by status",
+    sectionTrend: "Activity preview (6 months)",
+    trendPlaceholder: "Illustrative trend — replace with real monthly data from your API.",
+    chartEmpty: "No reservation breakdown to display yet.",
+    sectionSummary: "Establishments",
+    summaryEstablishments: "{{active}} active · {{total}} total establishments",
+    sectionRecent: "Recent activity",
+    recentEmpty: "No recent reservations or reviews.",
+    sectionTopServices: "Top services (sample)",
+    topServicesColService: "Service",
+    topServicesColCount: "Bookings (sample)",
+    extrasNote: "Sample ranking — connect your analytics later.",
+    cardEstablishments: "Establishments",
+    cardEstablishmentsHint: "Total",
+    cardEstablishmentsActive: "Active establishments",
+    cardEstablishmentsActiveHint: "Open for bookings",
+    cardServices: "Active offers",
+    cardServicesHint: "On active establishments",
+    cardCaracteristiques: "Offer features",
+    cardCaracteristiquesHint: "Characteristic lines",
+    cardReservations: "Reservations",
+    cardReservationsHint: "All statuses",
+    cardReviews: "Reviews",
+    cardReviewsHint: "Average or count",
+    statusDemandee: "Requested",
+    statusConfirmee: "Confirmed",
+    statusAnnulee: "Cancelled",
+    statusTerminee: "Completed",
+    reservationStatus: "Status",
+    reviewRating: "Rating",
+  },
+  providerProfile: {
+    pageTitle: "My profile",
+    pageDescription: "Update your contact details. Password change is not available here yet.",
+    cardTitle: "Account information",
+    cardDescription: "These details are linked to your user account.",
+    fieldNom: "Last name",
+    fieldPrenom: "First name",
+    fieldEmail: "Email",
+    fieldTelephone: "Phone",
+    fieldAdresse: "Address (optional)",
+    roleLabel: "Role",
+    saveButton: "Save changes",
+    savingButton: "Saving…",
+    loadError: "Could not load profile.",
+    saveError: "Could not save changes.",
+    saveSuccess: "Profile updated.",
+    retry: "Retry",
+    loading: "Loading…",
+    loginPrompt: "Sign in to view and edit your profile.",
+    goToLogin: "Go to sign in",
+  },
 };
 
 function asRecord(value: unknown): Record<string, unknown> {
@@ -895,6 +1352,15 @@ function normalizeDictionary(value: unknown): CommonDictionary {
   const quartiersColumns = asRecord(adminGeographie.quartiersColumns);
   const dashboardStats = asRecord(root.dashboardStats);
   const adminStats = asRecord(root.adminStats);
+  const providerSidebar = asRecord(root.providerSidebar);
+  const providerDashboard = asRecord(root.providerDashboard);
+  const providerEtablissements = asRecord(root.providerEtablissements);
+  const providerEstablishmentServices = asRecord(root.providerEstablishmentServices);
+  const providerEstablishmentServiceCaracteristiques = asRecord(
+    root.providerEstablishmentServiceCaracteristiques,
+  );
+  const providerStatistics = asRecord(root.providerStatistics);
+  const providerProfile = asRecord(root.providerProfile);
 
   return {
     brand: asString(root.brand, DEFAULT_COMMON_DICTIONARY.brand),
@@ -2258,6 +2724,853 @@ function normalizeDictionary(value: unknown): CommonDictionary {
       pieListings: asString(
         adminStats.pieListings,
         DEFAULT_COMMON_DICTIONARY.adminStats.pieListings
+      ),
+    },
+    providerSidebar: {
+      title: asString(
+        providerSidebar.title,
+        DEFAULT_COMMON_DICTIONARY.providerSidebar.title
+      ),
+      sectionGeneral: asString(
+        providerSidebar.sectionGeneral,
+        DEFAULT_COMMON_DICTIONARY.providerSidebar.sectionGeneral
+      ),
+      sectionBusiness: asString(
+        providerSidebar.sectionBusiness,
+        DEFAULT_COMMON_DICTIONARY.providerSidebar.sectionBusiness
+      ),
+      dashboard: asString(
+        providerSidebar.dashboard,
+        DEFAULT_COMMON_DICTIONARY.providerSidebar.dashboard
+      ),
+      establishments: asString(
+        providerSidebar.establishments,
+        DEFAULT_COMMON_DICTIONARY.providerSidebar.establishments
+      ),
+      establishmentServices: asString(
+        providerSidebar.establishmentServices,
+        DEFAULT_COMMON_DICTIONARY.providerSidebar.establishmentServices
+      ),
+      caracteristiques: asString(
+        providerSidebar.caracteristiques,
+        DEFAULT_COMMON_DICTIONARY.providerSidebar.caracteristiques
+      ),
+      medias: asString(
+        providerSidebar.medias,
+        DEFAULT_COMMON_DICTIONARY.providerSidebar.medias
+      ),
+      statistics: asString(
+        providerSidebar.statistics,
+        DEFAULT_COMMON_DICTIONARY.providerSidebar.statistics
+      ),
+      profile: asString(
+        providerSidebar.profile,
+        DEFAULT_COMMON_DICTIONARY.providerSidebar.profile
+      ),
+    },
+    providerDashboard: {
+      pageTitle: asString(
+        providerDashboard.pageTitle,
+        DEFAULT_COMMON_DICTIONARY.providerDashboard.pageTitle
+      ),
+      welcomeTitle: asString(
+        providerDashboard.welcomeTitle,
+        DEFAULT_COMMON_DICTIONARY.providerDashboard.welcomeTitle
+      ),
+      welcomeLead: asString(
+        providerDashboard.welcomeLead,
+        DEFAULT_COMMON_DICTIONARY.providerDashboard.welcomeLead
+      ),
+      statsSectionTitle: asString(
+        providerDashboard.statsSectionTitle,
+        DEFAULT_COMMON_DICTIONARY.providerDashboard.statsSectionTitle
+      ),
+      cardEstablishments: asString(
+        providerDashboard.cardEstablishments,
+        DEFAULT_COMMON_DICTIONARY.providerDashboard.cardEstablishments
+      ),
+      cardEstablishmentsHint: asString(
+        providerDashboard.cardEstablishmentsHint,
+        DEFAULT_COMMON_DICTIONARY.providerDashboard.cardEstablishmentsHint
+      ),
+      cardActiveServices: asString(
+        providerDashboard.cardActiveServices,
+        DEFAULT_COMMON_DICTIONARY.providerDashboard.cardActiveServices
+      ),
+      cardActiveServicesHint: asString(
+        providerDashboard.cardActiveServicesHint,
+        DEFAULT_COMMON_DICTIONARY.providerDashboard.cardActiveServicesHint
+      ),
+      cardCaracteristiques: asString(
+        providerDashboard.cardCaracteristiques,
+        DEFAULT_COMMON_DICTIONARY.providerDashboard.cardCaracteristiques
+      ),
+      cardCaracteristiquesHint: asString(
+        providerDashboard.cardCaracteristiquesHint,
+        DEFAULT_COMMON_DICTIONARY.providerDashboard.cardCaracteristiquesHint
+      ),
+      cardReservations: asString(
+        providerDashboard.cardReservations,
+        DEFAULT_COMMON_DICTIONARY.providerDashboard.cardReservations
+      ),
+      cardReservationsSoon: asString(
+        providerDashboard.cardReservationsSoon,
+        DEFAULT_COMMON_DICTIONARY.providerDashboard.cardReservationsSoon
+      ),
+      cardReviews: asString(
+        providerDashboard.cardReviews,
+        DEFAULT_COMMON_DICTIONARY.providerDashboard.cardReviews
+      ),
+      cardReviewsSoon: asString(
+        providerDashboard.cardReviewsSoon,
+        DEFAULT_COMMON_DICTIONARY.providerDashboard.cardReviewsSoon
+      ),
+      recentTitle: asString(
+        providerDashboard.recentTitle,
+        DEFAULT_COMMON_DICTIONARY.providerDashboard.recentTitle
+      ),
+      recentEmpty: asString(
+        providerDashboard.recentEmpty,
+        DEFAULT_COMMON_DICTIONARY.providerDashboard.recentEmpty
+      ),
+      quickActionsTitle: asString(
+        providerDashboard.quickActionsTitle,
+        DEFAULT_COMMON_DICTIONARY.providerDashboard.quickActionsTitle
+      ),
+      actionEstablishments: asString(
+        providerDashboard.actionEstablishments,
+        DEFAULT_COMMON_DICTIONARY.providerDashboard.actionEstablishments
+      ),
+      actionServices: asString(
+        providerDashboard.actionServices,
+        DEFAULT_COMMON_DICTIONARY.providerDashboard.actionServices
+      ),
+      actionStatistics: asString(
+        providerDashboard.actionStatistics,
+        DEFAULT_COMMON_DICTIONARY.providerDashboard.actionStatistics
+      ),
+      actionProfile: asString(
+        providerDashboard.actionProfile,
+        DEFAULT_COMMON_DICTIONARY.providerDashboard.actionProfile
+      ),
+      mockDataNote: asString(
+        providerDashboard.mockDataNote,
+        DEFAULT_COMMON_DICTIONARY.providerDashboard.mockDataNote
+      ),
+      reservationStatus: asString(
+        providerDashboard.reservationStatus,
+        DEFAULT_COMMON_DICTIONARY.providerDashboard.reservationStatus
+      ),
+      reviewRating: asString(
+        providerDashboard.reviewRating,
+        DEFAULT_COMMON_DICTIONARY.providerDashboard.reviewRating
+      ),
+    },
+    providerEtablissements: {
+      pageTitle: asString(
+        providerEtablissements.pageTitle,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.pageTitle
+      ),
+      pageDescription: asString(
+        providerEtablissements.pageDescription,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.pageDescription
+      ),
+      addButton: asString(
+        providerEtablissements.addButton,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.addButton
+      ),
+      colNom: asString(
+        providerEtablissements.colNom,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.colNom
+      ),
+      colVille: asString(
+        providerEtablissements.colVille,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.colVille
+      ),
+      colQuartier: asString(
+        providerEtablissements.colQuartier,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.colQuartier
+      ),
+      colStatut: asString(
+        providerEtablissements.colStatut,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.colStatut
+      ),
+      colCreated: asString(
+        providerEtablissements.colCreated,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.colCreated
+      ),
+      colActions: asString(
+        providerEtablissements.colActions,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.colActions
+      ),
+      statutActive: asString(
+        providerEtablissements.statutActive,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.statutActive
+      ),
+      statutInactive: asString(
+        providerEtablissements.statutInactive,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.statutInactive
+      ),
+      empty: asString(
+        providerEtablissements.empty,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.empty
+      ),
+      loadError: asString(
+        providerEtablissements.loadError,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.loadError
+      ),
+      retry: asString(
+        providerEtablissements.retry,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.retry
+      ),
+      loading: asString(
+        providerEtablissements.loading,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.loading
+      ),
+      formCreateTitle: asString(
+        providerEtablissements.formCreateTitle,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.formCreateTitle
+      ),
+      formEditTitle: asString(
+        providerEtablissements.formEditTitle,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.formEditTitle
+      ),
+      formNom: asString(
+        providerEtablissements.formNom,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.formNom
+      ),
+      formAdresse: asString(
+        providerEtablissements.formAdresse,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.formAdresse
+      ),
+      formDescription: asString(
+        providerEtablissements.formDescription,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.formDescription
+      ),
+      formTelephone: asString(
+        providerEtablissements.formTelephone,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.formTelephone
+      ),
+      formEmail: asString(
+        providerEtablissements.formEmail,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.formEmail
+      ),
+      formVille: asString(
+        providerEtablissements.formVille,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.formVille
+      ),
+      formQuartier: asString(
+        providerEtablissements.formQuartier,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.formQuartier
+      ),
+      formCancel: asString(
+        providerEtablissements.formCancel,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.formCancel
+      ),
+      formSave: asString(
+        providerEtablissements.formSave,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.formSave
+      ),
+      selectVille: asString(
+        providerEtablissements.selectVille,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.selectVille
+      ),
+      selectQuartier: asString(
+        providerEtablissements.selectQuartier,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.selectQuartier
+      ),
+      actionEdit: asString(
+        providerEtablissements.actionEdit,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.actionEdit
+      ),
+      saveError: asString(
+        providerEtablissements.saveError,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.saveError
+      ),
+      statusError: asString(
+        providerEtablissements.statusError,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.statusError
+      ),
+    },
+    providerEstablishmentServices: {
+      pageTitle: asString(
+        providerEstablishmentServices.pageTitle,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.pageTitle
+      ),
+      pageDescription: asString(
+        providerEstablishmentServices.pageDescription,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.pageDescription
+      ),
+      filterAll: asString(
+        providerEstablishmentServices.filterAll,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.filterAll
+      ),
+      filterLabel: asString(
+        providerEstablishmentServices.filterLabel,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.filterLabel
+      ),
+      addButton: asString(
+        providerEstablishmentServices.addButton,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.addButton
+      ),
+      colEtablissement: asString(
+        providerEstablishmentServices.colEtablissement,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.colEtablissement
+      ),
+      colService: asString(
+        providerEstablishmentServices.colService,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.colService
+      ),
+      colDomaine: asString(
+        providerEstablishmentServices.colDomaine,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.colDomaine
+      ),
+      colStatut: asString(
+        providerEstablishmentServices.colStatut,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.colStatut
+      ),
+      colPrix: asString(
+        providerEstablishmentServices.colPrix,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.colPrix
+      ),
+      colCommentaire: asString(
+        providerEstablishmentServices.colCommentaire,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.colCommentaire
+      ),
+      colDateCreation: asString(
+        providerEstablishmentServices.colDateCreation,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.colDateCreation
+      ),
+      colActions: asString(
+        providerEstablishmentServices.colActions,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.colActions
+      ),
+      statutEtabActif: asString(
+        providerEstablishmentServices.statutEtabActif,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.statutEtabActif
+      ),
+      statutEtabInactif: asString(
+        providerEstablishmentServices.statutEtabInactif,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.statutEtabInactif
+      ),
+      empty: asString(
+        providerEstablishmentServices.empty,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.empty
+      ),
+      loadError: asString(
+        providerEstablishmentServices.loadError,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.loadError
+      ),
+      loadErrorRefs: asString(
+        providerEstablishmentServices.loadErrorRefs,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.loadErrorRefs
+      ),
+      retry: asString(
+        providerEstablishmentServices.retry,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.retry
+      ),
+      loading: asString(
+        providerEstablishmentServices.loading,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.loading
+      ),
+      formCreateTitle: asString(
+        providerEstablishmentServices.formCreateTitle,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.formCreateTitle
+      ),
+      formEditTitle: asString(
+        providerEstablishmentServices.formEditTitle,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.formEditTitle
+      ),
+      formEtablissement: asString(
+        providerEstablishmentServices.formEtablissement,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.formEtablissement
+      ),
+      formService: asString(
+        providerEstablishmentServices.formService,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.formService
+      ),
+      formPrix: asString(
+        providerEstablishmentServices.formPrix,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.formPrix
+      ),
+      formCommentaire: asString(
+        providerEstablishmentServices.formCommentaire,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.formCommentaire
+      ),
+      formCancel: asString(
+        providerEstablishmentServices.formCancel,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.formCancel
+      ),
+      formSave: asString(
+        providerEstablishmentServices.formSave,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.formSave
+      ),
+      selectPlaceholder: asString(
+        providerEstablishmentServices.selectPlaceholder,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.selectPlaceholder
+      ),
+      serviceOptionDisabled: asString(
+        providerEstablishmentServices.serviceOptionDisabled,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.serviceOptionDisabled
+      ),
+      prixPlaceholder: asString(
+        providerEstablishmentServices.prixPlaceholder,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.prixPlaceholder
+      ),
+      commentairePlaceholder: asString(
+        providerEstablishmentServices.commentairePlaceholder,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.commentairePlaceholder
+      ),
+      prixInvalid: asString(
+        providerEstablishmentServices.prixInvalid,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.prixInvalid
+      ),
+      editHint: asString(
+        providerEstablishmentServices.editHint,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.editHint
+      ),
+      actionEdit: asString(
+        providerEstablishmentServices.actionEdit,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.actionEdit
+      ),
+      actionDelete: asString(
+        providerEstablishmentServices.actionDelete,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.actionDelete
+      ),
+      deleteConfirmTitle: asString(
+        providerEstablishmentServices.deleteConfirmTitle,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.deleteConfirmTitle
+      ),
+      deleteConfirmDescription: asString(
+        providerEstablishmentServices.deleteConfirmDescription,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.deleteConfirmDescription
+      ),
+      deleteConfirmOk: asString(
+        providerEstablishmentServices.deleteConfirmOk,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.deleteConfirmOk
+      ),
+      deleteConfirmCancel: asString(
+        providerEstablishmentServices.deleteConfirmCancel,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.deleteConfirmCancel
+      ),
+      saveError: asString(
+        providerEstablishmentServices.saveError,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.saveError
+      ),
+      deleteError: asString(
+        providerEstablishmentServices.deleteError,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.deleteError
+      ),
+      deleteSuccess: asString(
+        providerEstablishmentServices.deleteSuccess,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.deleteSuccess
+      ),
+      noServiceAvailable: asString(
+        providerEstablishmentServices.noServiceAvailable,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.noServiceAvailable
+      ),
+    },
+    providerEstablishmentServiceCaracteristiques: {
+      pageTitle: asString(
+        providerEstablishmentServiceCaracteristiques.pageTitle,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.pageTitle
+      ),
+      pageDescription: asString(
+        providerEstablishmentServiceCaracteristiques.pageDescription,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.pageDescription
+      ),
+      filterEtabAll: asString(
+        providerEstablishmentServiceCaracteristiques.filterEtabAll,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.filterEtabAll
+      ),
+      filterEtabLabel: asString(
+        providerEstablishmentServiceCaracteristiques.filterEtabLabel,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.filterEtabLabel
+      ),
+      filterOfferAll: asString(
+        providerEstablishmentServiceCaracteristiques.filterOfferAll,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.filterOfferAll
+      ),
+      filterOfferLabel: asString(
+        providerEstablishmentServiceCaracteristiques.filterOfferLabel,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.filterOfferLabel
+      ),
+      addButton: asString(
+        providerEstablishmentServiceCaracteristiques.addButton,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.addButton
+      ),
+      colEtablissement: asString(
+        providerEstablishmentServiceCaracteristiques.colEtablissement,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.colEtablissement
+      ),
+      colService: asString(
+        providerEstablishmentServiceCaracteristiques.colService,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.colService
+      ),
+      colLibelle: asString(
+        providerEstablishmentServiceCaracteristiques.colLibelle,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.colLibelle
+      ),
+      colValeur: asString(
+        providerEstablishmentServiceCaracteristiques.colValeur,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.colValeur
+      ),
+      colDateCreation: asString(
+        providerEstablishmentServiceCaracteristiques.colDateCreation,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.colDateCreation
+      ),
+      colActions: asString(
+        providerEstablishmentServiceCaracteristiques.colActions,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.colActions
+      ),
+      empty: asString(
+        providerEstablishmentServiceCaracteristiques.empty,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.empty
+      ),
+      emptyNoOffers: asString(
+        providerEstablishmentServiceCaracteristiques.emptyNoOffers,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.emptyNoOffers
+      ),
+      loadError: asString(
+        providerEstablishmentServiceCaracteristiques.loadError,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.loadError
+      ),
+      loadErrorRefs: asString(
+        providerEstablishmentServiceCaracteristiques.loadErrorRefs,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.loadErrorRefs
+      ),
+      retry: asString(
+        providerEstablishmentServiceCaracteristiques.retry,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.retry
+      ),
+      loading: asString(
+        providerEstablishmentServiceCaracteristiques.loading,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.loading
+      ),
+      formCreateTitle: asString(
+        providerEstablishmentServiceCaracteristiques.formCreateTitle,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.formCreateTitle
+      ),
+      formEditTitle: asString(
+        providerEstablishmentServiceCaracteristiques.formEditTitle,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.formEditTitle
+      ),
+      formOffer: asString(
+        providerEstablishmentServiceCaracteristiques.formOffer,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.formOffer
+      ),
+      formValeur: asString(
+        providerEstablishmentServiceCaracteristiques.formValeur,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.formValeur
+      ),
+      formLibelle: asString(
+        providerEstablishmentServiceCaracteristiques.formLibelle,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.formLibelle
+      ),
+      formModeCatalog: asString(
+        providerEstablishmentServiceCaracteristiques.formModeCatalog,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.formModeCatalog
+      ),
+      formModeFree: asString(
+        providerEstablishmentServiceCaracteristiques.formModeFree,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.formModeFree
+      ),
+      formCatalogPick: asString(
+        providerEstablishmentServiceCaracteristiques.formCatalogPick,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.formCatalogPick
+      ),
+      formCancel: asString(
+        providerEstablishmentServiceCaracteristiques.formCancel,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.formCancel
+      ),
+      formSave: asString(
+        providerEstablishmentServiceCaracteristiques.formSave,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.formSave
+      ),
+      selectPlaceholder: asString(
+        providerEstablishmentServiceCaracteristiques.selectPlaceholder,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.selectPlaceholder
+      ),
+      valeurPlaceholder: asString(
+        providerEstablishmentServiceCaracteristiques.valeurPlaceholder,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.valeurPlaceholder
+      ),
+      libellePlaceholder: asString(
+        providerEstablishmentServiceCaracteristiques.libellePlaceholder,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.libellePlaceholder
+      ),
+      valeurRequired: asString(
+        providerEstablishmentServiceCaracteristiques.valeurRequired,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.valeurRequired
+      ),
+      libelleRequired: asString(
+        providerEstablishmentServiceCaracteristiques.libelleRequired,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.libelleRequired
+      ),
+      actionEdit: asString(
+        providerEstablishmentServiceCaracteristiques.actionEdit,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.actionEdit
+      ),
+      actionDelete: asString(
+        providerEstablishmentServiceCaracteristiques.actionDelete,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.actionDelete
+      ),
+      deleteConfirmTitle: asString(
+        providerEstablishmentServiceCaracteristiques.deleteConfirmTitle,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.deleteConfirmTitle
+      ),
+      deleteConfirmDescription: asString(
+        providerEstablishmentServiceCaracteristiques.deleteConfirmDescription,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.deleteConfirmDescription
+      ),
+      deleteConfirmOk: asString(
+        providerEstablishmentServiceCaracteristiques.deleteConfirmOk,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.deleteConfirmOk
+      ),
+      deleteConfirmCancel: asString(
+        providerEstablishmentServiceCaracteristiques.deleteConfirmCancel,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.deleteConfirmCancel
+      ),
+      saveError: asString(
+        providerEstablishmentServiceCaracteristiques.saveError,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.saveError
+      ),
+      deleteError: asString(
+        providerEstablishmentServiceCaracteristiques.deleteError,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.deleteError
+      ),
+      deleteSuccess: asString(
+        providerEstablishmentServiceCaracteristiques.deleteSuccess,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.deleteSuccess
+      ),
+      conflictError: asString(
+        providerEstablishmentServiceCaracteristiques.conflictError,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.conflictError
+      ),
+      editHint: asString(
+        providerEstablishmentServiceCaracteristiques.editHint,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.editHint
+      ),
+      noCatalogLeft: asString(
+        providerEstablishmentServiceCaracteristiques.noCatalogLeft,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServiceCaracteristiques.noCatalogLeft
+      ),
+    },
+    providerStatistics: {
+      pageTitle: asString(
+        providerStatistics.pageTitle,
+        DEFAULT_COMMON_DICTIONARY.providerStatistics.pageTitle
+      ),
+      pageDescription: asString(
+        providerStatistics.pageDescription,
+        DEFAULT_COMMON_DICTIONARY.providerStatistics.pageDescription
+      ),
+      dataSourceNote: asString(
+        providerStatistics.dataSourceNote,
+        DEFAULT_COMMON_DICTIONARY.providerStatistics.dataSourceNote
+      ),
+      generatedAt: asString(
+        providerStatistics.generatedAt,
+        DEFAULT_COMMON_DICTIONARY.providerStatistics.generatedAt
+      ),
+      sectionKpis: asString(
+        providerStatistics.sectionKpis,
+        DEFAULT_COMMON_DICTIONARY.providerStatistics.sectionKpis
+      ),
+      sectionByStatus: asString(
+        providerStatistics.sectionByStatus,
+        DEFAULT_COMMON_DICTIONARY.providerStatistics.sectionByStatus
+      ),
+      sectionTrend: asString(
+        providerStatistics.sectionTrend,
+        DEFAULT_COMMON_DICTIONARY.providerStatistics.sectionTrend
+      ),
+      trendPlaceholder: asString(
+        providerStatistics.trendPlaceholder,
+        DEFAULT_COMMON_DICTIONARY.providerStatistics.trendPlaceholder
+      ),
+      chartEmpty: asString(
+        providerStatistics.chartEmpty,
+        DEFAULT_COMMON_DICTIONARY.providerStatistics.chartEmpty
+      ),
+      sectionSummary: asString(
+        providerStatistics.sectionSummary,
+        DEFAULT_COMMON_DICTIONARY.providerStatistics.sectionSummary
+      ),
+      summaryEstablishments: asString(
+        providerStatistics.summaryEstablishments,
+        DEFAULT_COMMON_DICTIONARY.providerStatistics.summaryEstablishments
+      ),
+      sectionRecent: asString(
+        providerStatistics.sectionRecent,
+        DEFAULT_COMMON_DICTIONARY.providerStatistics.sectionRecent
+      ),
+      recentEmpty: asString(
+        providerStatistics.recentEmpty,
+        DEFAULT_COMMON_DICTIONARY.providerStatistics.recentEmpty
+      ),
+      sectionTopServices: asString(
+        providerStatistics.sectionTopServices,
+        DEFAULT_COMMON_DICTIONARY.providerStatistics.sectionTopServices
+      ),
+      topServicesColService: asString(
+        providerStatistics.topServicesColService,
+        DEFAULT_COMMON_DICTIONARY.providerStatistics.topServicesColService
+      ),
+      topServicesColCount: asString(
+        providerStatistics.topServicesColCount,
+        DEFAULT_COMMON_DICTIONARY.providerStatistics.topServicesColCount
+      ),
+      extrasNote: asString(
+        providerStatistics.extrasNote,
+        DEFAULT_COMMON_DICTIONARY.providerStatistics.extrasNote
+      ),
+      cardEstablishments: asString(
+        providerStatistics.cardEstablishments,
+        DEFAULT_COMMON_DICTIONARY.providerStatistics.cardEstablishments
+      ),
+      cardEstablishmentsHint: asString(
+        providerStatistics.cardEstablishmentsHint,
+        DEFAULT_COMMON_DICTIONARY.providerStatistics.cardEstablishmentsHint
+      ),
+      cardEstablishmentsActive: asString(
+        providerStatistics.cardEstablishmentsActive,
+        DEFAULT_COMMON_DICTIONARY.providerStatistics.cardEstablishmentsActive
+      ),
+      cardEstablishmentsActiveHint: asString(
+        providerStatistics.cardEstablishmentsActiveHint,
+        DEFAULT_COMMON_DICTIONARY.providerStatistics.cardEstablishmentsActiveHint
+      ),
+      cardServices: asString(
+        providerStatistics.cardServices,
+        DEFAULT_COMMON_DICTIONARY.providerStatistics.cardServices
+      ),
+      cardServicesHint: asString(
+        providerStatistics.cardServicesHint,
+        DEFAULT_COMMON_DICTIONARY.providerStatistics.cardServicesHint
+      ),
+      cardCaracteristiques: asString(
+        providerStatistics.cardCaracteristiques,
+        DEFAULT_COMMON_DICTIONARY.providerStatistics.cardCaracteristiques
+      ),
+      cardCaracteristiquesHint: asString(
+        providerStatistics.cardCaracteristiquesHint,
+        DEFAULT_COMMON_DICTIONARY.providerStatistics.cardCaracteristiquesHint
+      ),
+      cardReservations: asString(
+        providerStatistics.cardReservations,
+        DEFAULT_COMMON_DICTIONARY.providerStatistics.cardReservations
+      ),
+      cardReservationsHint: asString(
+        providerStatistics.cardReservationsHint,
+        DEFAULT_COMMON_DICTIONARY.providerStatistics.cardReservationsHint
+      ),
+      cardReviews: asString(
+        providerStatistics.cardReviews,
+        DEFAULT_COMMON_DICTIONARY.providerStatistics.cardReviews
+      ),
+      cardReviewsHint: asString(
+        providerStatistics.cardReviewsHint,
+        DEFAULT_COMMON_DICTIONARY.providerStatistics.cardReviewsHint
+      ),
+      statusDemandee: asString(
+        providerStatistics.statusDemandee,
+        DEFAULT_COMMON_DICTIONARY.providerStatistics.statusDemandee
+      ),
+      statusConfirmee: asString(
+        providerStatistics.statusConfirmee,
+        DEFAULT_COMMON_DICTIONARY.providerStatistics.statusConfirmee
+      ),
+      statusAnnulee: asString(
+        providerStatistics.statusAnnulee,
+        DEFAULT_COMMON_DICTIONARY.providerStatistics.statusAnnulee
+      ),
+      statusTerminee: asString(
+        providerStatistics.statusTerminee,
+        DEFAULT_COMMON_DICTIONARY.providerStatistics.statusTerminee
+      ),
+      reservationStatus: asString(
+        providerStatistics.reservationStatus,
+        DEFAULT_COMMON_DICTIONARY.providerStatistics.reservationStatus
+      ),
+      reviewRating: asString(
+        providerStatistics.reviewRating,
+        DEFAULT_COMMON_DICTIONARY.providerStatistics.reviewRating
+      ),
+    },
+    providerProfile: {
+      pageTitle: asString(
+        providerProfile.pageTitle,
+        DEFAULT_COMMON_DICTIONARY.providerProfile.pageTitle
+      ),
+      pageDescription: asString(
+        providerProfile.pageDescription,
+        DEFAULT_COMMON_DICTIONARY.providerProfile.pageDescription
+      ),
+      cardTitle: asString(
+        providerProfile.cardTitle,
+        DEFAULT_COMMON_DICTIONARY.providerProfile.cardTitle
+      ),
+      cardDescription: asString(
+        providerProfile.cardDescription,
+        DEFAULT_COMMON_DICTIONARY.providerProfile.cardDescription
+      ),
+      fieldNom: asString(
+        providerProfile.fieldNom,
+        DEFAULT_COMMON_DICTIONARY.providerProfile.fieldNom
+      ),
+      fieldPrenom: asString(
+        providerProfile.fieldPrenom,
+        DEFAULT_COMMON_DICTIONARY.providerProfile.fieldPrenom
+      ),
+      fieldEmail: asString(
+        providerProfile.fieldEmail,
+        DEFAULT_COMMON_DICTIONARY.providerProfile.fieldEmail
+      ),
+      fieldTelephone: asString(
+        providerProfile.fieldTelephone,
+        DEFAULT_COMMON_DICTIONARY.providerProfile.fieldTelephone
+      ),
+      fieldAdresse: asString(
+        providerProfile.fieldAdresse,
+        DEFAULT_COMMON_DICTIONARY.providerProfile.fieldAdresse
+      ),
+      roleLabel: asString(
+        providerProfile.roleLabel,
+        DEFAULT_COMMON_DICTIONARY.providerProfile.roleLabel
+      ),
+      saveButton: asString(
+        providerProfile.saveButton,
+        DEFAULT_COMMON_DICTIONARY.providerProfile.saveButton
+      ),
+      savingButton: asString(
+        providerProfile.savingButton,
+        DEFAULT_COMMON_DICTIONARY.providerProfile.savingButton
+      ),
+      loadError: asString(
+        providerProfile.loadError,
+        DEFAULT_COMMON_DICTIONARY.providerProfile.loadError
+      ),
+      saveError: asString(
+        providerProfile.saveError,
+        DEFAULT_COMMON_DICTIONARY.providerProfile.saveError
+      ),
+      saveSuccess: asString(
+        providerProfile.saveSuccess,
+        DEFAULT_COMMON_DICTIONARY.providerProfile.saveSuccess
+      ),
+      retry: asString(providerProfile.retry, DEFAULT_COMMON_DICTIONARY.providerProfile.retry),
+      loading: asString(
+        providerProfile.loading,
+        DEFAULT_COMMON_DICTIONARY.providerProfile.loading
+      ),
+      loginPrompt: asString(
+        providerProfile.loginPrompt,
+        DEFAULT_COMMON_DICTIONARY.providerProfile.loginPrompt
+      ),
+      goToLogin: asString(
+        providerProfile.goToLogin,
+        DEFAULT_COMMON_DICTIONARY.providerProfile.goToLogin
       ),
     },
   };

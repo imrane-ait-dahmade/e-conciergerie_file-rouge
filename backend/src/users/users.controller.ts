@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Patch, Post, Req, UseGuards } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 import {
   ApiBearerAuth,
@@ -10,6 +10,7 @@ import {
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login_user.dto';
 import type { ProfileResponseDto } from './dto/profile-response.dto';
+import { UpdateOwnProfileDto } from './dto/update-own-profile.dto';
 import type { SafeUserResponse } from './utils/safe-user.types';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -57,5 +58,22 @@ export class UsersController {
     @Req() req: { user: RequestUser },
   ): Promise<ProfileResponseDto> {
     return this.usersService.getProfile(req.user.userId);
+  }
+
+  @Patch('profile')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Mettre à jour mon profil (nom, prénom, email, téléphone, adresse)' })
+  @ApiResponse({
+    status: 200,
+    schema: { $ref: getSchemaPath(ProfileResponseSchema) },
+  })
+  @ApiResponse({ status: 401, description: 'Token manquant ou invalide' })
+  @ApiResponse({ status: 409, description: 'Email déjà utilisé' })
+  async updateProfile(
+    @Req() req: { user: RequestUser },
+    @Body() dto: UpdateOwnProfileDto,
+  ): Promise<ProfileResponseDto> {
+    return this.usersService.updateOwnProfile(req.user.userId, dto);
   }
 }
