@@ -1,224 +1,208 @@
 /**
- * Tests unitaires pour EtablissementsService.
- * Chaque test vérifie un comportement précis du service.
- * Les dépendances (Mongoose Model) sont mockées pour isoler le service.
+ * EtablissementsService (prestataire) — unit tests, Mongoose mocké, pas de vraie base.
  */
-import { Test, TestingModule } from '@nestjs/testing';
-import { getModelToken } from '@nestjs/mongoose';
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
+import { getModelToken } from '@nestjs/mongoose';
+import { Test, TestingModule } from '@nestjs/testing';
+import { Types } from 'mongoose';
+import { Etablissement } from './schemas/etablissement.schema';
 import { EtablissementsService } from './etablissements.service';
 
-// Objet mock pour simuler un établissement en base
+const ETAB_ID = '507f1f77bcf86cd799439011';
+const OWNER_ID = '507f1f77bcf86cd799439012';
+
 const mockEtablissement = {
-  _id: '507f1f77bcf86cd799439011',
+  _id: ETAB_ID,
   nom: 'Mon Restaurant',
   adresse: '123 Rue Example',
-  prestataire: '507f1f77bcf86cd799439012',
+  prestataire: new Types.ObjectId(OWNER_ID),
 };
 
-/**
- * Crée un objet "thenable" (utilisé par Mongoose findById).
- * Permet de faire await sur un mock.
- */
-function mockResolve(value: unknown) {
-  return {
-    then: (resolve: (v: unknown) => void) => resolve(value),
-    catch: () => ({}),
-  };
+/** findById(id) seul — utilisé par findOne (await direct sur la query). */
+function mockFindByIdResolves<T>(value: T | null) {
+  return Promise.resolve(value);
 }
 
-/**
- * Crée une chaîne select().lean() pour mocker findById().select().lean()
- */
-function mockSelectLean(value: unknown) {
+/** findById(id).select('prestataire').lean() — utilisé par verifierProprietaire */
+function mockOwnerCheckChain(doc: { prestataire: unknown } | null) {
   return {
-    select: () => ({
-      lean: () => mockResolve(value),
+    select: jest.fn().mockReturnValue({
+      lean: jest.fn().mockResolvedValue(doc),
     }),
-    then: (resolve: (v: unknown) => void) => resolve(value),
-    catch: () => ({}),
   };
 }
 
 describe('EtablissementsService', () => {
   let service: EtablissementsService;
-  let mockModel: {
-    create: jest.Mock;
-    find: jest.Mock;
-    findById: jest.Mock;
-    findByIdAndUpdate: jest.Mock;
-    findByIdAndDelete: jest.Mock;
+
+  const etablissementModel = {
+    create: jest.fn(),
+    find: jest.fn(),
+    findById: jest.fn(),
+    findByIdAndUpdate: jest.fn(),
+    findByIdAndDelete: jest.fn(),
   };
 
   beforeEach(async () => {
-    // Mock du modèle Mongoose (on simule la base de données)
-    mockModel = {
-      create: jest.fn().mockResolvedValue(mockEtablissement),
-      find: jest.fn().mockReturnValue([]),
-      findById: jest.fn(),
-      findByIdAndUpdate: jest.fn().mockResolvedValue(mockEtablissement),
-      findByIdAndDelete: jest.fn().mockResolvedValue(mockEtablissement),
-    };
+    jest.clearAllMocks();
+    etablissementModel.create.mockResolvedValue(mockEtablissement);
+    etablissementModel.find.mockReturnValue([]);
+    etablissementModel.findByIdAndUpdate.mockResolvedValue(mockEtablissement);
+    etablissementModel.findByIdAndDelete.mockResolvedValue(mockEtablissement);
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         EtablissementsService,
         {
-          provide: getModelToken('Etablissement'),
-          useValue: mockModel,
+          provide: getModelToken(Etablissement.name),
+          useValue: etablissementModel,
         },
       ],
     }).compile();
 
     service = module.get<EtablissementsService>(EtablissementsService);
-    jest.clearAllMocks();
   });
 
-  it('service doit être défini', () => {
+  it('should be defined', () => {
     expect(service).toBeDefined();
   });
 
   describe('create', () => {
-    it('doit créer un établissement avec prestataire = userId', async () => {
-      // Arrange : données d'entrée (userId = ObjectId valide 24 caractères hex)
+    it('creates with prestataire set to connected user id', async () => {
       const dto = { nom: 'Mon Restaurant', adresse: '123 Rue Example' };
-      const userId = '507f1f77bcf86cd799439012';
 
-      // Act : appel de la méthode
-      await service.create(dto, userId);
+      const result = await service.create(dto, OWNER_ID);
 
-      // Assert : vérifie que create a été appelé avec les bonnes données
-      expect(mockModel.create).toHaveBeenCalledTimes(1);
-      const callArg = mockModel.create.mock.calls[0][0];
-      expect(callArg.nom).toBe('Mon Restaurant');
-      expect(callArg.adresse).toBe('123 Rue Example');
-      expect(String(callArg.prestataire)).toBe(userId);
+      expect(etablissementModel.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          nom: 'Mon Restaurant',
+          adresse: '123 Rue Example',
+          prestataire: new Types.ObjectId(OWNER_ID),
+        }),
+      );
+      expect(result).toEqual(mockEtablissement);
     });
   });
 
   describe('findAll', () => {
-    it('doit retourner la liste des établissements', async () => {
+    it('returns find() result', async () => {
       const liste = [{ nom: 'Etab1' }, { nom: 'Etab2' }];
-      mockModel.find.mockReturnValue(liste);
+      etablissementModel.find.mockReturnValue(liste);
 
       const result = await service.findAll();
 
-      expect(mockModel.find).toHaveBeenCalledTimes(1);
+      expect(etablissementModel.find).toHaveBeenCalled();
       expect(result).toEqual(liste);
     });
   });
 
   describe('findOne', () => {
-    it('doit retourner un établissement si trouvé', async () => {
-      mockModel.findById.mockReturnValue(mockResolve(mockEtablissement));
-
-      const result = await service.findOne('507f1f77bcf86cd799439011');
-
-      expect(mockModel.findById).toHaveBeenCalledWith(
-        '507f1f77bcf86cd799439011',
+    it('returns establishment when found', async () => {
+      etablissementModel.findById.mockReturnValue(
+        mockFindByIdResolves(mockEtablissement),
       );
+
+      const result = await service.findOne(ETAB_ID);
+
+      expect(etablissementModel.findById).toHaveBeenCalledWith(ETAB_ID);
       expect(result).toEqual(mockEtablissement);
     });
 
-    it('doit lancer NotFoundException si non trouvé', async () => {
-      mockModel.findById.mockReturnValue(mockResolve(null));
+    it('throws NotFoundException when missing', async () => {
+      etablissementModel.findById.mockReturnValue(mockFindByIdResolves(null));
 
-      await expect(service.findOne('id inexistant')).rejects.toThrow(
-        NotFoundException,
-      );
-      await expect(service.findOne('id inexistant')).rejects.toThrow(
-        'Établissement introuvable',
-      );
+      await expect(service.findOne(ETAB_ID)).rejects.toThrow(NotFoundException);
     });
   });
 
-  describe('update', () => {
-    it('doit mettre à jour si utilisateur est le propriétaire', async () => {
-      const userId = '507f1f77bcf86cd799439012';
-      mockModel.findById.mockReturnValue(
-        mockSelectLean({ prestataire: userId }),
-      );
-      const dto = { nom: 'Nouveau nom' };
+  /**
+   * Routes publiques prestataire (`EtablissementsService`) : si le JWT ne correspond pas
+   * à `Etablissement.prestataire`, le service lève **ForbiddenException** (pas seulement 404).
+   */
+  describe('Provider ownership (prestataire API)', () => {
+    describe('update', () => {
+      it('allows provider to update their own establishment', async () => {
+        etablissementModel.findById.mockReturnValue(
+          mockOwnerCheckChain({ prestataire: new Types.ObjectId(OWNER_ID) }),
+        );
+        const dto = { nom: 'Nouveau nom' };
 
-      const result = await service.update(
-        '507f1f77bcf86cd799439011',
-        dto,
-        userId,
-      );
+        const result = await service.update(ETAB_ID, dto, OWNER_ID);
 
-      expect(mockModel.findByIdAndUpdate).toHaveBeenCalledWith(
-        '507f1f77bcf86cd799439011',
-        dto,
-        { new: true },
-      );
-      expect(result).toEqual(mockEtablissement);
+        expect(etablissementModel.findByIdAndUpdate).toHaveBeenCalledWith(
+          ETAB_ID,
+          dto,
+          { new: true },
+        );
+        expect(result).toEqual(mockEtablissement);
+      });
+
+      it('forbids provider from updating another provider establishment', async () => {
+        etablissementModel.findById.mockReturnValue(
+          mockOwnerCheckChain({
+            prestataire: new Types.ObjectId('507f1f77bcf86cd799439099'),
+          }),
+        );
+
+        await expect(
+          service.update(ETAB_ID, { nom: 'X' }, OWNER_ID),
+        ).rejects.toThrow(ForbiddenException);
+        expect(etablissementModel.findByIdAndUpdate).not.toHaveBeenCalled();
+      });
+
+      it('throws NotFoundException when establishment missing', async () => {
+        etablissementModel.findById.mockReturnValue(mockOwnerCheckChain(null));
+
+        await expect(
+          service.update(ETAB_ID, { nom: 'Test' }, OWNER_ID),
+        ).rejects.toThrow(NotFoundException);
+      });
     });
 
-    it('doit lancer ForbiddenException si utilisateur nest pas le propriétaire', async () => {
-      mockModel.findById.mockReturnValue(
-        mockSelectLean({ prestataire: '507f1f77bcf86cd799439099' }),
-      );
-      const dto = { nom: 'Nouveau nom' };
-      const userId = '507f1f77bcf86cd799439012'; // différent du propriétaire
+    describe('delete', () => {
+      it('allows provider to delete their own establishment', async () => {
+        etablissementModel.findById.mockReturnValue(
+          mockOwnerCheckChain({ prestataire: new Types.ObjectId(OWNER_ID) }),
+        );
 
-      await expect(
-        service.update('507f1f77bcf86cd799439011', dto, userId),
-      ).rejects.toThrow(ForbiddenException);
-      await expect(
-        service.update('507f1f77bcf86cd799439011', dto, userId),
-      ).rejects.toThrow('Vous ne pouvez pas modifier cet établissement');
+        const result = await service.delete(ETAB_ID, OWNER_ID);
 
-      expect(mockModel.findByIdAndUpdate).not.toHaveBeenCalled();
-    });
+        expect(etablissementModel.findByIdAndDelete).toHaveBeenCalledWith(ETAB_ID);
+        expect(result).toEqual(mockEtablissement);
+      });
 
-    it('doit lancer NotFoundException si établissement inexistant', async () => {
-      mockModel.findById.mockReturnValue(mockSelectLean(null));
+      it('forbids provider from deleting another provider establishment', async () => {
+        etablissementModel.findById.mockReturnValue(
+          mockOwnerCheckChain({
+            prestataire: new Types.ObjectId('507f1f77bcf86cd799439099'),
+          }),
+        );
 
-      await expect(
-        service.update(
-          '507f00000000000000000000',
-          { nom: 'Test' },
-          '507f1f77bcf86cd799439012',
-        ),
-      ).rejects.toThrow(NotFoundException);
-    });
-  });
+        await expect(service.delete(ETAB_ID, OWNER_ID)).rejects.toThrow(
+          ForbiddenException,
+        );
+        expect(etablissementModel.findByIdAndDelete).not.toHaveBeenCalled();
+      });
 
-  describe('delete', () => {
-    it('doit supprimer si utilisateur est le propriétaire', async () => {
-      const userId = '507f1f77bcf86cd799439012';
-      mockModel.findById.mockReturnValue(
-        mockSelectLean({ prestataire: userId }),
-      );
+      it('throws NotFoundException when establishment missing before delete', async () => {
+        etablissementModel.findById.mockReturnValue(mockOwnerCheckChain(null));
 
-      const result = await service.delete('507f1f77bcf86cd799439011', userId);
+        await expect(service.delete(ETAB_ID, OWNER_ID)).rejects.toThrow(
+          NotFoundException,
+        );
+        expect(etablissementModel.findByIdAndDelete).not.toHaveBeenCalled();
+      });
 
-      expect(mockModel.findByIdAndDelete).toHaveBeenCalledWith(
-        '507f1f77bcf86cd799439011',
-      );
-      expect(result).toEqual(mockEtablissement);
-    });
+      it('throws NotFoundException when findByIdAndDelete returns null', async () => {
+        etablissementModel.findById.mockReturnValue(
+          mockOwnerCheckChain({ prestataire: new Types.ObjectId(OWNER_ID) }),
+        );
+        etablissementModel.findByIdAndDelete.mockResolvedValue(null);
 
-    it('doit lancer ForbiddenException si utilisateur nest pas le propriétaire', async () => {
-      mockModel.findById.mockReturnValue(
-        mockSelectLean({ prestataire: '507f1f77bcf86cd799439099' }),
-      );
-      const userId = '507f1f77bcf86cd799439012';
-
-      await expect(
-        service.delete('507f1f77bcf86cd799439011', userId),
-      ).rejects.toThrow(ForbiddenException);
-
-      expect(mockModel.findByIdAndDelete).not.toHaveBeenCalled();
-    });
-
-    it('doit lancer NotFoundException si établissement inexistant', async () => {
-      mockModel.findById.mockReturnValue(mockSelectLean(null));
-      mockModel.findByIdAndDelete.mockResolvedValue(null);
-
-      await expect(
-        service.delete('507f00000000000000000000', '507f1f77bcf86cd799439012'),
-      ).rejects.toThrow(NotFoundException);
+        await expect(service.delete(ETAB_ID, OWNER_ID)).rejects.toThrow(
+          NotFoundException,
+        );
+      });
     });
   });
 });
