@@ -11,12 +11,15 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { MediaService } from '../media/media.service';
 import { EtablissementsService } from './etablissements.service';
 import { CreateEtablissementDto } from './dto/create-etablissement.dto';
+import { HomeBestProvidersQueryDto } from './dto/home-best-providers-query.dto';
 import { UpdateEtablissementDto } from './dto/update-etablissement.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import type { RequestUser } from '../auth/jwt.strategy';
@@ -42,6 +45,13 @@ export class EtablissementsController {
   @Get()
   findAll() {
     return this.service.findAll();
+  }
+
+  /** Best providers (accueil) : public, actifs + featured uniquement. Avant les routes :id. */
+  @Get('home/best-providers')
+  @ApiOperation({ summary: 'Établissements mis en avant pour la page d’accueil' })
+  findHomeBestProviders(@Query() query: HomeBestProvidersQueryDto) {
+    return this.service.findHomeBestProviders(query.limit ?? 12);
   }
 
   /** Image principale (isPrimary) : public. Déclaré avant GET :id/media. */

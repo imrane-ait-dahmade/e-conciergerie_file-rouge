@@ -42,6 +42,51 @@ export class EtablissementsService {
   }
 
   /**
+   * Section accueil « Best providers » : uniquement établissements actifs et mis en avant.
+   */
+  async findHomeBestProviders(limit = 12) {
+    const cap = Math.min(Math.max(limit, 1), 50);
+    return this.etablissementModel
+      .find({
+        isActive: true,
+        isFeaturedForHomeBestProviders: true,
+      })
+      .sort({ bestProviderSortOrder: 1, createdAt: -1 })
+      .limit(cap)
+      .populate({ path: 'ville', select: 'nom' })
+      .select(
+        'nom slug logo coverImage image ville averageRating reviewCount bestProviderSortOrder',
+      )
+      .lean()
+      .exec();
+  }
+
+  /**
+   * Best providers pour l’app mobile : même filtre, tri explicite pour la home
+   * (ordre d’affichage, note moyenne, id).
+   */
+  async findMobileBestProviders(limit = 20) {
+    const cap = Math.min(Math.max(limit, 1), 50);
+    return this.etablissementModel
+      .find({
+        isActive: true,
+        isFeaturedForHomeBestProviders: true,
+      })
+      .sort({
+        bestProviderSortOrder: 1,
+        averageRating: -1,
+        _id: -1,
+      })
+      .limit(cap)
+      .populate({ path: 'ville', select: 'nom' })
+      .select(
+        'nom slug logo coverImage image ville averageRating reviewCount bestProviderSortOrder',
+      )
+      .lean()
+      .exec();
+  }
+
+  /**
    * Trouver un établissement par ID (route publique).
    */
   async findOne(id: string) {

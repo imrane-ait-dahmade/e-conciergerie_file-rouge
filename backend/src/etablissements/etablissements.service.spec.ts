@@ -96,6 +96,58 @@ describe('EtablissementsService', () => {
     });
   });
 
+  describe('findHomeBestProviders', () => {
+    it('queries active featured establishments with sort and limit', async () => {
+      const rows = [{ nom: 'Top', isActive: true }];
+      const exec = jest.fn().mockResolvedValue(rows);
+      const sort = jest.fn().mockReturnThis();
+      etablissementModel.find.mockReturnValue({
+        sort,
+        limit: jest.fn().mockReturnThis(),
+        populate: jest.fn().mockReturnThis(),
+        select: jest.fn().mockReturnThis(),
+        lean: jest.fn().mockReturnThis(),
+        exec,
+      });
+
+      const result = await service.findHomeBestProviders(10);
+
+      expect(etablissementModel.find).toHaveBeenCalledWith({
+        isActive: true,
+        isFeaturedForHomeBestProviders: true,
+      });
+      expect(sort).toHaveBeenCalledWith({
+        bestProviderSortOrder: 1,
+        createdAt: -1,
+      });
+      expect(result).toEqual(rows);
+    });
+  });
+
+  describe('findMobileBestProviders', () => {
+    it('uses mobile home sort (order, rating desc, id desc)', async () => {
+      const rows = [{ nom: 'M' }];
+      const exec = jest.fn().mockResolvedValue(rows);
+      const sort = jest.fn().mockReturnThis();
+      etablissementModel.find.mockReturnValue({
+        sort,
+        limit: jest.fn().mockReturnThis(),
+        populate: jest.fn().mockReturnThis(),
+        select: jest.fn().mockReturnThis(),
+        lean: jest.fn().mockReturnThis(),
+        exec,
+      });
+
+      await service.findMobileBestProviders(15);
+
+      expect(sort).toHaveBeenCalledWith({
+        bestProviderSortOrder: 1,
+        averageRating: -1,
+        _id: -1,
+      });
+    });
+  });
+
   describe('findOne', () => {
     it('returns establishment when found', async () => {
       etablissementModel.findById.mockReturnValue(

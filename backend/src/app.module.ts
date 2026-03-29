@@ -34,6 +34,8 @@ import { Reservation, ReservationSchema } from './reservations/schemas/reservati
 import { Paiement, PaiementSchema } from './paiements/schemas/paiement.schema';
 import { Abonnement, AbonnementSchema } from './abonnements/schemas/abonnement.schema';
 import { MediaModule } from './media/media.module';
+import { SliderModule } from './sliders/slider.module';
+import { MobileModule } from './mobile/mobile.module';
 import { Admin, AdminSchema } from './admins/schemas/admin.schema';
 import { Prestataire, PrestataireSchema } from './prestataires/schemas/prestataire.schema';
 import { Voyageur, VoyageurSchema } from './voyageurs/schemas/voyageur.schema';
@@ -111,6 +113,8 @@ import { RequestContextMiddleware } from './common/middleware/request-context.mi
     ProviderEtablissementServiceCaracteristiquesModule,
     ProviderDashboardModule,
     MediaModule,
+    SliderModule,
+    MobileModule,
   ],
   controllers: [AppController],
   providers: [

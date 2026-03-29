@@ -14,10 +14,11 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { AdminOnly } from '../auth/decorators/admin-only.decorator';
-import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 import { AdminEtablissementsService } from './admin-etablissements.service';
 import { AdminCreateEtablissementDto } from './dto/admin-create-etablissement.dto';
 import { AdminUpdateEtablissementDto } from './dto/admin-update-etablissement.dto';
+import { ListAdminEtablissementsQueryDto } from './dto/list-admin-etablissements-query.dto';
+import { PatchEtablissementBestProvidersDto } from './dto/patch-etablissement-best-providers.dto';
 import { UpdateEtablissementStatusDto } from './dto/update-etablissement-status.dto';
 
 /**
@@ -41,9 +42,24 @@ export class AdminEtablissementsController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Lister les établissements (paginé, références peuplées)' })
-  list(@Query() query: PaginationQueryDto) {
+  @ApiOperation({
+    summary:
+      'Lister les établissements (paginé, filtres isActive / featured accueil, recherche nom)',
+  })
+  list(@Query() query: ListAdminEtablissementsQueryDto) {
     return this.adminEtablissementsService.findAllPaginated(query);
+  }
+
+  /**
+   * Déclaré avant GET :id — liste uniquement les établissements « Best providers » (featured).
+   */
+  @Get('best-providers')
+  @ApiOperation({
+    summary:
+      'Lister les établissements mis en avant pour la section accueil (tri par ordre puis date)',
+  })
+  listBestProviders(@Query() query: ListAdminEtablissementsQueryDto) {
+    return this.adminEtablissementsService.findBestProvidersPaginated(query);
   }
 
   @Get(':id')
@@ -59,6 +75,18 @@ export class AdminEtablissementsController {
     @Body() dto: UpdateEtablissementStatusDto,
   ) {
     return this.adminEtablissementsService.updateStatus(id, dto);
+  }
+
+  @Patch(':id/best-providers')
+  @ApiOperation({
+    summary:
+      'Mettre à jour uniquement le statut « Best providers » accueil et l’ordre d’affichage',
+  })
+  patchBestProviders(
+    @Param('id') id: string,
+    @Body() dto: PatchEtablissementBestProvidersDto,
+  ) {
+    return this.adminEtablissementsService.updateBestProviders(id, dto);
   }
 
   @Patch(':id')
