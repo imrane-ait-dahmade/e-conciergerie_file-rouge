@@ -16,10 +16,14 @@ import {
 import { Favori, FavoriSchema } from '../favoris/schemas/favori.schema';
 import { Pays, PaysSchema } from '../pays/schemas/pays.schema';
 import { Quartier, QuartierSchema } from '../quartiers/schemas/quartier.schema';
-import { Reservation, ReservationSchema } from '../reservations/schemas/reservation.schema';
+import {
+  Reservation,
+  ReservationSchema,
+} from '../reservations/schemas/reservation.schema';
 import { Role, RoleSchema } from '../roles/schemas/role.schema';
 import { User, UserSchema } from '../users/schemas/user.schema';
 import { Ville, VilleSchema } from '../villes/schemas/ville.schema';
+import { MediaModule } from '../media/media.module';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { AdminEtablissementsController } from './admin-etablissements.controller';
 import { AdminEtablissementsService } from './admin-etablissements.service';
@@ -32,6 +36,7 @@ import { EtablissementsService } from './etablissements.service';
 
 @Module({
   imports: [
+    MediaModule,
     MongooseModule.forFeature([
       { name: Etablissement.name, schema: EtablissementSchema },
       { name: User.name, schema: UserSchema },

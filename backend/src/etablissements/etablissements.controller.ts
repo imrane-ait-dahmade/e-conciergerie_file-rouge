@@ -14,6 +14,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
+import { MediaService } from '../media/media.service';
 import { EtablissementsService } from './etablissements.service';
 import { CreateEtablissementDto } from './dto/create-etablissement.dto';
 import { UpdateEtablissementDto } from './dto/update-etablissement.dto';
@@ -22,7 +23,10 @@ import type { RequestUser } from '../auth/jwt.strategy';
 
 @Controller('etablissements')
 export class EtablissementsController {
-  constructor(private readonly service: EtablissementsService) {}
+  constructor(
+    private readonly service: EtablissementsService,
+    private readonly mediaService: MediaService,
+  ) {}
 
   /** Créer : protégé. prestataire = utilisateur connecté. */
   @Post()
@@ -38,6 +42,12 @@ export class EtablissementsController {
   @Get()
   findAll() {
     return this.service.findAll();
+  }
+
+  /** Médias liés à l’établissement : public (déclaré avant GET :id). */
+  @Get(':id/media')
+  findMedia(@Param('id') id: string) {
+    return this.mediaService.findMediaForEtablissement(id);
   }
 
   /** Détail : public. */

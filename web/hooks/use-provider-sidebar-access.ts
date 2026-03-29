@@ -14,6 +14,7 @@ export function useProviderSidebarAccess() {
     canViewEstablishments: ok,
     canViewEstablishmentServices: ok,
     canViewCaracteristiques: ok,
+    canViewMedias: ok,
     canViewStatistics: ok,
     canViewProfile: ok,
   };

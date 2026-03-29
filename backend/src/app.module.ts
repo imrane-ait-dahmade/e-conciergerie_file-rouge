@@ -33,7 +33,7 @@ import { Avis, AvisSchema } from './avis/schemas/avis.schema';
 import { Reservation, ReservationSchema } from './reservations/schemas/reservation.schema';
 import { Paiement, PaiementSchema } from './paiements/schemas/paiement.schema';
 import { Abonnement, AbonnementSchema } from './abonnements/schemas/abonnement.schema';
-import { Media, MediaSchema } from './media/schemas/media.schema';
+import { MediaModule } from './media/media.module';
 import { Admin, AdminSchema } from './admins/schemas/admin.schema';
 import { Prestataire, PrestataireSchema } from './prestataires/schemas/prestataire.schema';
 import { Voyageur, VoyageurSchema } from './voyageurs/schemas/voyageur.schema';
@@ -83,7 +83,6 @@ import { RequestContextMiddleware } from './common/middleware/request-context.mi
       { name: Reservation.name, schema: ReservationSchema },
       { name: Paiement.name, schema: PaiementSchema },
       { name: Abonnement.name, schema: AbonnementSchema },
-      { name: Media.name, schema: MediaSchema },
       { name: Admin.name, schema: AdminSchema },
       { name: Prestataire.name, schema: PrestataireSchema },
       { name: Voyageur.name, schema: VoyageurSchema },
@@ -111,6 +110,7 @@ import { RequestContextMiddleware } from './common/middleware/request-context.mi
     ProviderEstablishmentServicesModule,
     ProviderEtablissementServiceCaracteristiquesModule,
     ProviderDashboardModule,
+    MediaModule,
   ],
   controllers: [AppController],
   providers: [

@@ -505,6 +505,42 @@ export type CommonDictionary = {
     saveError: string;
     statusError: string;
   };
+  /** Prestataire — `/[locale]/prestataire/medias` */
+  providerMedias: {
+    pageTitle: string;
+    pageDescription: string;
+    tabEstablishment: string;
+    tabServiceLine: string;
+    selectEtabLabel: string;
+    selectEtabPlaceholder: string;
+    selectServiceLabel: string;
+    selectServicePlaceholder: string;
+    filesLabel: string;
+    filesHint: string;
+    primaryCheckbox: string;
+    uploadButton: string;
+    uploadingLabel: string;
+    cardUploadTitle: string;
+    cardUploadDescription: string;
+    sectionLibrary: string;
+    sectionLibraryHint: string;
+    emptyLibrary: string;
+    loadListError: string;
+    loadingList: string;
+    loadingRefs: string;
+    refsLoadError: string;
+    retry: string;
+    selectParentFirst: string;
+    deleteButton: string;
+    deleteConfirm: string;
+    badgePrimary: string;
+    markPrimary: string;
+    successMarkPrimary: string;
+    successUpload: string;
+    successDelete: string;
+    errorGeneric: string;
+    videoBadge: string;
+  };
   /** Prestataire — `/[locale]/prestataire/services` */
   providerEstablishmentServices: {
     pageTitle: string;
@@ -1150,6 +1186,42 @@ const DEFAULT_COMMON_DICTIONARY: CommonDictionary = {
     saveError: "Could not save.",
     statusError: "Could not update status.",
   },
+  providerMedias: {
+    pageTitle: "Media library",
+    pageDescription:
+      "Upload images or videos for an establishment or for a specific service line. One image can be marked as primary (cover) per scope.",
+    tabEstablishment: "Establishment",
+    tabServiceLine: "Service line",
+    selectEtabLabel: "Establishment",
+    selectEtabPlaceholder: "Choose an establishment…",
+    selectServiceLabel: "Assignment (establishment — service)",
+    selectServicePlaceholder: "Choose a line…",
+    filesLabel: "Files",
+    filesHint: "Images or videos. Multiple files allowed.",
+    primaryCheckbox: "Set the first image in the batch as primary (cover)",
+    uploadButton: "Upload",
+    uploadingLabel: "Uploading…",
+    cardUploadTitle: "Upload",
+    cardUploadDescription: "Choose where to attach files, then select one or more files.",
+    sectionLibrary: "Uploaded media",
+    sectionLibraryHint: "Preview, play videos, or remove a file.",
+    emptyLibrary: "No media for this selection yet.",
+    loadListError: "Could not load media list.",
+    loadingList: "Loading media…",
+    loadingRefs: "Loading your establishments and services…",
+    refsLoadError: "Could not load establishments or services.",
+    retry: "Retry",
+    selectParentFirst: "Select an establishment or a service line first.",
+    deleteButton: "Delete",
+    deleteConfirm: "Delete this media? This cannot be undone.",
+    badgePrimary: "Primary",
+    markPrimary: "Set primary",
+    successMarkPrimary: "Cover image updated.",
+    successUpload: "Upload successful.",
+    successDelete: "Media deleted.",
+    errorGeneric: "Something went wrong.",
+    videoBadge: "Video",
+  },
   providerEstablishmentServices: {
     pageTitle: "Establishment services",
     pageDescription: "Link catalog services to your establishments.",
@@ -1355,6 +1427,7 @@ function normalizeDictionary(value: unknown): CommonDictionary {
   const providerSidebar = asRecord(root.providerSidebar);
   const providerDashboard = asRecord(root.providerDashboard);
   const providerEtablissements = asRecord(root.providerEtablissements);
+  const providerMedias = asRecord(root.providerMedias);
   const providerEstablishmentServices = asRecord(root.providerEstablishmentServices);
   const providerEstablishmentServiceCaracteristiques = asRecord(
     root.providerEstablishmentServiceCaracteristiques,
@@ -2990,6 +3063,137 @@ function normalizeDictionary(value: unknown): CommonDictionary {
       statusError: asString(
         providerEtablissements.statusError,
         DEFAULT_COMMON_DICTIONARY.providerEtablissements.statusError
+      ),
+    },
+    providerMedias: {
+      pageTitle: asString(
+        providerMedias.pageTitle,
+        DEFAULT_COMMON_DICTIONARY.providerMedias.pageTitle
+      ),
+      pageDescription: asString(
+        providerMedias.pageDescription,
+        DEFAULT_COMMON_DICTIONARY.providerMedias.pageDescription
+      ),
+      tabEstablishment: asString(
+        providerMedias.tabEstablishment,
+        DEFAULT_COMMON_DICTIONARY.providerMedias.tabEstablishment
+      ),
+      tabServiceLine: asString(
+        providerMedias.tabServiceLine,
+        DEFAULT_COMMON_DICTIONARY.providerMedias.tabServiceLine
+      ),
+      selectEtabLabel: asString(
+        providerMedias.selectEtabLabel,
+        DEFAULT_COMMON_DICTIONARY.providerMedias.selectEtabLabel
+      ),
+      selectEtabPlaceholder: asString(
+        providerMedias.selectEtabPlaceholder,
+        DEFAULT_COMMON_DICTIONARY.providerMedias.selectEtabPlaceholder
+      ),
+      selectServiceLabel: asString(
+        providerMedias.selectServiceLabel,
+        DEFAULT_COMMON_DICTIONARY.providerMedias.selectServiceLabel
+      ),
+      selectServicePlaceholder: asString(
+        providerMedias.selectServicePlaceholder,
+        DEFAULT_COMMON_DICTIONARY.providerMedias.selectServicePlaceholder
+      ),
+      filesLabel: asString(
+        providerMedias.filesLabel,
+        DEFAULT_COMMON_DICTIONARY.providerMedias.filesLabel
+      ),
+      filesHint: asString(
+        providerMedias.filesHint,
+        DEFAULT_COMMON_DICTIONARY.providerMedias.filesHint
+      ),
+      primaryCheckbox: asString(
+        providerMedias.primaryCheckbox,
+        DEFAULT_COMMON_DICTIONARY.providerMedias.primaryCheckbox
+      ),
+      uploadButton: asString(
+        providerMedias.uploadButton,
+        DEFAULT_COMMON_DICTIONARY.providerMedias.uploadButton
+      ),
+      uploadingLabel: asString(
+        providerMedias.uploadingLabel,
+        DEFAULT_COMMON_DICTIONARY.providerMedias.uploadingLabel
+      ),
+      cardUploadTitle: asString(
+        providerMedias.cardUploadTitle,
+        DEFAULT_COMMON_DICTIONARY.providerMedias.cardUploadTitle
+      ),
+      cardUploadDescription: asString(
+        providerMedias.cardUploadDescription,
+        DEFAULT_COMMON_DICTIONARY.providerMedias.cardUploadDescription
+      ),
+      sectionLibrary: asString(
+        providerMedias.sectionLibrary,
+        DEFAULT_COMMON_DICTIONARY.providerMedias.sectionLibrary
+      ),
+      sectionLibraryHint: asString(
+        providerMedias.sectionLibraryHint,
+        DEFAULT_COMMON_DICTIONARY.providerMedias.sectionLibraryHint
+      ),
+      emptyLibrary: asString(
+        providerMedias.emptyLibrary,
+        DEFAULT_COMMON_DICTIONARY.providerMedias.emptyLibrary
+      ),
+      loadListError: asString(
+        providerMedias.loadListError,
+        DEFAULT_COMMON_DICTIONARY.providerMedias.loadListError
+      ),
+      loadingList: asString(
+        providerMedias.loadingList,
+        DEFAULT_COMMON_DICTIONARY.providerMedias.loadingList
+      ),
+      loadingRefs: asString(
+        providerMedias.loadingRefs,
+        DEFAULT_COMMON_DICTIONARY.providerMedias.loadingRefs
+      ),
+      refsLoadError: asString(
+        providerMedias.refsLoadError,
+        DEFAULT_COMMON_DICTIONARY.providerMedias.refsLoadError
+      ),
+      retry: asString(providerMedias.retry, DEFAULT_COMMON_DICTIONARY.providerMedias.retry),
+      selectParentFirst: asString(
+        providerMedias.selectParentFirst,
+        DEFAULT_COMMON_DICTIONARY.providerMedias.selectParentFirst
+      ),
+      deleteButton: asString(
+        providerMedias.deleteButton,
+        DEFAULT_COMMON_DICTIONARY.providerMedias.deleteButton
+      ),
+      deleteConfirm: asString(
+        providerMedias.deleteConfirm,
+        DEFAULT_COMMON_DICTIONARY.providerMedias.deleteConfirm
+      ),
+      badgePrimary: asString(
+        providerMedias.badgePrimary,
+        DEFAULT_COMMON_DICTIONARY.providerMedias.badgePrimary
+      ),
+      markPrimary: asString(
+        providerMedias.markPrimary,
+        DEFAULT_COMMON_DICTIONARY.providerMedias.markPrimary
+      ),
+      successMarkPrimary: asString(
+        providerMedias.successMarkPrimary,
+        DEFAULT_COMMON_DICTIONARY.providerMedias.successMarkPrimary
+      ),
+      successUpload: asString(
+        providerMedias.successUpload,
+        DEFAULT_COMMON_DICTIONARY.providerMedias.successUpload
+      ),
+      successDelete: asString(
+        providerMedias.successDelete,
+        DEFAULT_COMMON_DICTIONARY.providerMedias.successDelete
+      ),
+      errorGeneric: asString(
+        providerMedias.errorGeneric,
+        DEFAULT_COMMON_DICTIONARY.providerMedias.errorGeneric
+      ),
+      videoBadge: asString(
+        providerMedias.videoBadge,
+        DEFAULT_COMMON_DICTIONARY.providerMedias.videoBadge
       ),
     },
     providerEstablishmentServices: {

@@ -1,4 +1,4 @@
-import { ProviderPageHeader } from "@/components/prestataire/provider-dashboard-shell";
+import { ProviderMediasSection } from "@/components/prestataire/provider-medias-section";
 import { getDictionary } from "@/lib/get-dictionary";
 import { isLocale } from "@/lib/i18n-config";
 import { notFound } from "next/navigation";
@@ -12,10 +12,5 @@ export default async function PrestataireMediasPage({
   if (!isLocale(locale)) notFound();
   const dict = await getDictionary(locale);
 
-  return (
-    <ProviderPageHeader
-      title={dict.providerSidebar.medias}
-      description="À venir — médias et photos."
-    />
-  );
+  return <ProviderMediasSection labels={dict.providerMedias} />;
 }

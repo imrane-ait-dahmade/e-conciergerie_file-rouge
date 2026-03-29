@@ -11,6 +11,7 @@ import {
   ShopOutlined,
   LinkOutlined,
   CheckSquareOutlined,
+  PictureOutlined,
   LineChartOutlined,
   UserOutlined,
 } from "@ant-design/icons";
@@ -21,7 +22,7 @@ import { cn } from "@/lib/utils";
 
 const { Sider } = Layout;
 
-/** Aligné sur `CommonDictionary["providerSidebar"]` (sans entrée Médias dans le menu). */
+/** Aligné sur `CommonDictionary["providerSidebar"]`. */
 export type PrestataireSidebarLabels = {
   title: string;
   sectionGeneral: string;
@@ -30,6 +31,7 @@ export type PrestataireSidebarLabels = {
   establishments: string;
   establishmentServices: string;
   caracteristiques: string;
+  medias: string;
   statistics: string;
   profile: string;
 };
@@ -96,6 +98,13 @@ export function PrestataireSidebar({
         label: labels.caracteristiques,
       });
     }
+    if (access.canViewMedias) {
+      business.push({
+        key: `${base}/medias`,
+        icon: <PictureOutlined />,
+        label: labels.medias,
+      });
+    }
     if (access.canViewStatistics) {
       business.push({
         key: `${base}/statistiques`,
@@ -132,6 +141,7 @@ export function PrestataireSidebar({
     access.canViewDashboard,
     access.canViewEstablishmentServices,
     access.canViewEstablishments,
+    access.canViewMedias,
     access.canViewProfile,
     access.canViewStatistics,
     base,
