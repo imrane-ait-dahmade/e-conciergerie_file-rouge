@@ -10,11 +10,12 @@ import { randomUUID } from 'crypto';
 import { Model, Types } from 'mongoose';
 import { Etablissement } from '../etablissements/schemas/etablissement.schema';
 import { EtablissementService } from '../etablissement-services/schemas/etablissement-service.schema';
+import { Pays } from '../pays/schemas/pays.schema';
 import { UploadsService } from '../uploads/uploads.service';
+import { Ville } from '../villes/schemas/ville.schema';
 import { ListMediaQueryDto } from './dto/list-media-query.dto';
 import { UploadMediaDto } from './dto/upload-media.dto';
 import { Media, MediaKind } from './schemas/media.schema';
-import type { FilterQuery } from 'mongoose';
 
 function detectMediaKind(mimetype: string): MediaKind | null {
   if (mimetype.startsWith('image/')) {
@@ -26,8 +27,11 @@ function detectMediaKind(mimetype: string): MediaKind | null {
   return null;
 }
 
-/** Filtre Mongo pour « même scope » qu’un document (legacy + champs génériques). */
-function primaryScopeFilter(doc: Media): FilterQuery<Media> | null {
+/**
+ * Filtre Mongo pour « même entité parente » qu’un document média.
+ * Sert à désigner tous les médias dont il faut baisser `isPrimary` avant d’en promouvoir une.
+ */
+function primaryScopeFilter(doc: Media): Record<string, unknown> | null {
   const etab =
     doc.etablissementId ??
     (doc.entityType === 'etablissement' ? doc.entityId : undefined);
@@ -60,6 +64,13 @@ function primaryScopeFilter(doc: Media): FilterQuery<Media> | null {
   return null;
 }
 
+/** Parent cible après validation du DTO (un seul mode actif). */
+type ResolvedUploadParent =
+  | { kind: 'etablissement'; etablissementId: Types.ObjectId }
+  | { kind: 'service'; etablissementServiceId: Types.ObjectId }
+  | { kind: 'city'; entityId: Types.ObjectId }
+  | { kind: 'country'; entityId: Types.ObjectId };
+
 @Injectable()
 export class MediaService {
   constructor(
@@ -68,6 +79,8 @@ export class MediaService {
     private readonly etablissementModel: Model<Etablissement>,
     @InjectModel(EtablissementService.name)
     private readonly etablissementServiceModel: Model<EtablissementService>,
+    @InjectModel(Pays.name) private readonly paysModel: Model<Pays>,
+    @InjectModel(Ville.name) private readonly villeModel: Model<Ville>,
     private readonly uploads: UploadsService,
     private readonly config: ConfigService,
   ) {}
@@ -81,6 +94,47 @@ export class MediaService {
       .map((segment) => encodeURIComponent(segment))
       .join('/');
     return `${base}/${bucket}/${path}`;
+  }
+
+  private async assertCountryExists(id: string): Promise<void> {
+    if (!Types.ObjectId.isValid(id)) {
+      throw new BadRequestException('Identifiant pays invalide');
+    }
+    const exists = await this.paysModel.exists({ _id: id }).exec();
+    if (!exists) {
+      throw new NotFoundException('Pays introuvable');
+    }
+  }
+
+  private async assertCityExists(id: string): Promise<void> {
+    if (!Types.ObjectId.isValid(id)) {
+      throw new BadRequestException('Identifiant ville invalide');
+    }
+    const exists = await this.villeModel.exists({ _id: id }).exec();
+    if (!exists) {
+      throw new NotFoundException('Ville introuvable');
+    }
+  }
+
+  /** Envoie vers MinIO et calcule l’URL publique (tous types de parent). */
+  private async storeFileInMinio(
+    file: Express.Multer.File,
+    prestataireId: string,
+  ): Promise<{
+    url: string;
+    bucket: string;
+    objectKey: string;
+    size: number;
+  }> {
+    const safe = file.originalname.replace(/[^\w.-]+/g, '_') || 'file';
+    const objectKey = `media/${prestataireId}/${randomUUID()}-${safe}`;
+    const uploaded = await this.uploads.uploadFileWithKey(file, objectKey);
+    return {
+      url: this.buildPublicUrl(uploaded.bucket, uploaded.key),
+      bucket: uploaded.bucket,
+      objectKey: uploaded.key,
+      size: uploaded.size,
+    };
   }
 
   /**
@@ -118,6 +172,122 @@ export class MediaService {
       })
       .sort({ isPrimary: -1, createdAt: -1 })
       .exec();
+  }
+
+  private mapPublicImageRows(rows: unknown[]) {
+    type Row = {
+      _id: Types.ObjectId;
+      url: string;
+      isPrimary: boolean;
+      mimeType?: string;
+      createdAt?: Date;
+    };
+    return (rows as Row[]).map((row) => ({
+      id: String(row._id),
+      url: row.url,
+      isPrimary: row.isPrimary,
+      mimeType: row.mimeType,
+      createdAt: row.createdAt,
+    }));
+  }
+
+  private mapPublicImageRow(row: unknown | null | undefined) {
+    if (row == null) {
+      return null;
+    }
+    return this.mapPublicImageRows([row])[0] ?? null;
+  }
+
+  /**
+   * Image marquée principale pour un établissement (`isPrimary` + `type: image`), ou `null`.
+   */
+  async findPrimaryMediaForEtablissement(etablissementId: string) {
+    if (!Types.ObjectId.isValid(etablissementId)) {
+      throw new BadRequestException('Identifiant établissement invalide');
+    }
+    const etab = await this.etablissementModel.findById(etablissementId).exec();
+    if (!etab) {
+      throw new NotFoundException('Établissement introuvable');
+    }
+    const id = new Types.ObjectId(etablissementId);
+    const row = await this.mediaModel
+      .findOne({
+        $or: [{ etablissementId: id }, { entityType: 'etablissement', entityId: id }],
+        type: 'image',
+        isPrimary: true,
+      })
+      .select('url isPrimary mimeType createdAt')
+      .lean()
+      .exec();
+    return this.mapPublicImageRow(row);
+  }
+
+  /**
+   * Image marquée principale pour une ville, ou `null`.
+   */
+  async findPrimaryMediaForCity(cityId: string) {
+    await this.assertCityExists(cityId);
+    const oid = new Types.ObjectId(cityId);
+    const row = await this.mediaModel
+      .findOne({
+        entityType: 'city',
+        entityId: oid,
+        type: 'image',
+        isPrimary: true,
+      })
+      .select('url isPrimary mimeType createdAt')
+      .lean()
+      .exec();
+    return this.mapPublicImageRow(row);
+  }
+
+  /**
+   * Image marquée principale pour un pays, ou `null`.
+   */
+  async findPrimaryMediaForCountry(countryId: string) {
+    await this.assertCountryExists(countryId);
+    const oid = new Types.ObjectId(countryId);
+    const row = await this.mediaModel
+      .findOne({
+        entityType: 'country',
+        entityId: oid,
+        type: 'image',
+        isPrimary: true,
+      })
+      .select('url isPrimary mimeType createdAt')
+      .lean()
+      .exec();
+    return this.mapPublicImageRow(row);
+  }
+
+  /**
+   * Images publiques liées à une ville (`entityType` + `entityId`).
+   */
+  async findMediaForCity(cityId: string) {
+    await this.assertCityExists(cityId);
+    const oid = new Types.ObjectId(cityId);
+    const rows = await this.mediaModel
+      .find({ entityType: 'city', entityId: oid, type: 'image' })
+      .select('url isPrimary mimeType createdAt')
+      .sort({ isPrimary: -1, createdAt: -1 })
+      .lean()
+      .exec();
+    return this.mapPublicImageRows(rows);
+  }
+
+  /**
+   * Images publiques liées à un pays (`entityType` + `entityId`).
+   */
+  async findMediaForCountry(countryId: string) {
+    await this.assertCountryExists(countryId);
+    const oid = new Types.ObjectId(countryId);
+    const rows = await this.mediaModel
+      .find({ entityType: 'country', entityId: oid, type: 'image' })
+      .select('url isPrimary mimeType createdAt')
+      .sort({ isPrimary: -1, createdAt: -1 })
+      .lean()
+      .exec();
+    return this.mapPublicImageRows(rows);
   }
 
   /** Charge la ligne EtablissementService ou lève 400 / 404. */
@@ -204,8 +374,11 @@ export class MediaService {
       return;
     }
     if (doc.entityType === 'city' || doc.entityType === 'country') {
+      if (doc.prestataire.toString() === prestataireId) {
+        return;
+      }
       throw new ForbiddenException(
-        'Les médias ville / pays ne sont pas gérés dans cet espace prestataire pour le moment',
+        "Vous n'êtes pas l'auteur de ce média (ville / pays).",
       );
     }
     throw new ForbiddenException(
@@ -241,7 +414,8 @@ export class MediaService {
       );
     }
     await this.clearPrimarySameScope(doc);
-    const id = new Types.ObjectId(String((doc as { id: string }).id));
+    const rawId = (doc as { _id?: Types.ObjectId; id?: string })._id ?? (doc as { id?: string }).id;
+    const id = new Types.ObjectId(String(rawId));
     await this.mediaModel
       .updateOne({ _id: id }, { $set: { isPrimary: true } })
       .exec();
@@ -255,6 +429,31 @@ export class MediaService {
   private validateUploadParentDto(dto: UploadMediaDto): void {
     const hasEtab = Boolean(dto.etablissementId);
     const hasEs = Boolean(dto.etablissementServiceId);
+    const geo =
+      dto.entityType === 'city' || dto.entityType === 'country'
+        ? dto.entityType
+        : null;
+
+    if (geo) {
+      if (hasEtab || hasEs) {
+        throw new BadRequestException(
+          'Ne pas combiner entityType (city/country) avec etablissementId ou etablissementServiceId.',
+        );
+      }
+      if (!dto.entityId) {
+        throw new BadRequestException(
+          'entityId est requis avec entityType city ou country.',
+        );
+      }
+      return;
+    }
+
+    if (dto.entityId) {
+      throw new BadRequestException(
+        'entityId requiert entityType = city ou country.',
+      );
+    }
+
     if (hasEtab === hasEs) {
       throw new BadRequestException(
         'Indiquez exactement un des deux : etablissementId OU etablissementServiceId.',
@@ -262,10 +461,37 @@ export class MediaService {
     }
   }
 
+  private resolveUploadParent(dto: UploadMediaDto): ResolvedUploadParent {
+    if (dto.entityType === 'country' && dto.entityId) {
+      return { kind: 'country', entityId: new Types.ObjectId(dto.entityId) };
+    }
+    if (dto.entityType === 'city' && dto.entityId) {
+      return { kind: 'city', entityId: new Types.ObjectId(dto.entityId) };
+    }
+    if (dto.etablissementId) {
+      return {
+        kind: 'etablissement',
+        etablissementId: new Types.ObjectId(dto.etablissementId),
+      };
+    }
+    return {
+      kind: 'service',
+      etablissementServiceId: new Types.ObjectId(dto.etablissementServiceId!),
+    };
+  }
+
   private async assertPrestataireOwnsUploadTarget(
     dto: UploadMediaDto,
     prestataireId: string,
   ): Promise<void> {
+    if (dto.entityType === 'country' && dto.entityId) {
+      await this.assertCountryExists(dto.entityId);
+      return;
+    }
+    if (dto.entityType === 'city' && dto.entityId) {
+      await this.assertCityExists(dto.entityId);
+      return;
+    }
     if (dto.etablissementId) {
       await this.assertPrestataireOwnsEtablissement(
         dto.etablissementId,
@@ -281,40 +507,44 @@ export class MediaService {
 
   private async createMediaRecord(
     file: Express.Multer.File,
-    dto: UploadMediaDto,
+    parent: ResolvedUploadParent,
     prestataireId: string,
     kind: MediaKind,
   ): Promise<Media> {
-    const safe = file.originalname.replace(/[^\w.-]+/g, '_') || 'file';
-    const objectKey = `media/${prestataireId}/${randomUUID()}-${safe}`;
-    const uploaded = await this.uploads.uploadFileWithKey(file, objectKey);
-    const url = this.buildPublicUrl(uploaded.bucket, uploaded.key);
-
-    const etabOid = dto.etablissementId
-      ? new Types.ObjectId(dto.etablissementId)
-      : undefined;
-    const esOid = dto.etablissementServiceId
-      ? new Types.ObjectId(dto.etablissementServiceId)
-      : undefined;
-
-    return this.mediaModel.create({
-      url,
-      bucket: uploaded.bucket,
-      objectKey: uploaded.key,
+    const stored = await this.storeFileInMinio(file, prestataireId);
+    const prestataireOid = new Types.ObjectId(prestataireId);
+    const base = {
+      url: stored.url,
+      bucket: stored.bucket,
+      objectKey: stored.objectKey,
       type: kind,
       mimeType: file.mimetype,
-      sizeBytes: uploaded.size,
+      sizeBytes: stored.size,
       originalFilename: file.originalname,
-      prestataire: new Types.ObjectId(prestataireId),
-      etablissementId: etabOid,
-      etablissementServiceId: esOid,
-      entityType: etabOid
-        ? ('etablissement' as const)
-        : esOid
-          ? ('service' as const)
-          : undefined,
-      entityId: etabOid ?? esOid,
+      prestataire: prestataireOid,
       isPrimary: false,
+    };
+
+    if (parent.kind === 'etablissement') {
+      return this.mediaModel.create({
+        ...base,
+        etablissementId: parent.etablissementId,
+        entityType: 'etablissement' as const,
+        entityId: parent.etablissementId,
+      });
+    }
+    if (parent.kind === 'service') {
+      return this.mediaModel.create({
+        ...base,
+        etablissementServiceId: parent.etablissementServiceId,
+        entityType: 'service' as const,
+        entityId: parent.etablissementServiceId,
+      });
+    }
+    return this.mediaModel.create({
+      ...base,
+      entityType: parent.kind,
+      entityId: parent.entityId,
     });
   }
 
@@ -329,6 +559,7 @@ export class MediaService {
 
     this.validateUploadParentDto(dto);
     await this.assertPrestataireOwnsUploadTarget(dto, prestataireId);
+    const uploadParent = this.resolveUploadParent(dto);
 
     const kind = detectMediaKind(file.mimetype || '');
     if (!kind) {
@@ -342,7 +573,7 @@ export class MediaService {
 
     const created = await this.createMediaRecord(
       file,
-      dto,
+      uploadParent,
       prestataireId,
       kind,
     );
@@ -364,6 +595,7 @@ export class MediaService {
 
     this.validateUploadParentDto(dto);
     await this.assertPrestataireOwnsUploadTarget(dto, prestataireId);
+    const uploadParent = this.resolveUploadParent(dto);
 
     const results: Media[] = [];
     let primaryAssigned = false;
@@ -383,7 +615,7 @@ export class MediaService {
         Boolean(dto.isPrimary) && !primaryAssigned && kind === 'image';
       const created = await this.createMediaRecord(
         file,
-        dto,
+        uploadParent,
         prestataireId,
         kind,
       );
@@ -405,6 +637,10 @@ export class MediaService {
     return results;
   }
 
+  /**
+   * Définit un média comme image principale pour son entité (établissement, ville, pays, ligne service…).
+   * Vérifie les droits (`findOne`), puis applique la règle « un seul primaire par entité ».
+   */
   async setPrimary(mediaId: string, prestataireId: string) {
     const doc = await this.findOne(mediaId, prestataireId);
     return this.applyPrimaryToMedia(doc);

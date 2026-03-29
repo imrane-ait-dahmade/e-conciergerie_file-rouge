@@ -97,6 +97,33 @@ export async function uploadProviderMediaBatch(
   return Array.isArray(data) ? (data as ProviderMedia[]) : [];
 }
 
+/** POST /media/upload — ville ou pays (référentiel géo). */
+export async function uploadGeoMedia(
+  file: File,
+  opts: {
+    entityType: "city" | "country";
+    entityId: string;
+    /** Image principale (drapeau / couverture). */
+    isPrimary?: boolean;
+  },
+): Promise<ProviderMedia> {
+  const base = baseOrThrow();
+  const form = new FormData();
+  form.append("file", file);
+  form.append("entityType", opts.entityType);
+  form.append("entityId", opts.entityId);
+  if (opts.isPrimary) {
+    form.append("isPrimary", "true");
+  }
+  const res = await fetch(`${base}/media/upload`, {
+    method: "POST",
+    headers: headersMultipartAuth(),
+    body: form,
+  });
+  if (!res.ok) throw new Error(await readErrorMessage(res));
+  return res.json() as Promise<ProviderMedia>;
+}
+
 export async function deleteProviderMedia(id: string): Promise<void> {
   const base = baseOrThrow();
   const res = await fetch(`${base}/media/${encodeURIComponent(id)}`, {

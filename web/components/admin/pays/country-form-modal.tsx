@@ -7,7 +7,9 @@ import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { uploadGeoMedia } from "@/lib/api/provider-media";
 import { createCountry, updateCountry } from "@/lib/api/countries";
+import { extractDocumentId } from "@/lib/extract-document-id";
 
 const FORM_ID = "country-form";
 
@@ -32,6 +34,7 @@ type FormValues = {
 
 export function CountryFormModal({ open, onClose, initialData, onSuccess }: CountryFormModalProps) {
   const [submitting, setSubmitting] = useState(false);
+  const [flagFile, setFlagFile] = useState<File | null>(null);
 
   const isEdit = Boolean(initialData?.id);
 
@@ -55,6 +58,7 @@ export function CountryFormModal({ open, onClose, initialData, onSuccess }: Coun
       name: initialData?.name ?? "",
       code: initialData?.code ?? "",
     });
+    setFlagFile(null);
   }, [open, initialData?.id, initialData?.name, initialData?.code, reset]);
 
   const handleClose = () => {
@@ -72,16 +76,43 @@ export function CountryFormModal({ open, onClose, initialData, onSuccess }: Coun
 
     setSubmitting(true);
     try {
+      let countryId: string | null = null;
       if (isEdit && initialData?.id) {
         await updateCountry(initialData.id, payload);
+        countryId = initialData.id;
         message.success("Pays mis à jour.");
       } else {
-        await createCountry(payload);
+        const created = await createCountry(payload);
+        countryId = extractDocumentId(created);
         message.success("Pays créé.");
+        if (!countryId) {
+          message.warning(
+            "Réponse sans identifiant : impossible d’envoyer le drapeau automatiquement.",
+          );
+        }
       }
+
+      if (flagFile && countryId) {
+        try {
+          await uploadGeoMedia(flagFile, {
+            entityType: "country",
+            entityId: countryId,
+            isPrimary: true,
+          });
+          message.success("Drapeau enregistré.");
+        } catch (e) {
+          message.warning(
+            e instanceof Error
+              ? `Drapeau : ${e.message}`
+              : "Le drapeau n’a pas pu être enregistré.",
+          );
+        }
+      }
+
       onSuccess();
       onClose();
       reset({ name: "", code: "" });
+      setFlagFile(null);
     } catch (e) {
       message.error(e instanceof Error ? e.message : "Une erreur est survenue.");
     } finally {
@@ -144,6 +175,26 @@ export function CountryFormModal({ open, onClose, initialData, onSuccess }: Coun
           {errors.code ? (
             <p className="text-sm text-destructive" role="alert">
               {errors.code.message}
+            </p>
+          ) : null}
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="country-flag">Drapeau (image, optionnel)</Label>
+          <Input
+            id="country-flag"
+            type="file"
+            accept="image/*"
+            disabled={submitting}
+            className="cursor-pointer file:mr-3 file:rounded-md file:border-0 file:bg-muted file:px-3 file:py-1.5 file:text-sm file:font-medium"
+            onChange={(e) => setFlagFile(e.target.files?.[0] ?? null)}
+          />
+          <p className="text-xs text-muted-foreground">
+            Envoyé après l’enregistrement du pays, comme image principale (drapeau).
+          </p>
+          {flagFile ? (
+            <p className="truncate text-xs text-muted-foreground" title={flagFile.name}>
+              Sélection : {flagFile.name}
             </p>
           ) : null}
         </div>

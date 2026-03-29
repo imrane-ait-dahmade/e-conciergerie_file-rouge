@@ -14,13 +14,17 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CreateVilleDto } from './dto/create-ville.dto';
 import { ListVillesQueryDto } from './dto/list-villes-query.dto';
+import { MediaService } from '../media/media.service';
 import { UpdateVilleDto } from './dto/update-ville.dto';
 import { VillesService } from './villes.service';
 
 @ApiTags('Villes')
 @Controller(['villes', 'cities'])
 export class VillesController {
-  constructor(private readonly villesService: VillesService) {}
+  constructor(
+    private readonly villesService: VillesService,
+    private readonly mediaService: MediaService,
+  ) {}
 
   @Post()
   @UseGuards(JwtAuthGuard)
@@ -34,6 +38,18 @@ export class VillesController {
   @ApiOperation({ summary: 'Lister les villes (paginé ; filtre optionnel ?countryId=)' })
   findAll(@Query() query: ListVillesQueryDto) {
     return this.villesService.findAll(query);
+  }
+
+  @Get(':id/media/primary')
+  @ApiOperation({ summary: 'Image principale de la ville (isPrimary), ou null' })
+  findCityPrimaryMedia(@Param('id') id: string) {
+    return this.mediaService.findPrimaryMediaForCity(id);
+  }
+
+  @Get(':id/media')
+  @ApiOperation({ summary: 'Images liées à la ville' })
+  findCityMedia(@Param('id') id: string) {
+    return this.mediaService.findMediaForCity(id);
   }
 
   @Get(':id')

@@ -75,8 +75,9 @@ export class Media {
   etablissementServiceId?: Types.ObjectId;
 
   /**
-   * Image de couverture dans le scope du parent (un seul `true` par entité parente
-   * — géré dans MediaService).
+   * Image principale pour l’entité liée (établissement, ville, pays, etc.) : au plus une avec
+   * `true` par couple (`entityType` + `entityId`) ou équivalent legacy (`etablissementId`…).
+   * Choisir une nouvelle principale met les autres du même scope à `false` (voir MediaService).
    */
   @Prop({ required: true, default: false })
   isPrimary: boolean;

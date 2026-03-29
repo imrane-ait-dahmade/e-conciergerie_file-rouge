@@ -44,6 +44,12 @@ export class EtablissementsController {
     return this.service.findAll();
   }
 
+  /** Image principale (isPrimary) : public. Déclaré avant GET :id/media. */
+  @Get(':id/media/primary')
+  findPrimaryMedia(@Param('id') id: string) {
+    return this.mediaService.findPrimaryMediaForEtablissement(id);
+  }
+
   /** Médias liés à l’établissement : public (déclaré avant GET :id). */
   @Get(':id/media')
   findMedia(@Param('id') id: string) {

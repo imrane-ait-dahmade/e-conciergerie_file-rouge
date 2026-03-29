@@ -9,6 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createCity, updateCity } from "@/lib/api/cities";
 import { fetchCountries, type CountryListItem } from "@/lib/api/countries";
+import { uploadGeoMedia } from "@/lib/api/provider-media";
+import { extractDocumentId } from "@/lib/extract-document-id";
 
 const FORM_ID = "city-form";
 
@@ -37,6 +39,7 @@ function countryLabel(c: CountryListItem): string {
 
 export function CityFormModal({ open, onClose, initialData, onSuccess }: CityFormModalProps) {
   const [submitting, setSubmitting] = useState(false);
+  const [coverFile, setCoverFile] = useState<File | null>(null);
   const [countriesLoading, setCountriesLoading] = useState(false);
   const [countries, setCountries] = useState<CountryListItem[]>([]);
   const [countriesError, setCountriesError] = useState<string | null>(null);
@@ -85,6 +88,7 @@ export function CityFormModal({ open, onClose, initialData, onSuccess }: CityFor
       name: initialData?.name ?? "",
       countryId: initialData?.countryId ?? "",
     });
+    setCoverFile(null);
   }, [open, initialData?.id, initialData?.name, initialData?.countryId, reset]);
 
   const selectOptions = useMemo(
@@ -107,16 +111,43 @@ export function CityFormModal({ open, onClose, initialData, onSuccess }: CityFor
 
     setSubmitting(true);
     try {
+      let cityId: string | null = null;
       if (isEdit && initialData?.id) {
         await updateCity(initialData.id, { nom, pays });
+        cityId = initialData.id;
         message.success("Ville mise à jour.");
       } else {
-        await createCity({ nom, pays });
+        const created = await createCity({ nom, pays });
+        cityId = extractDocumentId(created);
         message.success("Ville créée.");
+        if (!cityId) {
+          message.warning(
+            "Réponse sans identifiant : impossible d’envoyer l’image automatiquement.",
+          );
+        }
       }
+
+      if (coverFile && cityId) {
+        try {
+          await uploadGeoMedia(coverFile, {
+            entityType: "city",
+            entityId: cityId,
+            isPrimary: true,
+          });
+          message.success("Image de la ville enregistrée.");
+        } catch (e) {
+          message.warning(
+            e instanceof Error
+              ? `Image : ${e.message}`
+              : "L’image n’a pas pu être enregistrée.",
+          );
+        }
+      }
+
       onSuccess();
       onClose();
       reset({ name: "", countryId: "" });
+      setCoverFile(null);
     } catch (e) {
       message.error(e instanceof Error ? e.message : "Une erreur est survenue.");
     } finally {
@@ -211,6 +242,26 @@ export function CityFormModal({ open, onClose, initialData, onSuccess }: CityFor
               {errors.countryId ? (
                 <p className="text-sm text-destructive" role="alert">
                   {errors.countryId.message}
+                </p>
+              ) : null}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="city-cover">Image de la ville (optionnel)</Label>
+              <Input
+                id="city-cover"
+                type="file"
+                accept="image/*"
+                disabled={formDisabled || submitting}
+                className="cursor-pointer file:mr-3 file:rounded-md file:border-0 file:bg-muted file:px-3 file:py-1.5 file:text-sm file:font-medium"
+                onChange={(e) => setCoverFile(e.target.files?.[0] ?? null)}
+              />
+              <p className="text-xs text-muted-foreground">
+                Envoyée après l’enregistrement de la ville, comme image principale.
+              </p>
+              {coverFile ? (
+                <p className="truncate text-xs text-muted-foreground" title={coverFile.name}>
+                  Sélection : {coverFile.name}
                 </p>
               ) : null}
             </div>

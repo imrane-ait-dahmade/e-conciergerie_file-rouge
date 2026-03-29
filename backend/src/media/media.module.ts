@@ -9,15 +9,17 @@ import {
   EtablissementService,
   EtablissementServiceSchema,
 } from '../etablissement-services/schemas/etablissement-service.schema';
+import { Pays, PaysSchema } from '../pays/schemas/pays.schema';
 import { Role, RoleSchema } from '../roles/schemas/role.schema';
 import { User, UserSchema } from '../users/schemas/user.schema';
+import { Ville, VilleSchema } from '../villes/schemas/ville.schema';
 import { UploadsModule } from '../uploads/uploads.module';
 import { MediaController } from './media.controller';
 import { MediaService } from './media.service';
 import { Media, MediaSchema } from './schemas/media.schema';
 
 /**
- * Module médias : upload MinIO, métadonnées MongoDB, accès réservé aux prestataires.
+ * Module médias : upload MinIO, métadonnées MongoDB, accès admin ou prestataire.
  */
 @Module({
   imports: [
@@ -26,6 +28,8 @@ import { Media, MediaSchema } from './schemas/media.schema';
       { name: Media.name, schema: MediaSchema },
       { name: Etablissement.name, schema: EtablissementSchema },
       { name: EtablissementService.name, schema: EtablissementServiceSchema },
+      { name: Pays.name, schema: PaysSchema },
+      { name: Ville.name, schema: VilleSchema },
       { name: User.name, schema: UserSchema },
       { name: Role.name, schema: RoleSchema },
     ]),

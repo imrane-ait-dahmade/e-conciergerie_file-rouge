@@ -20,8 +20,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { memoryStorage } from 'multer';
+import { AdminOrPrestataire } from '../auth/decorators/admin-or-prestataire.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
-import { ProviderOnly } from '../auth/decorators/provider-only.decorator';
 import { ListMediaQueryDto } from './dto/list-media-query.dto';
 import { UploadMediaDto } from './dto/upload-media.dto';
 import { MediaService } from './media.service';
@@ -31,11 +31,11 @@ const MAX_BATCH_FILES = 15;
 
 /**
  * Gestion des médias (MinIO + MongoDB).
- * Toutes les routes exigent un JWT prestataire : les médias sont filtrés par propriétaire.
+ * JWT **admin** ou **prestataire** ; les listes / droits sur une ligne restent liés à `prestataire` en base.
  */
 @ApiTags('Media')
 @ApiBearerAuth()
-@ProviderOnly()
+@AdminOrPrestataire()
 @Controller('media')
 export class MediaController {
   constructor(private readonly mediaService: MediaService) {}
@@ -55,6 +55,8 @@ export class MediaController {
         files: { type: 'array', items: { type: 'string', format: 'binary' } },
         etablissementId: { type: 'string' },
         etablissementServiceId: { type: 'string' },
+        entityType: { type: 'string', enum: ['city', 'country'] },
+        entityId: { type: 'string', description: 'Mongo id ville ou pays' },
         isPrimary: {
           type: 'boolean',
           description: 'Première image du lot = principale',
@@ -93,6 +95,15 @@ export class MediaController {
           type: 'string',
           description: 'ID ligne etablissement_service (xor etablissementId)',
         },
+        entityType: {
+          type: 'string',
+          enum: ['city', 'country'],
+          description: 'Xor avec etablissement* : cible référentiel géo',
+        },
+        entityId: {
+          type: 'string',
+          description: 'ID Mongo ville (entityType=city) ou pays (country)',
+        },
         isPrimary: {
           type: 'boolean',
           description: 'Image principale (images uniquement)',
@@ -129,7 +140,7 @@ export class MediaController {
   @Patch(':id/primary')
   @ApiOperation({
     summary:
-      'Définir ce média comme image principale (un seul par établissement ou par ligne service)',
+      'Image principale : un seul isPrimary par entité (établissement, ville, pays, ligne service). Les autres passent à false.',
   })
   setPrimary(@Param('id') id: string, @CurrentUser('userId') userId: string) {
     return this.mediaService.setPrimary(id, userId);
