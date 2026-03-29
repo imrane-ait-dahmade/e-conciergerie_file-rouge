@@ -23,7 +23,7 @@ import { Label } from "@/components/ui/label";
 import { getPostLoginHref } from "@/lib/auth-navigation";
 import type { CommonDictionary } from "@/lib/get-dictionary";
 import { login } from "@/lib/api";
-import { saveAccessToken } from "@/lib/auth-storage";
+import { saveAccessToken, saveAuthUser } from "@/lib/auth-storage";
 import { AppleIcon, GoogleIcon } from "@/components/auth/oauth-provider-icons";
 
 type LoginFormProps = {
@@ -67,6 +67,7 @@ export function LoginForm({ locale, signupHref, copy }: LoginFormProps) {
       const data = await login({ email, password });
       // Jeton JWT pour les prochains appels API (solution provisoire)
       saveAccessToken(data.accessToken);
+      saveAuthUser(data.user);
       router.replace(getPostLoginHref(locale, data.user));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erreur de connexion");

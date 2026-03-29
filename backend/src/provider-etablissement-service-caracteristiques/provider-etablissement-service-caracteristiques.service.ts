@@ -6,6 +6,11 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
+import {
+  assertValidObjectId,
+  ensurePrestataireOwnsEtablissementService,
+  ensurePrestataireOwnsEtablissementServiceCaracteristique,
+} from '../auth/ownership/prestataire-ownership.util';
 import { Caracteristique } from '../caracteristiques/schemas/caracteristique.schema';
 import { Etablissement } from '../etablissements/schemas/etablissement.schema';
 import { EtablissementService } from '../etablissement-services/schemas/etablissement-service.schema';
@@ -35,12 +40,6 @@ export class ProviderEtablissementServiceCaracteristiquesService {
     private readonly caracteristiqueModel: Model<Caracteristique>,
   ) {}
 
-  private assertValidObjectId(id: string, label: string): void {
-    if (!Types.ObjectId.isValid(id)) {
-      throw new BadRequestException(`Identifiant ${label} invalide`);
-    }
-  }
-
   private isMongoDuplicateKey(err: unknown): boolean {
     return (
       typeof err === 'object' &&
@@ -50,58 +49,16 @@ export class ProviderEtablissementServiceCaracteristiquesService {
     );
   }
 
-  /**
-   * La liaison établissement–service doit exister et son établissement doit être à moi.
-   */
-  private async assertEtablissementServiceOwnedBy(
-    etablissementServiceId: string,
-    userId: string,
-  ): Promise<void> {
-    this.assertValidObjectId(etablissementServiceId, 'offre');
-    const es = await this.esModel
-      .findById(etablissementServiceId)
-      .select('etablissement')
-      .lean()
-      .exec();
-    if (!es) {
-      throw new NotFoundException('Assignation établissement–service introuvable');
-    }
-    const ok = await this.etablissementModel.exists({
-      _id: es.etablissement,
-      prestataire: new Types.ObjectId(userId),
-    });
-    if (!ok) {
-      throw new NotFoundException('Assignation établissement–service introuvable');
-    }
-  }
-
-  /**
-   * La ligne ESC doit exister ; l’offre parente doit m’appartenir.
-   */
-  private async assertEscOwnedBy(
-    escId: string,
-    userId: string,
-  ): Promise<void> {
-    this.assertValidObjectId(escId, 'caractéristique');
-    const row = await this.escModel
-      .findById(escId)
-      .select('etablissementService')
-      .lean()
-      .exec();
-    if (!row) {
-      throw new NotFoundException('Caractéristique d’offre introuvable');
-    }
-    await this.assertEtablissementServiceOwnedBy(
-      String(row.etablissementService),
-      userId,
-    );
-  }
-
   async findAllForEstablishmentService(
     etablissementServiceId: string,
     userId: string,
   ) {
-    await this.assertEtablissementServiceOwnedBy(etablissementServiceId, userId);
+    await ensurePrestataireOwnsEtablissementService(
+      this.esModel,
+      this.etablissementModel,
+      etablissementServiceId,
+      userId,
+    );
     return this.escModel
       .find({
         etablissementService: new Types.ObjectId(etablissementServiceId),
@@ -116,11 +73,16 @@ export class ProviderEtablissementServiceCaracteristiquesService {
     dto: CreateProviderEtablissementServiceCaracteristiqueDto,
     userId: string,
   ) {
-    await this.assertEtablissementServiceOwnedBy(etablissementServiceId, userId);
+    await ensurePrestataireOwnsEtablissementService(
+      this.esModel,
+      this.etablissementModel,
+      etablissementServiceId,
+      userId,
+    );
 
     let libelle: string;
     if (dto.caracteristiqueCatalogId) {
-      this.assertValidObjectId(dto.caracteristiqueCatalogId, 'catalogue');
+      assertValidObjectId(dto.caracteristiqueCatalogId, 'catalogue');
       const cat = await this.caracteristiqueModel
         .findById(dto.caracteristiqueCatalogId)
         .select('libelle')
@@ -169,7 +131,13 @@ export class ProviderEtablissementServiceCaracteristiquesService {
     dto: UpdateProviderEtablissementServiceCaracteristiqueDto,
     userId: string,
   ) {
-    await this.assertEscOwnedBy(id, userId);
+    await ensurePrestataireOwnsEtablissementServiceCaracteristique(
+      this.escModel,
+      this.esModel,
+      this.etablissementModel,
+      id,
+      userId,
+    );
 
     if (dto.libelle === undefined && dto.valeur === undefined) {
       throw new BadRequestException('Aucun champ à mettre à jour');
@@ -214,7 +182,13 @@ export class ProviderEtablissementServiceCaracteristiquesService {
   }
 
   async remove(id: string, userId: string): Promise<void> {
-    await this.assertEscOwnedBy(id, userId);
+    await ensurePrestataireOwnsEtablissementServiceCaracteristique(
+      this.escModel,
+      this.esModel,
+      this.etablissementModel,
+      id,
+      userId,
+    );
     const res = await this.escModel.findByIdAndDelete(id).exec();
     if (!res) {
       throw new NotFoundException('Caractéristique d’offre introuvable');

@@ -16,6 +16,7 @@ import {
 } from "@ant-design/icons";
 import { usePathname, useRouter } from "next/navigation";
 
+import { useProviderSidebarAccess } from "@/hooks/use-provider-sidebar-access";
 import { cn } from "@/lib/utils";
 
 const { Sider } = Layout;
@@ -57,58 +58,85 @@ export function PrestataireSidebar({
   const [collapsed, setCollapsed] = useState(false);
 
   const base = prestataireBase(locale);
+  const access = useProviderSidebarAccess();
 
   useEffect(() => {
     setSelectedKeys([pathname]);
   }, [pathname]);
 
-  const menuItems = useMemo<MenuProps["items"]>(
-    () => [
-      {
+  const menuItems = useMemo<MenuProps["items"]>(() => {
+    const general: NonNullable<MenuProps["items"]>[number][] = [];
+    if (access.canViewDashboard) {
+      general.push({
+        key: base,
+        icon: <DashboardOutlined />,
+        label: labels.dashboard,
+      });
+    }
+
+    const business: NonNullable<MenuProps["items"]>[number][] = [];
+    if (access.canViewEstablishments) {
+      business.push({
+        key: `${base}/etablissements`,
+        icon: <ShopOutlined />,
+        label: labels.establishments,
+      });
+    }
+    if (access.canViewEstablishmentServices) {
+      business.push({
+        key: `${base}/services`,
+        icon: <LinkOutlined />,
+        label: labels.establishmentServices,
+      });
+    }
+    if (access.canViewCaracteristiques) {
+      business.push({
+        key: `${base}/caracteristiques`,
+        icon: <CheckSquareOutlined />,
+        label: labels.caracteristiques,
+      });
+    }
+    if (access.canViewStatistics) {
+      business.push({
+        key: `${base}/statistiques`,
+        icon: <LineChartOutlined />,
+        label: labels.statistics,
+      });
+    }
+    if (access.canViewProfile) {
+      business.push({
+        key: `${base}/profil`,
+        icon: <UserOutlined />,
+        label: labels.profile,
+      });
+    }
+
+    const items: MenuProps["items"] = [];
+    if (general.length > 0) {
+      items.push({
         type: "group",
         label: labels.sectionGeneral,
-        children: [
-          {
-            key: base,
-            icon: <DashboardOutlined />,
-            label: labels.dashboard,
-          },
-        ],
-      },
-      {
+        children: general,
+      });
+    }
+    if (business.length > 0) {
+      items.push({
         type: "group",
         label: labels.sectionBusiness,
-        children: [
-          {
-            key: `${base}/etablissements`,
-            icon: <ShopOutlined />,
-            label: labels.establishments,
-          },
-          {
-            key: `${base}/services`,
-            icon: <LinkOutlined />,
-            label: labels.establishmentServices,
-          },
-          {
-            key: `${base}/caracteristiques`,
-            icon: <CheckSquareOutlined />,
-            label: labels.caracteristiques,
-          },
-          {
-            key: `${base}/statistiques`,
-            icon: <LineChartOutlined />,
-            label: labels.statistics,
-          },
-          {
-            key: `${base}/profil`,
-            icon: <UserOutlined />,
-            label: labels.profile,
-          },
-        ],
-      },
-    ],
-    [base, labels],
-  );
+        children: business,
+      });
+    }
+    return items;
+  }, [
+    access.canViewCaracteristiques,
+    access.canViewDashboard,
+    access.canViewEstablishmentServices,
+    access.canViewEstablishments,
+    access.canViewProfile,
+    access.canViewStatistics,
+    base,
+    labels,
+  ]);
 
   const handleMenuClick = useCallback(
     (info: MenuClickInfo) => {

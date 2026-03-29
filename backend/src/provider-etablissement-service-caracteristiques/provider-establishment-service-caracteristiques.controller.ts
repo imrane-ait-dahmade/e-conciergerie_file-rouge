@@ -1,9 +1,7 @@
-import { Body, Controller, Get, Post, Param, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Param } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../auth/guards/roles.guard';
-import { Roles } from '../auth/decorators/roles.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { ProviderOnly } from '../auth/decorators/provider-only.decorator';
 import { CreateProviderEtablissementServiceCaracteristiqueDto } from './dto/create-provider-etablissement-service-caracteristique.dto';
 import { ProviderEtablissementServiceCaracteristiquesService } from './provider-etablissement-service-caracteristiques.service';
 
@@ -13,8 +11,7 @@ import { ProviderEtablissementServiceCaracteristiquesService } from './provider-
  */
 @ApiTags('Provider — caractéristiques d’offre')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, RolesGuard)
-@Roles('prestataire')
+@ProviderOnly()
 @Controller('provider/establishment-services')
 export class ProviderEstablishmentServiceCaracteristiquesController {
   constructor(

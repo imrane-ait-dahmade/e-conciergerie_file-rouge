@@ -1,4 +1,9 @@
-import { Module } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
@@ -40,6 +45,7 @@ import {
   ServicePicture,
   ServicePictureSchema,
 } from './service-pictures/schemas/service-picture.schema';
+import { RequestContextMiddleware } from './common/middleware/request-context.middleware';
 
 /**
  * Module racine de l'application.
@@ -109,7 +115,14 @@ import {
   controllers: [AppController],
   providers: [
     AppService,
+    RequestContextMiddleware,
     { provide: APP_GUARD, useClass: ThrottlerGuard },
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer
+      .apply(RequestContextMiddleware)
+      .forRoutes({ path: '*', method: RequestMethod.ALL });
+  }
+}

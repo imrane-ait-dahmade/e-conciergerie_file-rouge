@@ -5,17 +5,14 @@ import {
   Param,
   Patch,
   Post,
-  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../auth/guards/roles.guard';
-import { Roles } from '../auth/decorators/roles.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { ProviderOnly } from '../auth/decorators/provider-only.decorator';
 import { UpdateEtablissementStatusDto } from '../etablissements/dto/update-etablissement-status.dto';
 import { ProviderCreateEtablissementDto } from './dto/provider-create-etablissement.dto';
 import { ProviderUpdateEtablissementDto } from './dto/provider-update-etablissement.dto';
@@ -26,8 +23,7 @@ import { ProviderEtablissementsService } from './provider-etablissements.service
  */
 @ApiTags('Provider — établissements')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, RolesGuard)
-@Roles('prestataire')
+@ProviderOnly()
 @Controller('provider/etablissements')
 export class ProviderEtablissementsController {
   constructor(

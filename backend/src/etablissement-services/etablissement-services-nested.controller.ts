@@ -1,8 +1,6 @@
-import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../auth/guards/roles.guard';
-import { Roles } from '../auth/decorators/roles.decorator';
+import { AdminOnly } from '../auth/decorators/admin-only.decorator';
 import { EtablissementServicesService } from './etablissement-services.service';
 
 /**
@@ -12,8 +10,7 @@ import { EtablissementServicesService } from './etablissement-services.service';
  */
 @ApiTags('Etablissement-services (admin)')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, RolesGuard)
-@Roles('admin')
+@AdminOnly()
 @Controller('etablissements')
 export class EtablissementServicesNestedController {
   constructor(

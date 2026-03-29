@@ -1,11 +1,15 @@
 import {
-  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
+import {
+  assertValidObjectId,
+  ensurePrestataireOwnsEtablissement,
+  ensurePrestataireOwnsEtablissementService,
+} from '../auth/ownership/prestataire-ownership.util';
 import { Etablissement } from '../etablissements/schemas/etablissement.schema';
 import { Service } from '../services/schemas/service.schema';
 import { CreateEtablissementServiceDto } from '../etablissement-services/dto/create-etablissement-service.dto';
@@ -41,12 +45,6 @@ export class ProviderEstablishmentServicesService {
     private readonly serviceModel: Model<Service>,
   ) {}
 
-  private assertValidObjectId(id: string, label: string): void {
-    if (!Types.ObjectId.isValid(id)) {
-      throw new BadRequestException(`Identifiant ${label} invalide`);
-    }
-  }
-
   private populateAssignment() {
     return [
       {
@@ -61,25 +59,8 @@ export class ProviderEstablishmentServicesService {
     ] as const;
   }
 
-  /**
-   * L’établissement doit exister **et** avoir `prestataire` = cet utilisateur.
-   */
-  private async assertEtablissementOwnedBy(
-    etablissementId: string,
-    userId: string,
-  ): Promise<void> {
-    this.assertValidObjectId(etablissementId, 'établissement');
-    const ok = await this.etablissementModel.exists({
-      _id: new Types.ObjectId(etablissementId),
-      prestataire: new Types.ObjectId(userId),
-    });
-    if (!ok) {
-      throw new NotFoundException('Établissement introuvable');
-    }
-  }
-
   private async assertServiceCatalogExists(id: string): Promise<void> {
-    this.assertValidObjectId(id, 'service');
+    assertValidObjectId(id, 'service');
     const ok = await this.serviceModel.exists({ _id: new Types.ObjectId(id) });
     if (!ok) {
       throw new NotFoundException('Service (catalogue) introuvable');
@@ -123,7 +104,11 @@ export class ProviderEstablishmentServicesService {
     etablissementId: string,
     userId: string,
   ) {
-    await this.assertEtablissementOwnedBy(etablissementId, userId);
+    await ensurePrestataireOwnsEtablissement(
+      this.etablissementModel,
+      etablissementId,
+      userId,
+    );
     return this.liaisonModel
       .find({ etablissement: new Types.ObjectId(etablissementId) })
       .sort({ createdAt: -1 })
@@ -132,30 +117,12 @@ export class ProviderEstablishmentServicesService {
       .exec();
   }
 
-  /**
-   * Charge la liaison ; vérifie que l’établissement lié appartient au prestataire.
-   */
-  private async assertAssignmentOwnedBy(
-    liaisonId: string,
-    userId: string,
-  ): Promise<void> {
-    this.assertValidObjectId(liaisonId, 'liaison');
-    const row = await this.liaisonModel
-      .findById(liaisonId)
-      .select('etablissement')
-      .lean()
-      .exec();
-    if (!row) {
-      throw new NotFoundException('Assignation introuvable');
-    }
-    await this.assertEtablissementOwnedBy(
-      String(row.etablissement),
+  async createForProvider(dto: CreateEtablissementServiceDto, userId: string) {
+    await ensurePrestataireOwnsEtablissement(
+      this.etablissementModel,
+      dto.etablissement,
       userId,
     );
-  }
-
-  async createForProvider(dto: CreateEtablissementServiceDto, userId: string) {
-    await this.assertEtablissementOwnedBy(dto.etablissement, userId);
     await this.assertServiceCatalogExists(dto.service);
 
     const etabOid = new Types.ObjectId(dto.etablissement);
@@ -195,7 +162,12 @@ export class ProviderEstablishmentServicesService {
     liaisonId: string,
     userId: string,
   ) {
-    await this.assertAssignmentOwnedBy(liaisonId, userId);
+    await ensurePrestataireOwnsEtablissementService(
+      this.liaisonModel,
+      this.etablissementModel,
+      liaisonId,
+      userId,
+    );
     const doc = await this.liaisonModel
       .findById(liaisonId)
       .populate([...this.populateAssignment()])
@@ -212,7 +184,12 @@ export class ProviderEstablishmentServicesService {
     dto: UpdateEtablissementServiceDto,
     userId: string,
   ) {
-    await this.assertAssignmentOwnedBy(id, userId);
+    await ensurePrestataireOwnsEtablissementService(
+      this.liaisonModel,
+      this.etablissementModel,
+      id,
+      userId,
+    );
 
     const set: Record<string, unknown> = {};
     if (dto.prix !== undefined) set.prix = dto.prix;
@@ -237,7 +214,12 @@ export class ProviderEstablishmentServicesService {
   }
 
   async removeForProvider(id: string, userId: string): Promise<void> {
-    await this.assertAssignmentOwnedBy(id, userId);
+    await ensurePrestataireOwnsEtablissementService(
+      this.liaisonModel,
+      this.etablissementModel,
+      id,
+      userId,
+    );
     const res = await this.liaisonModel.findByIdAndDelete(id).exec();
     if (!res) {
       throw new NotFoundException('Assignation introuvable');

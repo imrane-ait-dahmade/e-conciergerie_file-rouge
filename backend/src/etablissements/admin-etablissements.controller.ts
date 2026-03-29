@@ -7,16 +7,13 @@ import {
   Patch,
   Post,
   Query,
-  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../auth/guards/roles.guard';
-import { Roles } from '../auth/decorators/roles.decorator';
+import { AdminOnly } from '../auth/decorators/admin-only.decorator';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 import { AdminEtablissementsService } from './admin-etablissements.service';
 import { AdminCreateEtablissementDto } from './dto/admin-create-etablissement.dto';
@@ -32,8 +29,7 @@ import { UpdateEtablissementStatusDto } from './dto/update-etablissement-status.
  */
 @ApiTags('Etablissements (admin)')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, RolesGuard)
-@Roles('admin')
+@AdminOnly()
 @Controller('admin/etablissements')
 export class AdminEtablissementsController {
   constructor(private readonly adminEtablissementsService: AdminEtablissementsService) {}

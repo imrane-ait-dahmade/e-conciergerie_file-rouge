@@ -8,7 +8,6 @@ import {
   Post,
   Query,
   Req,
-  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -17,9 +16,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import type { RequestUser } from '../auth/jwt.strategy';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../auth/guards/roles.guard';
-import { Roles } from '../auth/decorators/roles.decorator';
+import { AdminOnly } from '../auth/decorators/admin-only.decorator';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 import { AdminUsersService } from './admin-users.service';
 import { AdminCreateUserDto } from './dto/admin-create-user.dto';
@@ -35,8 +32,7 @@ import { UpdateUserStatusDto } from './dto/update-user-status.dto';
  */
 @ApiTags('Users (admin)')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, RolesGuard)
-@Roles('admin')
+@AdminOnly()
 @Controller('users')
 export class AdminUsersController {
   constructor(private readonly adminUsersService: AdminUsersService) {}

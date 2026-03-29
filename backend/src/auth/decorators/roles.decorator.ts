@@ -5,12 +5,14 @@ import { SetMetadata } from '@nestjs/common';
 const ROLES_KEY = 'roles';
 
 /**
- * Indique qu'une route nécessite un des rôles listés.
- * À utiliser avec @UseGuards(JwtAuthGuard, RolesGuard).
+ * Indique qu'une route nécessite un des rôles listés (noms tels qu'en base : `roles.name`).
+ * À utiliser avec @UseGuards(JwtAuthGuard, RolesGuard), ou via @AdminOnly() / @ProviderOnly().
+ *
+ * Préférez les constantes `RoleName` (`auth/constants/role-names.ts`) pour éviter les typos.
  *
  * Exemple :
  *   @UseGuards(JwtAuthGuard, RolesGuard)
- *   @Roles('admin')
+ *   @Roles(RoleName.Admin)
  *   @Delete(':id')
  *   deleteUser(@Param('id') id: string) { ... }
  */
