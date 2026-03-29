@@ -25,12 +25,15 @@
  * ---------------------------------------------------------------------------
  */
 
+import { clearAuthSession, getAccessToken } from "./auth-storage";
+
 const API_BASE = (process.env.NEXT_PUBLIC_API_URL ?? "").replace(/\/$/, "");
 
 /** Chemins auth (préfixe global Nest : pas de /api ici sauf si tu en ajoutes un côté serveur). */
 export const AUTH_PATHS = {
   login: "/auth/login",
   signup: "/auth/signup",
+  logout: "/auth/logout",
 } as const;
 
 /** Corps attendu par POST /auth/login */
@@ -130,4 +133,27 @@ export async function login(data: LoginData): Promise<AuthResponse> {
 export async function signup(data: SignupData): Promise<AuthResponse> {
   const raw = await postJson<unknown>(AUTH_PATHS.signup, data);
   return assertAuthResponse(raw);
+}
+
+/**
+ * Déconnexion : POST /auth/logout (Bearer access token) puis suppression locale du jeton.
+ * Si l’API échoue (réseau), le stockage local est quand même effacé.
+ */
+export async function logoutSession(): Promise<void> {
+  const token = getAccessToken();
+  if (API_BASE && token) {
+    try {
+      await fetch(`${API_BASE}${AUTH_PATHS.logout}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    } catch {
+      /* hors ligne ou erreur réseau */
+    }
+  }
+  clearAuthSession();
 }

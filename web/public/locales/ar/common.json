@@ -131,7 +131,8 @@
     "etablissementServices": "خدمات المنشأة",
     "reservations": "الحجوزات",
     "services": "الخدمات",
-    "settings": "الإعدادات"
+    "settings": "الإعدادات",
+    "logout": "تسجيل الخروج"
   },
   "adminGeographie": {
     "pageTitle": "إدارة الجغرافيا",
@@ -262,7 +263,22 @@
     "retry": "إعادة المحاولة",
     "empty": "لا توجد منشآت مطابقة.",
     "loading": "جاري تحميل المنشآت…",
-    "noPrestataireAccounts": "لا يوجد حساب مقدّم خدمة. أنشئ واحدًا من المستخدمين."
+    "noPrestataireAccounts": "لا يوجد حساب مقدّم خدمة. أنشئ واحدًا من المستخدمين.",
+    "mainLocationTitle": "الموقع الرئيسي",
+    "mainLocationHelp": "هذا هو موقع المنشأة الرئيسي وقد يُستخدم كاحتياطي للخدمات بلا موقع محدد.",
+    "addressLineLabel": "العنوان",
+    "mapsLoading": "جاري تحميل الخريطة…",
+    "mapsLoadError": "تعذّر تحميل خرائط Google. تحقّق من الاتصال ومفتاح API.",
+    "mapsMissingKey": "الخريطة معطّلة: عيّن NEXT_PUBLIC_GOOGLE_MAPS_API_KEY في web/.env.local.",
+    "mapsSearchPlaceholder": "ابحث عن عنوان…",
+    "mapsUseTypedCoords": "استخدام الإحداثيات المدخلة",
+    "mapsResetLocation": "إعادة تعيين الموقع",
+    "mapsPickerHint": "اختر من الاقتراحات أو انقر الخريطة أو اسحب العلامة.",
+    "formLatitude": "خط العرض (WGS84)",
+    "formLongitude": "خط الطول (WGS84)",
+    "validationLatRange": "يجب أن يكون خط العرض بين -90 و 90.",
+    "validationLngRange": "يجب أن يكون خط الطول بين -180 و 180.",
+    "validationLatLngPair": "أدخل خطي العرض والطول معًا أو اتركهما فارغين."
   },
   "adminEtablissementServices": {
     "pageTitle": "خدمات المنشآت",
@@ -304,7 +320,25 @@
     "loadError": "تعذّر تحميل الإسنادات.",
     "loading": "جاري التحميل…",
     "empty": "لا يوجد إسناد يطابق البحث.",
-    "loadErrorOptions": "تعذّر تحميل المنشآت أو خدمات الكتالوج."
+    "loadErrorOptions": "تعذّر تحميل المنشآت أو خدمات الكتالوج.",
+    "specificLocationToggle": "لهذا العرض موقع محدد",
+    "specificLocationOffHelp": "سيستخدم هذا العرض موقع المنشأة الرئيسي.",
+    "formAdresse": "العنوان",
+    "formLatitude": "خط العرض (WGS84)",
+    "formLongitude": "خط الطول (WGS84)",
+    "formLocationLabel": "تسمية الموقع",
+    "formLocationType": "نوع الموقع",
+    "addressLineLabel": "العنوان",
+    "mapsLoading": "جاري تحميل الخريطة…",
+    "mapsLoadError": "تعذّر تحميل خرائط Google.",
+    "mapsMissingKey": "الخريطة معطّلة: عيّن NEXT_PUBLIC_GOOGLE_MAPS_API_KEY.",
+    "mapsSearchPlaceholder": "ابحث عن عنوان…",
+    "mapsUseTypedCoords": "استخدام الإحداثيات المدخلة",
+    "mapsResetLocation": "إعادة تعيين الموقع",
+    "mapsPickerHint": "اختر من الاقتراحات أو انقر الخريطة أو اسحب العلامة.",
+    "validationLatRange": "يجب أن يكون خط العرض بين -90 و 90.",
+    "validationLngRange": "يجب أن يكون خط الطول بين -180 و 180.",
+    "validationLatLngPair": "أدخل خطي العرض والطول معًا أو اتركهما فارغين."
   },
   "adminServicesCatalog": {
     "pageTitle": "إدارة الخدمات",
@@ -421,7 +455,8 @@
     "caracteristiques": "الخصائص",
     "medias": "الوسائط",
     "statistics": "الإحصائيات",
-    "profile": "ملفي"
+    "profile": "ملفي",
+    "logout": "تسجيل الخروج"
   },
   "providerDashboard": {
     "pageTitle": "لوحة التحكم",

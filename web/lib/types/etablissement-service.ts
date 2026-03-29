@@ -16,6 +16,13 @@ export type EtablissementServiceAssignment = {
   service: ServiceDoc | string;
   prix?: number;
   commentaire?: string;
+  adresse?: string;
+  address?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
+  location_label?: string;
+  location_type?: string;
+  location?: unknown;
   createdAt?: string;
   updatedAt?: string;
 };

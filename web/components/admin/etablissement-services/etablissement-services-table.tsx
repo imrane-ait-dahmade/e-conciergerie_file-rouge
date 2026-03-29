@@ -4,7 +4,7 @@
  * Tableau des assignations établissement ↔ service catalogue.
  * Liste chargée depuis l’API (pagination agrégée côté client), recherche locale, modales création / édition / suppression.
  */
-import { Modal, Select, Spin, message } from "antd";
+import { Modal, Select, Spin, Switch, message } from "antd";
 import { Pencil, Plus, Search, Trash2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -21,12 +21,15 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
+import { LocationPicker } from "@/components/shared/LocationPicker";
+import { ApiRequestError, matchBackendMessagesToFields } from "@/lib/api/api-request-error";
 import { fetchEtablissements } from "@/lib/api/etablissements";
 import {
   createEtablissementService,
   deleteEtablissementService,
   fetchAllEtablissementAssignments,
   updateEtablissementService,
+  type UpdateEtablissementServicePayload,
 } from "@/lib/api/etablissement-services";
 import { fetchServices } from "@/lib/api/services";
 import { displayRefName } from "@/lib/catalog-display";
@@ -34,6 +37,12 @@ import type { CommonDictionary } from "@/lib/get-dictionary";
 import type { EtablissementListItem, ServiceDoc } from "@/lib/types/catalog";
 import type { EtablissementServiceAssignment } from "@/lib/types/etablissement-service";
 import { refId } from "@/lib/types/etablissement-service";
+import {
+  isLatLngPairComplete,
+  isLatValid,
+  isLngValid,
+  parseCoordField,
+} from "@/lib/validation/coordinates";
 import { cn } from "@/lib/utils";
 
 const FORM_CREATE_ID = "admin-etab-svc-create";
@@ -74,7 +83,7 @@ function etablissementActif(row: EtablissementServiceAssignment): boolean | unde
   return e.isActive;
 }
 
-function formatDate(iso: string | undefined, loadingLabel: string) {
+function formatDate(iso: string | undefined) {
   if (!iso) return "—";
   try {
     return new Intl.DateTimeFormat(undefined, {
@@ -105,17 +114,64 @@ function assignedServiceIdsForEtablissement(
   return set;
 }
 
+function lineAdresseService(row: EtablissementServiceAssignment): string {
+  return (row.adresse ?? row.address ?? "").trim();
+}
+
+function hasSpecificGeo(row: EtablissementServiceAssignment): boolean {
+  const lat = row.latitude;
+  const lng = row.longitude;
+  const hasPair =
+    lat != null &&
+    lng != null &&
+    !Number.isNaN(Number(lat)) &&
+    !Number.isNaN(Number(lng));
+  const hasLine = lineAdresseService(row).length > 0;
+  const hasMeta = !!(row.location_label?.trim() || row.location_type?.trim());
+  return hasPair || hasLine || hasMeta;
+}
+
 type CreateFormValues = {
   etablissement: string;
   service: string;
   prix: string;
   commentaire: string;
+  useSpecificLocation: boolean;
+  adresse: string;
+  latitude: string;
+  longitude: string;
+  location_label: string;
+  location_type: string;
 };
 
 type EditFormValues = {
   prix: string;
   commentaire: string;
+  useSpecificLocation: boolean;
+  adresse: string;
+  latitude: string;
+  longitude: string;
+  location_label: string;
+  location_type: string;
 };
+
+function validateGeo(
+  latStr: string,
+  lngStr: string,
+  labels: Labels,
+): { latitude?: string; longitude?: string } | null {
+  const lat = parseCoordField(latStr);
+  const lng = parseCoordField(lngStr);
+  const errs: { latitude?: string; longitude?: string } = {};
+  if (!isLatLngPairComplete(lat, lng)) {
+    errs.latitude = labels.validationLatLngPair;
+    errs.longitude = labels.validationLatLngPair;
+    return errs;
+  }
+  if (lat !== null && !isLatValid(lat)) errs.latitude = labels.validationLatRange;
+  if (lng !== null && !isLngValid(lng)) errs.longitude = labels.validationLngRange;
+  return Object.keys(errs).length ? errs : null;
+}
 
 export function EtablissementServicesTable({ labels, className }: EtablissementServicesTableProps) {
   const [query, setQuery] = useState("");
@@ -298,7 +354,7 @@ export function EtablissementServicesTable({ labels, className }: EtablissementS
                         {row.commentaire?.trim() ? row.commentaire : "—"}
                       </TableCell>
                       <TableCell className="whitespace-nowrap text-muted-foreground text-sm">
-                        {formatDate(row.createdAt, labels.loading)}
+                        {formatDate(row.createdAt)}
                       </TableCell>
                       <TableCell className="text-end">
                         <div className="flex justify-end gap-1">
@@ -390,16 +446,61 @@ function CreateAssignmentModal({
 }) {
   const [submitting, setSubmitting] = useState(false);
 
-  const { register, handleSubmit, reset, control, watch, setValue } = useForm<CreateFormValues>({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    control,
+    watch,
+    setValue,
+    setError,
+    clearErrors,
+    formState: { errors },
+  } = useForm<CreateFormValues>({
+    shouldUnregister: false,
     defaultValues: {
       etablissement: "",
       service: "",
       prix: "",
       commentaire: "",
+      useSpecificLocation: false,
+      adresse: "",
+      latitude: "",
+      longitude: "",
+      location_label: "",
+      location_type: "",
     },
   });
 
+  useEffect(() => {
+    register("adresse");
+    register("latitude");
+    register("longitude");
+    register("location_label");
+    register("location_type");
+  }, [register]);
+
   const etabId = watch("etablissement");
+  const useSpecific = watch("useSpecificLocation");
+  const adresse = watch("adresse");
+  const latitude = watch("latitude");
+  const longitude = watch("longitude");
+
+  const locationPickerLabels = useMemo(
+    () => ({
+      addressLineLabel: labels.addressLineLabel,
+      mapsLoading: labels.mapsLoading,
+      mapsLoadError: labels.mapsLoadError,
+      mapsMissingKey: labels.mapsMissingKey,
+      mapsSearchPlaceholder: labels.mapsSearchPlaceholder,
+      mapsUseTypedCoords: labels.mapsUseTypedCoords,
+      mapsResetLocation: labels.mapsResetLocation,
+      mapsPickerHint: labels.mapsPickerHint,
+      formLatitude: labels.formLatitude,
+      formLongitude: labels.formLongitude,
+    }),
+    [labels],
+  );
 
   useEffect(() => {
     if (!open) return;
@@ -408,6 +509,12 @@ function CreateAssignmentModal({
       service: "",
       prix: "",
       commentaire: "",
+      useSpecificLocation: false,
+      adresse: "",
+      latitude: "",
+      longitude: "",
+      location_label: "",
+      location_type: "",
     });
   }, [open, reset]);
 
@@ -457,18 +564,71 @@ function CreateAssignmentModal({
     }
     const commentaire = values.commentaire.trim();
 
+    if (values.useSpecificLocation) {
+      clearErrors(["latitude", "longitude", "adresse"]);
+      const geoErr = validateGeo(values.latitude, values.longitude, labels);
+      if (geoErr) {
+        if (geoErr.latitude) setError("latitude", { message: geoErr.latitude });
+        if (geoErr.longitude) setError("longitude", { message: geoErr.longitude });
+        return;
+      }
+    }
+
+    const lat = parseCoordField(values.latitude);
+    const lng = parseCoordField(values.longitude);
+
     setSubmitting(true);
     try {
-      await createEtablissementService({
-        etablissement: values.etablissement,
-        service: values.service,
-        ...(prix !== undefined ? { prix } : {}),
-        ...(commentaire !== "" ? { commentaire } : {}),
-      });
+      if (!values.useSpecificLocation) {
+        await createEtablissementService({
+          etablissement: values.etablissement,
+          service: values.service,
+          ...(prix !== undefined ? { prix } : {}),
+          ...(commentaire !== "" ? { commentaire } : {}),
+        });
+      } else {
+        await createEtablissementService({
+          etablissement: values.etablissement,
+          service: values.service,
+          ...(prix !== undefined ? { prix } : {}),
+          ...(commentaire !== "" ? { commentaire } : {}),
+          ...(values.adresse.trim() !== "" ? { adresse: values.adresse.trim() } : {}),
+          ...(lat !== null && lng !== null ? { latitude: lat, longitude: lng } : {}),
+          ...(values.location_label.trim() !== ""
+            ? { location_label: values.location_label.trim() }
+            : {}),
+          ...(values.location_type.trim() !== ""
+            ? { location_type: values.location_type.trim() }
+            : {}),
+        });
+      }
       message.success(labels.saveSuccess);
       await onSuccess();
-      reset({ etablissement: "", service: "", prix: "", commentaire: "" });
+      reset({
+        etablissement: "",
+        service: "",
+        prix: "",
+        commentaire: "",
+        useSpecificLocation: false,
+        adresse: "",
+        latitude: "",
+        longitude: "",
+        location_label: "",
+        location_type: "",
+      });
     } catch (e) {
+      if (e instanceof ApiRequestError) {
+        const mapped = matchBackendMessagesToFields(e.messages);
+        if (mapped.adresse) setError("adresse", { message: mapped.adresse });
+        if (mapped.latitude) setError("latitude", { message: mapped.latitude });
+        if (mapped.longitude) setError("longitude", { message: mapped.longitude });
+        if (mapped.location_label) {
+          setError("location_label", { message: mapped.location_label });
+        }
+        if (mapped.location_type) {
+          setError("location_type", { message: mapped.location_type });
+        }
+      }
       message.error(e instanceof Error ? e.message : labels.loadError);
     } finally {
       setSubmitting(false);
@@ -480,7 +640,7 @@ function CreateAssignmentModal({
       title={labels.formCreateTitle}
       open={open}
       onCancel={handleClose}
-      width={560}
+      width={720}
       footer={
         <div className="flex justify-end gap-2 pt-2">
           <Button type="button" variant="outline" onClick={handleClose} disabled={submitting}>
@@ -494,7 +654,7 @@ function CreateAssignmentModal({
       destroyOnClose
     >
       <Spin spinning={optionsLoading}>
-        <form id={formId} className="space-y-4 pt-2" onSubmit={handleSubmit(onSubmit)}>
+        <form id={formId} className="max-h-[75vh] space-y-4 overflow-y-auto pt-2 pr-1" onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-2">
             <Label>{labels.formEtablissement}</Label>
             <Controller
@@ -554,6 +714,74 @@ function CreateAssignmentModal({
               {...register("commentaire")}
             />
           </div>
+
+          <div className="flex items-center justify-between gap-3 rounded-lg border border-border/60 bg-muted/20 px-3 py-2">
+            <div className="space-y-0.5">
+              <Label htmlFor={`${formId}-specific`} className="font-medium">
+                {labels.specificLocationToggle}
+              </Label>
+            </div>
+            <Controller
+              name="useSpecificLocation"
+              control={control}
+              render={({ field }) => (
+                <Switch
+                  id={`${formId}-specific`}
+                  checked={field.value}
+                  onChange={field.onChange}
+                  disabled={submitting}
+                />
+              )}
+            />
+          </div>
+
+          {!useSpecific ? (
+            <p className="text-sm text-muted-foreground">{labels.specificLocationOffHelp}</p>
+          ) : (
+            <section className="space-y-3 rounded-xl border border-border/60 bg-card/40 p-4">
+              <LocationPicker
+                value={{
+                  address: adresse ?? "",
+                  latitude: latitude ?? "",
+                  longitude: longitude ?? "",
+                }}
+                onChange={(next) => {
+                  setValue("adresse", next.address, { shouldDirty: true, shouldValidate: true });
+                  setValue("latitude", next.latitude, { shouldDirty: true, shouldValidate: true });
+                  setValue("longitude", next.longitude, { shouldDirty: true, shouldValidate: true });
+                }}
+                labels={locationPickerLabels}
+                disabled={submitting}
+              />
+              {errors.adresse ? <p className="text-xs text-destructive">{errors.adresse.message}</p> : null}
+              {errors.latitude ? <p className="text-xs text-destructive">{errors.latitude.message}</p> : null}
+              {errors.longitude ? <p className="text-xs text-destructive">{errors.longitude.message}</p> : null}
+              <div className="grid gap-2 sm:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor={`${formId}-loc-label`}>{labels.formLocationLabel}</Label>
+                  <Input
+                    id={`${formId}-loc-label`}
+                    placeholder="ex. Accueil, Spa"
+                    {...register("location_label")}
+                  />
+                  {errors.location_label ? (
+                    <p className="text-xs text-destructive">{errors.location_label.message}</p>
+                  ) : null}
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor={`${formId}-loc-type`}>{labels.formLocationType}</Label>
+                  <Input
+                    id={`${formId}-loc-type`}
+                    placeholder="ex. onsite, customer_site"
+                    {...register("location_type")}
+                  />
+                  {errors.location_type ? (
+                    <p className="text-xs text-destructive">{errors.location_type.message}</p>
+                  ) : null}
+                </div>
+              </div>
+            </section>
+          )}
         </form>
       </Spin>
     </Modal>
@@ -577,16 +805,78 @@ function EditAssignmentModal({
 }) {
   const [submitting, setSubmitting] = useState(false);
 
-  const { register, handleSubmit, reset } = useForm<EditFormValues>({
-    defaultValues: { prix: "", commentaire: "" },
+  const hadGeoInitially = useMemo(
+    () => (row ? hasSpecificGeo(row) : false),
+    [row],
+  );
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    control,
+    watch,
+    setValue,
+    setError,
+    clearErrors,
+    formState: { errors },
+  } = useForm<EditFormValues>({
+    shouldUnregister: false,
+    defaultValues: {
+      prix: "",
+      commentaire: "",
+      useSpecificLocation: false,
+      adresse: "",
+      latitude: "",
+      longitude: "",
+      location_label: "",
+      location_type: "",
+    },
   });
+
+  useEffect(() => {
+    register("adresse");
+    register("latitude");
+    register("longitude");
+    register("location_label");
+    register("location_type");
+  }, [register]);
+
+  const useSpecific = watch("useSpecificLocation");
+  const adresse = watch("adresse");
+  const latitude = watch("latitude");
+  const longitude = watch("longitude");
+
+  const locationPickerLabels = useMemo(
+    () => ({
+      addressLineLabel: labels.addressLineLabel,
+      mapsLoading: labels.mapsLoading,
+      mapsLoadError: labels.mapsLoadError,
+      mapsMissingKey: labels.mapsMissingKey,
+      mapsSearchPlaceholder: labels.mapsSearchPlaceholder,
+      mapsUseTypedCoords: labels.mapsUseTypedCoords,
+      mapsResetLocation: labels.mapsResetLocation,
+      mapsPickerHint: labels.mapsPickerHint,
+      formLatitude: labels.formLatitude,
+      formLongitude: labels.formLongitude,
+    }),
+    [labels],
+  );
 
   useEffect(() => {
     if (!open || !row) return;
     const p = row.prix;
+    const lat = row.latitude;
+    const lng = row.longitude;
     reset({
       prix: p !== undefined && p !== null ? String(p) : "",
       commentaire: row.commentaire ?? "",
+      useSpecificLocation: hasSpecificGeo(row),
+      adresse: lineAdresseService(row),
+      latitude: lat != null && !Number.isNaN(Number(lat)) ? String(lat) : "",
+      longitude: lng != null && !Number.isNaN(Number(lng)) ? String(lng) : "",
+      location_label: row.location_label ?? "",
+      location_type: row.location_type ?? "",
     });
   }, [open, row, reset]);
 
@@ -611,14 +901,69 @@ function EditAssignmentModal({
     }
     const commentaire = values.commentaire.trim();
 
+    if (values.useSpecificLocation) {
+      clearErrors(["latitude", "longitude", "adresse"]);
+      const geoErr = validateGeo(values.latitude, values.longitude, labels);
+      if (geoErr) {
+        if (geoErr.latitude) setError("latitude", { message: geoErr.latitude });
+        if (geoErr.longitude) setError("longitude", { message: geoErr.longitude });
+        return;
+      }
+    }
+
+    const lat = parseCoordField(values.latitude);
+    const lng = parseCoordField(values.longitude);
+
     setSubmitting(true);
     try {
-      const payload: { prix?: number; commentaire: string } = { commentaire };
-      if (prixRaw !== "") payload.prix = prix as number;
-      await updateEtablissementService(row._id, payload);
+      const base: UpdateEtablissementServicePayload = {
+        commentaire,
+        ...(prixRaw !== "" ? { prix: prix as number } : {}),
+      };
+
+      if (!values.useSpecificLocation) {
+        if (hadGeoInitially) {
+          base.latitude = null;
+          base.longitude = null;
+          base.adresse = "";
+          base.location_label = "";
+          base.location_type = "";
+        }
+        await updateEtablissementService(row._id, base);
+      } else {
+        base.adresse = values.adresse.trim() !== "" ? values.adresse.trim() : "";
+        if (lat !== null && lng !== null) {
+          base.latitude = lat;
+          base.longitude = lng;
+        }
+        if (values.location_label.trim() !== "") {
+          base.location_label = values.location_label.trim();
+        } else {
+          base.location_label = "";
+        }
+        if (values.location_type.trim() !== "") {
+          base.location_type = values.location_type.trim();
+        } else {
+          base.location_type = "";
+        }
+        await updateEtablissementService(row._id, base);
+      }
+
       message.success(labels.saveSuccess);
       await onSuccess();
     } catch (e) {
+      if (e instanceof ApiRequestError) {
+        const mapped = matchBackendMessagesToFields(e.messages);
+        if (mapped.adresse) setError("adresse", { message: mapped.adresse });
+        if (mapped.latitude) setError("latitude", { message: mapped.latitude });
+        if (mapped.longitude) setError("longitude", { message: mapped.longitude });
+        if (mapped.location_label) {
+          setError("location_label", { message: mapped.location_label });
+        }
+        if (mapped.location_type) {
+          setError("location_type", { message: mapped.location_type });
+        }
+      }
       message.error(e instanceof Error ? e.message : labels.loadError);
     } finally {
       setSubmitting(false);
@@ -632,7 +977,7 @@ function EditAssignmentModal({
       title={labels.formEditTitle}
       open={open}
       onCancel={handleClose}
-      width={520}
+      width={720}
       footer={
         <div className="flex justify-end gap-2 pt-2">
           <Button type="button" variant="outline" onClick={handleClose} disabled={submitting}>
@@ -645,7 +990,11 @@ function EditAssignmentModal({
       }
       destroyOnClose
     >
-      <form id={formId} className="space-y-4 pt-2" onSubmit={handleSubmit(onSubmit)}>
+      <form
+        id={formId}
+        className="max-h-[75vh] space-y-4 overflow-y-auto pt-2 pr-1"
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <p className="text-sm text-muted-foreground">{labels.editHint}</p>
         <div className="rounded-lg border border-border/60 bg-muted/30 px-3 py-2 text-sm">
           <p>
@@ -675,6 +1024,74 @@ function EditAssignmentModal({
             {...register("commentaire")}
           />
         </div>
+
+        <div className="flex items-center justify-between gap-3 rounded-lg border border-border/60 bg-muted/20 px-3 py-2">
+          <div className="space-y-0.5">
+            <Label htmlFor={`${formId}-specific-edit`} className="font-medium">
+              {labels.specificLocationToggle}
+            </Label>
+          </div>
+          <Controller
+            name="useSpecificLocation"
+            control={control}
+            render={({ field }) => (
+              <Switch
+                id={`${formId}-specific-edit`}
+                checked={field.value}
+                onChange={field.onChange}
+                disabled={submitting}
+              />
+            )}
+          />
+        </div>
+
+        {!useSpecific ? (
+          <p className="text-sm text-muted-foreground">{labels.specificLocationOffHelp}</p>
+        ) : (
+          <section className="space-y-3 rounded-xl border border-border/60 bg-card/40 p-4">
+            <LocationPicker
+              value={{
+                address: adresse ?? "",
+                latitude: latitude ?? "",
+                longitude: longitude ?? "",
+              }}
+              onChange={(next) => {
+                setValue("adresse", next.address, { shouldDirty: true, shouldValidate: true });
+                setValue("latitude", next.latitude, { shouldDirty: true, shouldValidate: true });
+                setValue("longitude", next.longitude, { shouldDirty: true, shouldValidate: true });
+              }}
+              labels={locationPickerLabels}
+              disabled={submitting}
+            />
+            {errors.adresse ? <p className="text-xs text-destructive">{errors.adresse.message}</p> : null}
+            {errors.latitude ? <p className="text-xs text-destructive">{errors.latitude.message}</p> : null}
+            {errors.longitude ? <p className="text-xs text-destructive">{errors.longitude.message}</p> : null}
+            <div className="grid gap-2 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor={`${formId}-loc-label`}>{labels.formLocationLabel}</Label>
+                <Input
+                  id={`${formId}-loc-label`}
+                  placeholder="ex. Accueil, Spa"
+                  {...register("location_label")}
+                />
+                {errors.location_label ? (
+                  <p className="text-xs text-destructive">{errors.location_label.message}</p>
+                ) : null}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor={`${formId}-loc-type`}>{labels.formLocationType}</Label>
+                <Input
+                  id={`${formId}-loc-type`}
+                  placeholder="ex. onsite, customer_site"
+                  {...register("location_type")}
+                />
+                {errors.location_type ? (
+                  <p className="text-xs text-destructive">{errors.location_type.message}</p>
+                ) : null}
+              </div>
+            </div>
+          </section>
+        )}
       </form>
     </Modal>
   );

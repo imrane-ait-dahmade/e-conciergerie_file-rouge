@@ -131,7 +131,8 @@
     "etablissementServices": "Services par établissement",
     "reservations": "Réservations",
     "services": "Services",
-    "settings": "Paramètres"
+    "settings": "Paramètres",
+    "logout": "Déconnexion"
   },
   "adminGeographie": {
     "pageTitle": "Gestion géographique",
@@ -262,7 +263,22 @@
     "retry": "Réessayer",
     "empty": "Aucun établissement ne correspond à la recherche.",
     "loading": "Chargement des établissements…",
-    "noPrestataireAccounts": "Aucun compte prestataire : créez-en un dans Utilisateurs."
+    "noPrestataireAccounts": "Aucun compte prestataire : créez-en un dans Utilisateurs.",
+    "mainLocationTitle": "Emplacement principal",
+    "mainLocationHelp": "Il s’agit du lieu principal de l’établissement ; il peut servir de repli pour les services sans lieu précis.",
+    "addressLineLabel": "Adresse",
+    "mapsLoading": "Chargement de la carte…",
+    "mapsLoadError": "Impossible de charger Google Maps. Vérifiez la connexion et la clé API.",
+    "mapsMissingKey": "Carte désactivée : définissez NEXT_PUBLIC_GOOGLE_MAPS_API_KEY dans web/.env.local (Maps JavaScript API + Places).",
+    "mapsSearchPlaceholder": "Rechercher une adresse…",
+    "mapsUseTypedCoords": "Utiliser les coordonnées saisies",
+    "mapsResetLocation": "Réinitialiser le lieu",
+    "mapsPickerHint": "Choisissez une suggestion, cliquez sur la carte ou déplacez le marqueur — les coordonnées se mettent à jour.",
+    "formLatitude": "Latitude (WGS84)",
+    "formLongitude": "Longitude (WGS84)",
+    "validationLatRange": "La latitude doit être comprise entre -90 et 90.",
+    "validationLngRange": "La longitude doit être comprise entre -180 et 180.",
+    "validationLatLngPair": "Indiquez la latitude et la longitude ensemble, ou laissez les deux vides."
   },
   "adminEtablissementServices": {
     "pageTitle": "Services par établissement",
@@ -304,7 +320,25 @@
     "loadError": "Impossible de charger les assignations.",
     "loading": "Chargement…",
     "empty": "Aucune assignation ne correspond à la recherche.",
-    "loadErrorOptions": "Impossible de charger les établissements ou les services du catalogue."
+    "loadErrorOptions": "Impossible de charger les établissements ou les services du catalogue.",
+    "specificLocationToggle": "Ce service a un lieu spécifique",
+    "specificLocationOffHelp": "Ce service utilisera l’emplacement principal de l’établissement.",
+    "formAdresse": "Adresse",
+    "formLatitude": "Latitude (WGS84)",
+    "formLongitude": "Longitude (WGS84)",
+    "formLocationLabel": "Libellé du lieu",
+    "formLocationType": "Type de lieu",
+    "addressLineLabel": "Adresse",
+    "mapsLoading": "Chargement de la carte…",
+    "mapsLoadError": "Impossible de charger Google Maps. Vérifiez la connexion et la clé API.",
+    "mapsMissingKey": "Carte désactivée : définissez NEXT_PUBLIC_GOOGLE_MAPS_API_KEY dans web/.env.local (Maps JavaScript API + Places).",
+    "mapsSearchPlaceholder": "Rechercher une adresse…",
+    "mapsUseTypedCoords": "Utiliser les coordonnées saisies",
+    "mapsResetLocation": "Réinitialiser le lieu",
+    "mapsPickerHint": "Choisissez une suggestion, cliquez sur la carte ou déplacez le marqueur — les coordonnées se mettent à jour.",
+    "validationLatRange": "La latitude doit être comprise entre -90 et 90.",
+    "validationLngRange": "La longitude doit être comprise entre -180 et 180.",
+    "validationLatLngPair": "Indiquez la latitude et la longitude ensemble, ou laissez les deux vides."
   },
   "adminServicesCatalog": {
     "pageTitle": "Gestion des services",
@@ -421,7 +455,8 @@
     "caracteristiques": "Caractéristiques",
     "medias": "Médias",
     "statistics": "Statistiques",
-    "profile": "Mon profil"
+    "profile": "Mon profil",
+    "logout": "Déconnexion"
   },
   "providerDashboard": {
     "pageTitle": "Tableau de bord",

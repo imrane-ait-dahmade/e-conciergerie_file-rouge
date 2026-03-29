@@ -4,9 +4,11 @@ import { Modal, message } from "antd";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 
+import { LocationPicker } from "@/components/shared/LocationPicker";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { ApiRequestError, matchBackendMessagesToFields } from "@/lib/api/api-request-error";
 import { fetchCities, type CityListItem } from "@/lib/api/cities";
 import { fetchDistricts, type DistrictListItem } from "@/lib/api/districts";
 import {
@@ -18,6 +20,12 @@ import {
 } from "@/lib/api/etablissements-admin";
 import { fetchAdminUsers, type AdminUser } from "@/lib/api/users-admin";
 import type { CommonDictionary } from "@/lib/get-dictionary";
+import {
+  isLatLngPairComplete,
+  isLatValid,
+  isLngValid,
+  parseCoordField,
+} from "@/lib/validation/coordinates";
 import { cn } from "@/lib/utils";
 
 const FORM_ID = "admin-etablissement-form";
@@ -28,6 +36,10 @@ function geoId(ref: unknown): string {
   if (!ref || typeof ref !== "object") return "";
   if ("_id" in ref && ref._id != null) return String(ref._id);
   return "";
+}
+
+function lineAdresse(e: AdminEtablissement): string {
+  return (e.adresse ?? e.address ?? "").trim();
 }
 
 export type EtablissementFormModalProps = {
@@ -47,10 +59,29 @@ type FormValues = {
   telephone: string;
   email: string;
   adresse: string;
+  latitude: string;
+  longitude: string;
   villeId: string;
   quartierId: string;
   isActive: boolean;
 };
+
+function validateGeoFields(
+  values: FormValues,
+  labels: Labels,
+): Record<string, string> | null {
+  const lat = parseCoordField(values.latitude);
+  const lng = parseCoordField(values.longitude);
+  const errs: Record<string, string> = {};
+  if (!isLatLngPairComplete(lat, lng)) {
+    errs.latitude = labels.validationLatLngPair;
+    errs.longitude = labels.validationLatLngPair;
+    return errs;
+  }
+  if (lat !== null && !isLatValid(lat)) errs.latitude = labels.validationLatRange;
+  if (lng !== null && !isLngValid(lng)) errs.longitude = labels.validationLngRange;
+  return Object.keys(errs).length ? errs : null;
+}
 
 export function EtablissementFormModal({
   open,
@@ -80,6 +111,8 @@ export function EtablissementFormModal({
     reset,
     watch,
     setValue,
+    setError,
+    clearErrors,
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
@@ -89,13 +122,40 @@ export function EtablissementFormModal({
       telephone: "",
       email: "",
       adresse: "",
+      latitude: "",
+      longitude: "",
       villeId: "",
       quartierId: "",
       isActive: true,
     },
   });
 
+  useEffect(() => {
+    register("adresse");
+    register("latitude");
+    register("longitude");
+  }, [register]);
+
   const villeId = watch("villeId");
+  const adresse = watch("adresse");
+  const latitude = watch("latitude");
+  const longitude = watch("longitude");
+
+  const locationPickerLabels = useMemo(
+    () => ({
+      addressLineLabel: labels.addressLineLabel,
+      mapsLoading: labels.mapsLoading,
+      mapsLoadError: labels.mapsLoadError,
+      mapsMissingKey: labels.mapsMissingKey,
+      mapsSearchPlaceholder: labels.mapsSearchPlaceholder,
+      mapsUseTypedCoords: labels.mapsUseTypedCoords,
+      mapsResetLocation: labels.mapsResetLocation,
+      mapsPickerHint: labels.mapsPickerHint,
+      formLatitude: labels.formLatitude,
+      formLongitude: labels.formLongitude,
+    }),
+    [labels],
+  );
 
   useEffect(() => {
     if (!open) return;
@@ -108,7 +168,7 @@ export function EtablissementFormModal({
     ])
       .catch(() => message.error(labels.loadError))
       .finally(() => setLoadingRefs(false));
-  }, [open]);
+  }, [open, labels.loadError]);
 
   useEffect(() => {
     if (!open || !villeId) {
@@ -129,13 +189,17 @@ export function EtablissementFormModal({
       void fetchAdminEtablissement(etablissementId)
         .then((e) => {
           setLoadedIsActive(e.isActive);
+          const lat = e.latitude;
+          const lng = e.longitude;
           reset({
             nom: e.nom,
             prestataireId: geoId(e.prestataire),
             description: e.description ?? "",
             telephone: e.telephone ?? "",
             email: e.email ?? "",
-            adresse: e.adresse ?? "",
+            adresse: lineAdresse(e),
+            latitude: lat != null && !Number.isNaN(lat) ? String(lat) : "",
+            longitude: lng != null && !Number.isNaN(lng) ? String(lng) : "",
             villeId: geoId(e.ville),
             quartierId: geoId(e.quartier),
             isActive: e.isActive,
@@ -144,13 +208,17 @@ export function EtablissementFormModal({
         .catch(() => {
           if (initialRow) {
             setLoadedIsActive(initialRow.isActive);
+            const lat = initialRow.latitude;
+            const lng = initialRow.longitude;
             reset({
               nom: initialRow.nom,
               prestataireId: geoId(initialRow.prestataire),
               description: initialRow.description ?? "",
               telephone: initialRow.telephone ?? "",
               email: initialRow.email ?? "",
-              adresse: initialRow.adresse ?? "",
+              adresse: lineAdresse(initialRow),
+              latitude: lat != null && !Number.isNaN(lat) ? String(lat) : "",
+              longitude: lng != null && !Number.isNaN(lng) ? String(lng) : "",
               villeId: geoId(initialRow.ville),
               quartierId: geoId(initialRow.quartier),
               isActive: initialRow.isActive,
@@ -168,12 +236,14 @@ export function EtablissementFormModal({
         telephone: "",
         email: "",
         adresse: "",
+        latitude: "",
+        longitude: "",
         villeId: "",
         quartierId: "",
         isActive: true,
       });
     }
-  }, [open, isEdit, etablissementId, initialRow, reset]);
+  }, [open, isEdit, etablissementId, initialRow, reset, labels.loadError]);
 
   const handleClose = () => {
     if (submitting || loadingDetail) return;
@@ -197,6 +267,17 @@ export function EtablissementFormModal({
       return;
     }
 
+    clearErrors(["latitude", "longitude", "adresse"]);
+    const geoErr = validateGeoFields(values, labels);
+    if (geoErr) {
+      if (geoErr.latitude) setError("latitude", { message: geoErr.latitude });
+      if (geoErr.longitude) setError("longitude", { message: geoErr.longitude });
+      return;
+    }
+
+    const lat = parseCoordField(values.latitude);
+    const lng = parseCoordField(values.longitude);
+
     setSubmitting(true);
     try {
       const common = {
@@ -208,6 +289,7 @@ export function EtablissementFormModal({
         adresse: values.adresse.trim() || undefined,
         ville: values.villeId.trim() || undefined,
         quartier: values.quartierId.trim() || undefined,
+        ...(lat !== null && lng !== null ? { latitude: lat, longitude: lng } : {}),
       };
 
       if (isEdit && etablissementId) {
@@ -229,6 +311,12 @@ export function EtablissementFormModal({
       onClose();
       reset();
     } catch (e) {
+      if (e instanceof ApiRequestError) {
+        const mapped = matchBackendMessagesToFields(e.messages);
+        if (mapped.adresse) setError("adresse", { message: mapped.adresse });
+        if (mapped.latitude) setError("latitude", { message: mapped.latitude });
+        if (mapped.longitude) setError("longitude", { message: mapped.longitude });
+      }
       message.error(e instanceof Error ? e.message : "Erreur.");
     } finally {
       setSubmitting(false);
@@ -250,13 +338,13 @@ export function EtablissementFormModal({
           </Button>
         </div>
       }
-      width={560}
+      width={720}
       destroyOnClose
     >
       {loadingDetail || loadingRefs ? (
         <p className="text-sm text-muted-foreground">{labels.loading}</p>
       ) : (
-        <form id={FORM_ID} className="max-h-[70vh] space-y-4 overflow-y-auto pr-1" onSubmit={handleSubmit(onSubmit)}>
+        <form id={FORM_ID} className="max-h-[75vh] space-y-4 overflow-y-auto pr-1" onSubmit={handleSubmit(onSubmit)}>
           <div className="grid gap-2">
             <Label htmlFor="etab-nom">{labels.formNom}</Label>
             <Input id="etab-nom" {...register("nom", { required: true, minLength: 1 })} />
@@ -302,10 +390,29 @@ export function EtablissementFormModal({
             </div>
           </div>
 
-          <div className="grid gap-2">
-            <Label htmlFor="etab-adr">{labels.formAdresse}</Label>
-            <Input id="etab-adr" {...register("adresse")} />
-          </div>
+          <section className="space-y-3 rounded-xl border border-border/60 bg-card/40 p-4">
+            <div>
+              <h3 className="text-sm font-semibold text-foreground">{labels.mainLocationTitle}</h3>
+              <p className="mt-1 text-xs text-muted-foreground">{labels.mainLocationHelp}</p>
+            </div>
+            <LocationPicker
+              value={{
+                address: adresse ?? "",
+                latitude: latitude ?? "",
+                longitude: longitude ?? "",
+              }}
+              onChange={(next) => {
+                setValue("adresse", next.address, { shouldDirty: true, shouldValidate: true });
+                setValue("latitude", next.latitude, { shouldDirty: true, shouldValidate: true });
+                setValue("longitude", next.longitude, { shouldDirty: true, shouldValidate: true });
+              }}
+              labels={locationPickerLabels}
+              disabled={submitting || loadingDetail}
+            />
+            {errors.adresse ? <p className="text-xs text-destructive">{errors.adresse.message}</p> : null}
+            {errors.latitude ? <p className="text-xs text-destructive">{errors.latitude.message}</p> : null}
+            {errors.longitude ? <p className="text-xs text-destructive">{errors.longitude.message}</p> : null}
+          </section>
 
           <div className="grid gap-2">
             <Label htmlFor="etab-ville">{labels.formVille}</Label>

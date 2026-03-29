@@ -131,7 +131,8 @@
     "etablissementServices": "Establishment services",
     "reservations": "Bookings",
     "services": "Services",
-    "settings": "Settings"
+    "settings": "Settings",
+    "logout": "Log out"
   },
   "adminGeographie": {
     "pageTitle": "Geography management",
@@ -262,7 +263,22 @@
     "retry": "Retry",
     "empty": "No establishments match your search.",
     "loading": "Loading establishments…",
-    "noPrestataireAccounts": "No provider accounts yet. Create one under Users."
+    "noPrestataireAccounts": "No provider accounts yet. Create one under Users.",
+    "mainLocationTitle": "Main location",
+    "mainLocationHelp": "This is the main establishment location and may be used as fallback for services without a specific location.",
+    "addressLineLabel": "Address",
+    "mapsLoading": "Loading map…",
+    "mapsLoadError": "Google Maps could not be loaded. Check your connection and API key.",
+    "mapsMissingKey": "Maps are disabled: set NEXT_PUBLIC_GOOGLE_MAPS_API_KEY in web/.env.local (Maps JavaScript API + Places).",
+    "mapsSearchPlaceholder": "Search for an address…",
+    "mapsUseTypedCoords": "Use typed coordinates",
+    "mapsResetLocation": "Reset location",
+    "mapsPickerHint": "Pick a place from suggestions, click the map, or drag the marker — coordinates update automatically.",
+    "formLatitude": "Latitude (WGS84)",
+    "formLongitude": "Longitude (WGS84)",
+    "validationLatRange": "Latitude must be between -90 and 90.",
+    "validationLngRange": "Longitude must be between -180 and 180.",
+    "validationLatLngPair": "Provide both latitude and longitude, or leave both empty."
   },
   "adminEtablissementServices": {
     "pageTitle": "Establishment services",
@@ -304,7 +320,25 @@
     "loadError": "Could not load assignments.",
     "loading": "Loading…",
     "empty": "No assignments match your search.",
-    "loadErrorOptions": "Could not load establishments or catalog services."
+    "loadErrorOptions": "Could not load establishments or catalog services.",
+    "specificLocationToggle": "This service has a specific location",
+    "specificLocationOffHelp": "This service will use the main establishment location.",
+    "formAdresse": "Address",
+    "formLatitude": "Latitude (WGS84)",
+    "formLongitude": "Longitude (WGS84)",
+    "formLocationLabel": "Location label",
+    "formLocationType": "Location type",
+    "addressLineLabel": "Address",
+    "mapsLoading": "Loading map…",
+    "mapsLoadError": "Google Maps could not be loaded. Check your connection and API key.",
+    "mapsMissingKey": "Maps are disabled: set NEXT_PUBLIC_GOOGLE_MAPS_API_KEY in web/.env.local (Maps JavaScript API + Places).",
+    "mapsSearchPlaceholder": "Search for an address…",
+    "mapsUseTypedCoords": "Use typed coordinates",
+    "mapsResetLocation": "Reset location",
+    "mapsPickerHint": "Pick a place from suggestions, click the map, or drag the marker — coordinates update automatically.",
+    "validationLatRange": "Latitude must be between -90 and 90.",
+    "validationLngRange": "Longitude must be between -180 and 180.",
+    "validationLatLngPair": "Provide both latitude and longitude, or leave both empty."
   },
   "adminServicesCatalog": {
     "pageTitle": "Service management",
@@ -421,7 +455,8 @@
     "caracteristiques": "Features",
     "medias": "Media",
     "statistics": "Statistics",
-    "profile": "My profile"
+    "profile": "My profile",
+    "logout": "Log out"
   },
   "providerDashboard": {
     "pageTitle": "Dashboard",

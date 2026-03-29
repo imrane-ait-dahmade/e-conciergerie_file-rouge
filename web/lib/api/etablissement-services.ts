@@ -3,7 +3,8 @@
  */
 import type { EtablissementServiceAssignment } from "@/lib/types/etablissement-service";
 
-import { headersBearerAuth, headersJsonAuth, readErrorMessage, requireApiBase } from "./client";
+import { headersBearerAuth, headersJsonAuth, requireApiBase } from "./client";
+import { throwIfNotOk } from "./read-json-error";
 
 const PATH = "/etablissement-services";
 
@@ -19,11 +20,23 @@ export type CreateEtablissementServicePayload = {
   service: string;
   prix?: number;
   commentaire?: string;
+  adresse?: string;
+  address?: string;
+  latitude?: number;
+  longitude?: number;
+  location_label?: string;
+  location_type?: string;
 };
 
 export type UpdateEtablissementServicePayload = {
   prix?: number;
   commentaire?: string;
+  adresse?: string;
+  address?: string;
+  latitude?: number | null;
+  longitude?: number | null;
+  location_label?: string;
+  location_type?: string;
 };
 
 export async function fetchEtablissementServicesPage(params: {
@@ -42,7 +55,7 @@ export async function fetchEtablissementServicesPage(params: {
     method: "GET",
     headers: headersBearerAuth(),
   });
-  if (!res.ok) throw new Error(await readErrorMessage(res));
+  if (!res.ok) await throwIfNotOk(res);
   return (await res.json()) as EtablissementServicesListResponse;
 }
 
@@ -75,7 +88,7 @@ export async function createEtablissementService(
     headers: headersJsonAuth(),
     body: JSON.stringify(payload),
   });
-  if (!res.ok) throw new Error(await readErrorMessage(res));
+  if (!res.ok) await throwIfNotOk(res);
   return (await res.json()) as EtablissementServiceAssignment;
 }
 
@@ -89,7 +102,7 @@ export async function updateEtablissementService(
     headers: headersJsonAuth(),
     body: JSON.stringify(payload),
   });
-  if (!res.ok) throw new Error(await readErrorMessage(res));
+  if (!res.ok) await throwIfNotOk(res);
   return (await res.json()) as EtablissementServiceAssignment;
 }
 
@@ -99,5 +112,5 @@ export async function deleteEtablissementService(id: string): Promise<void> {
     method: "DELETE",
     headers: headersBearerAuth(),
   });
-  if (!res.ok) throw new Error(await readErrorMessage(res));
+  if (!res.ok) await throwIfNotOk(res);
 }
