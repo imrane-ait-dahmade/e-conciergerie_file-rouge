@@ -253,3 +253,58 @@ export function domaineSlug(dom: LeanDomaine | null | undefined): string {
   return slugifyCategoryName(dom.nom);
 }
 
+/** Réponse allégée pour GET /services/nearby (mobile). */
+export type NearbyServiceListingItem = {
+  id: string;
+  title: string;
+  image: string | null;
+  locationLabel: string | null;
+  distanceKm: number;
+  rating: number | null;
+  priceLabel: string | null;
+  domain: { id: string; name: string } | null;
+  establishmentName: string;
+};
+
+export function toNearbyServiceListingItem(
+  row: NearbyCandidateLean,
+  coverUrl: string | null,
+): NearbyServiceListingItem | null {
+  const coords = effectiveCoords(row, row.etab, row._geoSource);
+  if (!coords) {
+    return null;
+  }
+
+  const image =
+    coverUrl?.trim() ||
+    row.etab.coverImage?.trim() ||
+    row.etab.image?.trim() ||
+    row.etab.logo?.trim() ||
+    null;
+
+  const priceLabel =
+    typeof row.prix === 'number' && !Number.isNaN(row.prix)
+      ? `À partir de ${Math.round(row.prix)} ${MOBILE_LISTING_CURRENCY}`
+      : null;
+
+  const domain =
+    row.dom && row.dom._id
+      ? { id: String(row.dom._id), name: row.dom.nom?.trim() || '' }
+      : null;
+
+  return {
+    id: String(row._id),
+    title: row.svc.nom?.trim() || 'Service',
+    image,
+    locationLabel: row.location_label?.trim() || null,
+    distanceKm: roundDistanceKm(row.distanceMeters),
+    rating:
+      typeof row.etab.averageRating === 'number'
+        ? row.etab.averageRating
+        : null,
+    priceLabel,
+    domain,
+    establishmentName: row.etab.nom?.trim() || '',
+  };
+}
+

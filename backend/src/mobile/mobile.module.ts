@@ -13,6 +13,7 @@ import {
 } from '../etablissement-services/schemas/etablissement-service.schema';
 import { Media, MediaSchema } from '../media/schemas/media.schema';
 import { Service, ServiceSchema } from '../services/schemas/service.schema';
+import { SliderModule } from '../sliders/slider.module';
 import { MobileController } from './mobile.controller';
 import { MobileNearbyEstablishmentServicesService } from './services/mobile-nearby-establishment-services.service';
 
@@ -20,6 +21,7 @@ import { MobileNearbyEstablishmentServicesService } from './services/mobile-near
   imports: [
     EtablissementsModule,
     DomaineModule,
+    SliderModule,
     MongooseModule.forFeature([
       { name: EtablissementService.name, schema: EtablissementServiceSchema },
       { name: Etablissement.name, schema: EtablissementSchema },
@@ -30,5 +32,6 @@ import { MobileNearbyEstablishmentServicesService } from './services/mobile-near
   ],
   controllers: [MobileController],
   providers: [MobileNearbyEstablishmentServicesService],
+  exports: [MobileNearbyEstablishmentServicesService],
 })
 export class MobileModule {}

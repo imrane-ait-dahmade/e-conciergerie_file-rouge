@@ -21,6 +21,17 @@ export class Slider {
   @Prop({ required: false, trim: true })
   description?: string;
 
+  /** Pastille au-dessus du titre (ex. « Événement », « Hôtel »). */
+  @Prop({ required: false, trim: true, maxlength: 80 })
+  badge?: string;
+
+  /**
+   * Clé stable pour seed idempotent (upsert). Non utilisée par l’API publique.
+   * unique + sparse : les documents sans `seedKey` restent autorisés.
+   */
+  @Prop({ required: false, trim: true, unique: true, sparse: true })
+  seedKey?: string;
+
   /** URL ou chemin d’accès vers l’image (pas de référence Media pour l’instant). */
   @Prop({ required: true, trim: true })
   picture: string;

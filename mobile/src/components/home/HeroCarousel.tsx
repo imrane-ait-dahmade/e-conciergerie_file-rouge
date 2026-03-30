@@ -5,6 +5,7 @@ import {
   ListRenderItem,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -16,7 +17,20 @@ import { Colors, FontSize, LineHeight, Radius, Spacing } from '@/src/constants/t
 import type { HeroItem } from '@/src/types/home.types';
 
 const HORIZONTAL_PAD = Spacing.base;
-const SLIDE_HEIGHT = 228;
+/** Entre 20 et 24 px — carte premium */
+const HERO_CARD_RADIUS = 22;
+
+/** Hauteur slide et typo : s’adaptent à la largeur d’écran (petits / grands téléphones). */
+function useSlideMetrics(windowWidth: number) {
+  return useMemo(() => {
+    const slideWidth = Math.max(0, windowWidth - HORIZONTAL_PAD * 2);
+    const height = Math.min(292, Math.max(248, Math.round(slideWidth * 0.62)));
+    const contentPad = Math.min(26, Math.max(16, Math.round(windowWidth * 0.055)));
+    const titleSize = windowWidth < 360 ? FontSize.xl + 1 : FontSize.xxl;
+    const titleLineHeight = Math.round(titleSize * 1.28);
+    return { slideWidth, slideHeight: height, contentPad, titleSize, titleLineHeight };
+  }, [windowWidth]);
+}
 
 type Props = {
   items: HeroItem[];
@@ -25,10 +39,8 @@ type Props = {
 
 export function HeroCarousel({ items, onCtaPress }: Props) {
   const { width: windowWidth } = useWindowDimensions();
-  const slideWidth = useMemo(
-    () => Math.max(0, windowWidth - HORIZONTAL_PAD * 2),
-    [windowWidth],
-  );
+  const { slideWidth, slideHeight, contentPad, titleSize, titleLineHeight } =
+    useSlideMetrics(windowWidth);
   const [activeIndex, setActiveIndex] = useState(0);
 
   const onMomentumScrollEnd = useCallback(
@@ -45,49 +57,64 @@ export function HeroCarousel({ items, onCtaPress }: Props) {
 
   const renderItem: ListRenderItem<HeroItem> = useCallback(
     ({ item }) => (
-      <Pressable
-        style={[styles.slide, { width: slideWidth }]}
-        onPress={() => onCtaPress?.(item)}
-        accessibilityRole="button"
-        accessibilityLabel={`${item.title}. ${item.subtitle}`}
-      >
-        <Image
-          source={{ uri: item.image }}
-          style={StyleSheet.absoluteFill}
-          contentFit="cover"
-          transition={220}
-          accessibilityIgnoresInvertColors
-        />
-        <View style={styles.overlayBase} />
-        <View style={styles.overlayBottom} />
-        <View style={styles.slideContent}>
-          {item.badge ? (
-            <View style={styles.badge}>
-              <Text style={styles.badgeText} numberOfLines={1}>
-                {item.badge}
+      <View style={[styles.cardWrap, { width: slideWidth }]}>
+        <Pressable
+          style={[styles.slide, { height: slideHeight }]}
+          onPress={() => onCtaPress?.(item)}
+          accessibilityRole="button"
+          accessibilityLabel={`${item.title}. ${item.subtitle}`}
+        >
+          <Image
+            source={{ uri: item.image }}
+            style={StyleSheet.absoluteFill}
+            contentFit="cover"
+            transition={220}
+            accessibilityIgnoresInvertColors
+          />
+          <View style={styles.overlayBase} />
+          <View style={styles.overlayVignette} />
+          <View style={styles.overlayBottom} />
+          <View style={[styles.slideContent, { paddingHorizontal: contentPad }]}>
+            <View style={styles.textBlock}>
+              {item.badge ? (
+                <View style={styles.badge}>
+                  <Text
+                    style={styles.badgeText}
+                    numberOfLines={1}
+                    maxFontSizeMultiplier={1.15}
+                  >
+                    {item.badge}
+                  </Text>
+                </View>
+              ) : null}
+              <Text
+                style={[styles.title, { fontSize: titleSize, lineHeight: titleLineHeight }]}
+                numberOfLines={2}
+                maxFontSizeMultiplier={1.2}
+              >
+                {item.title}
+              </Text>
+              {item.subtitle ? (
+                <Text style={styles.subtitle} numberOfLines={2} maxFontSizeMultiplier={1.2}>
+                  {item.subtitle}
+                </Text>
+              ) : null}
+              {item.location ? (
+                <Text style={styles.location} numberOfLines={1} maxFontSizeMultiplier={1.15}>
+                  {item.location}
+                </Text>
+              ) : null}
+            </View>
+            <View style={styles.ctaPill}>
+              <Text style={styles.ctaText} maxFontSizeMultiplier={1.15}>
+                {item.ctaLabel ?? 'Voir plus'}
               </Text>
             </View>
-          ) : null}
-          <Text style={styles.title} numberOfLines={2}>
-            {item.title}
-          </Text>
-          {item.subtitle ? (
-            <Text style={styles.subtitle} numberOfLines={2}>
-              {item.subtitle}
-            </Text>
-          ) : null}
-          {item.location ? (
-            <Text style={styles.location} numberOfLines={1}>
-              {item.location}
-            </Text>
-          ) : null}
-          <View style={styles.ctaPill}>
-            <Text style={styles.ctaText}>{item.ctaLabel ?? 'Voir plus'}</Text>
           </View>
-        </View>
-      </Pressable>
+        </Pressable>
+      </View>
     ),
-    [onCtaPress, slideWidth],
+    [onCtaPress, slideWidth, slideHeight, contentPad, titleSize, titleLineHeight],
   );
 
   const keyExtractor = useCallback((item: HeroItem) => item.id, []);
@@ -119,119 +146,173 @@ export function HeroCarousel({ items, onCtaPress }: Props) {
         })}
       />
       {items.length > 1 ? (
-        <View style={styles.dots} accessibilityRole="tablist">
-          {items.map((item, i) => (
-            <View
-              key={item.id}
-              style={[styles.dot, i === activeIndex && styles.dotActive]}
-              accessibilityLabel={i === activeIndex ? 'Slide actif' : undefined}
-            />
-          ))}
+        <View style={styles.dotsOuter} accessibilityRole="tablist">
+          <View style={styles.dotsTrack}>
+            {items.map((item, i) => (
+              <View
+                key={item.id}
+                style={[styles.dot, i === activeIndex && styles.dotActive]}
+                accessibilityLabel={i === activeIndex ? 'Slide actif' : undefined}
+              />
+            ))}
+          </View>
         </View>
       ) : null}
     </View>
   );
 }
 
+const cardShadow = Platform.select({
+  ios: {
+    shadowColor: '#0F172A',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.14,
+    shadowRadius: 22,
+  },
+  android: {
+    elevation: 8,
+  },
+  default: {},
+});
+
 const styles = StyleSheet.create({
   outer: {
     marginBottom: Spacing.xl,
     paddingHorizontal: HORIZONTAL_PAD,
+    paddingBottom: Spacing.sm,
   },
   listContent: {
     alignItems: 'stretch',
   },
+  cardWrap: {
+    borderRadius: HERO_CARD_RADIUS,
+    backgroundColor: Colors.surfaceMuted,
+    ...cardShadow,
+  },
   slide: {
-    height: SLIDE_HEIGHT,
-    borderRadius: Radius.xl + 4,
+    borderRadius: HERO_CARD_RADIUS,
     overflow: 'hidden',
     backgroundColor: Colors.surfaceMuted,
   },
   overlayBase: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(15, 23, 42, 0.28)',
+    backgroundColor: 'rgba(15, 23, 42, 0.34)',
+  },
+  overlayVignette: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.14)',
   },
   overlayBottom: {
     position: 'absolute',
     left: 0,
     right: 0,
     bottom: 0,
-    height: '58%',
-    backgroundColor: 'rgba(15, 23, 42, 0.38)',
+    height: '78%',
+    backgroundColor: 'rgba(15, 23, 42, 0.55)',
   },
   slideContent: {
     flex: 1,
     justifyContent: 'flex-end',
-    paddingHorizontal: Spacing.lg,
-    paddingBottom: Spacing.lg,
-    paddingTop: Spacing.md,
+    paddingBottom: Spacing.xl + 8,
+    paddingTop: Spacing.xxl + 4,
+    gap: Spacing.lg,
+  },
+  textBlock: {
+    gap: Spacing.sm,
   },
   badge: {
     alignSelf: 'flex-start',
-    marginBottom: Spacing.sm,
-    paddingVertical: 4,
-    paddingHorizontal: Spacing.sm + 2,
-    borderRadius: Radius.sm,
-    backgroundColor: 'rgba(255,255,255,0.18)',
+    paddingVertical: 6,
+    paddingHorizontal: Spacing.md,
+    borderRadius: Radius.md,
+    backgroundColor: 'rgba(255, 255, 255, 0.14)',
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.35)',
+    borderColor: 'rgba(255, 255, 255, 0.24)',
   },
   badgeText: {
     fontSize: FontSize.xs,
-    fontWeight: '700',
-    color: Colors.card,
-    letterSpacing: 0.3,
+    fontWeight: '600',
+    color: 'rgba(255, 255, 255, 0.92)',
+    letterSpacing: 0.8,
     textTransform: 'uppercase',
   },
   title: {
-    fontSize: FontSize.xl,
-    fontWeight: '700',
-    color: Colors.card,
-    lineHeight: LineHeight.title,
-    marginBottom: Spacing.xs,
-    textShadowColor: 'rgba(0,0,0,0.45)',
+    fontWeight: '800',
+    color: '#FFFFFF',
+    letterSpacing: -0.35,
+    textShadowColor: 'rgba(0, 0, 0, 0.45)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 14,
+  },
+  subtitle: {
+    fontSize: FontSize.md,
+    fontWeight: '400',
+    color: 'rgba(255, 255, 255, 0.88)',
+    lineHeight: LineHeight.relaxed + 2,
+    textShadowColor: 'rgba(0, 0, 0, 0.35)',
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 8,
   },
-  subtitle: {
-    fontSize: FontSize.sm,
-    color: 'rgba(255,255,255,0.95)',
-    lineHeight: LineHeight.relaxed,
-    marginBottom: 4,
-  },
   location: {
-    fontSize: FontSize.xs,
+    fontSize: FontSize.sm,
     fontWeight: '500',
-    color: 'rgba(255,255,255,0.88)',
-    marginBottom: Spacing.md,
+    color: 'rgba(255, 255, 255, 0.75)',
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 6,
   },
   ctaPill: {
     alignSelf: 'flex-start',
-    backgroundColor: Colors.primary,
-    paddingVertical: Spacing.sm + 1,
-    paddingHorizontal: Spacing.md + 4,
-    borderRadius: Radius.md,
+    minHeight: 48,
+    justifyContent: 'center',
+    backgroundColor: '#FFFFFF',
+    paddingVertical: 13,
+    paddingHorizontal: Spacing.xl + 2,
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: 'rgba(226, 232, 240, 0.95)',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#0F172A',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.12,
+        shadowRadius: 10,
+      },
+      android: { elevation: 4 },
+      default: {},
+    }),
   },
   ctaText: {
-    fontSize: FontSize.sm,
+    fontSize: FontSize.md,
     fontWeight: '700',
-    color: Colors.card,
+    color: Colors.primary,
+    letterSpacing: 0.35,
   },
-  dots: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+  dotsOuter: {
     alignItems: 'center',
-    gap: Spacing.sm,
-    marginTop: Spacing.md,
+    marginTop: Spacing.lg + 6,
+    paddingBottom: Spacing.xs,
+  },
+  dotsTrack: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 7,
+    paddingVertical: 9,
+    paddingHorizontal: 14,
+    borderRadius: 100,
+    backgroundColor: 'rgba(15, 23, 42, 0.06)',
   },
   dot: {
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: Colors.border,
+    backgroundColor: 'rgba(100, 116, 139, 0.4)',
   },
   dotActive: {
     width: 20,
+    height: 6,
+    borderRadius: 3,
     backgroundColor: Colors.primary,
   },
 });

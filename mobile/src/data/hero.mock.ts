@@ -1,7 +1,8 @@
 import type { HeroItem } from '@/src/types/home.types';
 
 /**
- * Slides hero — remplacer plus tard par GET /mobile/home/hero (ou équivalent).
+ * @deprecated Données locales de démo — la Home utilise `GET /mobile/hero/sliders`.
+ * Conservé pour tests / previews hors réseau si besoin.
  */
 export const MOCK_HERO_ITEMS: HeroItem[] = [
   {

@@ -1,6 +1,51 @@
 import type { ServiceItem } from '@/src/types/home.types';
 
-export { MOCK_HERO_ITEMS } from '@/src/data/hero.mock';
+/**
+ * Sélection du moment — fallback Home quand pas de géoloc ou liste nearby vide.
+ * Remplaçable plus tard par GET /services/featured (ou équivalent).
+ */
+export const MOCK_FALLBACK_SELECTION: ServiceItem[] = [
+  {
+    id: 'fb-1',
+    title: 'Riad Dar Anika',
+    location: 'Kasbah, Marrakech',
+    priceLabel: 'À partir de 220 € / nuit',
+    rating: 4.9,
+    image:
+      'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&q=80',
+    isFavorite: false,
+  },
+  {
+    id: 'fb-2',
+    title: 'La Table du Palais',
+    location: 'Médina',
+    priceLabel: 'À partir de 85 €',
+    rating: 4.9,
+    image:
+      'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80',
+    isFavorite: false,
+  },
+  {
+    id: 'fb-3',
+    title: 'Hammam & soin royal',
+    location: 'Spa partenaire',
+    priceLabel: 'Formule 2 h',
+    rating: 4.9,
+    image:
+      'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800&q=80',
+    isFavorite: false,
+  },
+  {
+    id: 'fb-4',
+    title: 'Quad & coucher de soleil',
+    location: 'Agafay',
+    priceLabel: 'Dès 65 € / pers.',
+    rating: 4.8,
+    image:
+      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
+    isFavorite: false,
+  },
+];
 
 export const MOCK_RESTAURANTS: ServiceItem[] = [
   {

@@ -1,4 +1,5 @@
 import type { MobileDomainItemDto } from '../domaines/dto/mobile-domain-item.dto';
+import type { SliderApiResource } from '../sliders/slider.resource';
 import type { MobileBestProviderResource } from './resources/mobile-best-provider.resource';
 import type {
   MobileNearbyEstablishmentServiceResource,
@@ -37,6 +38,14 @@ export function mobileDomainsSuccess(data: MobileDomainItemDto[]) {
   return {
     success: true as const,
     message: 'Domains fetched successfully',
+    data,
+  };
+}
+
+export function mobileHeroSlidersSuccess(data: SliderApiResource[]) {
+  return {
+    success: true as const,
+    message: 'Hero sliders fetched successfully',
     data,
   };
 }

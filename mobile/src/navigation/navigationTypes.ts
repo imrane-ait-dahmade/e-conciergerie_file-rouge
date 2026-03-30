@@ -14,6 +14,7 @@ export type HomeStackParamList = {
 export type EstablishmentsStackParamList = {
   EstablishmentsList: undefined;
   EstablishmentDetails: { id: string };
+  ServiceDetail: { serviceId?: string };
 };
 
 /**

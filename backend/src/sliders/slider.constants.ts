@@ -6,6 +6,7 @@
 export const SLIDER_FILLABLE_FIELDS = [
   'title',
   'description',
+  'badge',
   'picture',
   'color',
   'isActive',

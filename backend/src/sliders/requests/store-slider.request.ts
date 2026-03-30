@@ -31,6 +31,13 @@ export class StoreSliderRequest {
   @MaxLength(2000)
   description?: string | null;
 
+  @ApiPropertyOptional({ example: 'Événement' })
+  @IsOptional()
+  @ValidateIf((_, v) => v != null)
+  @IsString()
+  @MaxLength(80)
+  badge?: string | null;
+
   @ApiProperty({ description: 'URL ou chemin de l’image' })
   @IsNotEmpty({ message: 'L’image est requise' })
   @IsString()

@@ -1,23 +1,33 @@
 import {
   BadRequestException,
   Injectable,
+  Logger,
   NotFoundException,
+  OnModuleInit,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { apiListSuccess, apiSuccess } from './slider-api-response';
-import { formatSlider } from './slider.resource';
+import { formatSlider, type SliderApiResource } from './slider.resource';
 import { ListSlidersQueryRequest } from './requests/list-sliders-query.request';
 import { StoreSliderRequest } from './requests/store-slider.request';
 import { UpdateSliderRequest } from './requests/update-slider.request';
 import { Slider, SliderDocument } from './schemas/slider.schema';
+import { seedHeroSliders } from './seeds/sliders.seed';
 
 @Injectable()
-export class SliderService {
+export class SliderService implements OnModuleInit {
+  private readonly logger = new Logger(SliderService.name);
+
   constructor(
     @InjectModel(Slider.name)
     private readonly sliderModel: Model<SliderDocument>,
   ) {}
+
+  /** Slides hero par défaut — idempotent (`seedKey`), voir `seeds/sliders.seed.ts`. */
+  async onModuleInit(): Promise<void> {
+    await seedHeroSliders(this.sliderModel, this.logger);
+  }
 
   private assertObjectId(id: string): void {
     if (!Types.ObjectId.isValid(id)) {
@@ -131,6 +141,39 @@ export class SliderService {
     return apiSuccess('Slider deleted successfully', formatSlider(removed));
   }
 
+  /**
+   * Slides hero mobile (public) : actifs, dans la fenêtre de publication, triés pour l’affichage.
+   */
+  async findActiveForMobileHero(limit = 20): Promise<SliderApiResource[]> {
+    const now = new Date();
+    const cap = Math.min(Math.max(limit, 1), 30);
+    const raw = await this.sliderModel
+      .find({
+        isActive: true,
+        $and: [
+          {
+            $or: [
+              { startsAt: { $exists: false } },
+              { startsAt: null },
+              { startsAt: { $lte: now } },
+            ],
+          },
+          {
+            $or: [
+              { endsAt: { $exists: false } },
+              { endsAt: null },
+              { endsAt: { $gte: now } },
+            ],
+          },
+        ],
+      })
+      .sort({ sortOrder: 1, createdAt: -1 })
+      .limit(cap)
+      .lean()
+      .exec();
+    return raw.map((d) => formatSlider(d as never));
+  }
+
   getModel(): Model<SliderDocument> {
     return this.sliderModel;
   }
@@ -142,6 +185,10 @@ export class SliderService {
         dto.description === undefined || dto.description === null
           ? undefined
           : dto.description,
+      badge:
+        dto.badge === undefined || dto.badge === null
+          ? undefined
+          : dto.badge,
       picture: dto.picture.trim(),
       color:
         dto.color === undefined || dto.color === null
@@ -175,6 +222,9 @@ export class SliderService {
     }
     if (dto.description !== undefined) {
       out.description = dto.description;
+    }
+    if (dto.badge !== undefined) {
+      out.badge = dto.badge;
     }
     if (dto.picture !== undefined) {
       out.picture = dto.picture.trim();

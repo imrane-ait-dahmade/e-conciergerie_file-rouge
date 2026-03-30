@@ -14,8 +14,10 @@ import {
   type MobileNearbyGroupedCategoryResource,
   type MobileNearbyGroupedItemResource,
   type NearbyCandidateLean,
+  type NearbyServiceListingItem,
   toMobileNearbyEstablishmentServiceResource,
   toMobileNearbyGroupedItemResource,
+  toNearbyServiceListingItem,
 } from '../resources/mobile-nearby-establishment-service.resource';
 
 const DEFAULT_MAX_DISTANCE_M = 50_000;
@@ -60,6 +62,46 @@ export class MobileNearbyEstablishmentServicesService {
     );
     const sliced = candidates.slice(0, limit);
     return this.mapCandidatesToResources(sliced);
+  }
+
+  /**
+   * Offres actives géolocalisées, tri par distance, champs réduits pour le mobile.
+   * Filtre optionnel par domaine (id MongoDB du domaine lié au service catalogue).
+   */
+  async findNearbyListingItems(params: {
+    latitude: number;
+    longitude: number;
+    maxMeters: number;
+    limit: number;
+    domainId?: string;
+  }): Promise<NearbyServiceListingItem[]> {
+    const pool = Math.min(500, Math.max(params.limit, params.limit * 3));
+    let candidates = await this.collectNearbyCandidates(
+      params.latitude,
+      params.longitude,
+      params.maxMeters,
+      pool,
+    );
+    if (params.domainId) {
+      candidates = candidates.filter(
+        (c) => c.dom && String(c.dom._id) === params.domainId,
+      );
+    }
+    const sliced = candidates.slice(0, params.limit);
+    const covers = await this.loadCoverUrlByLiaisonId(
+      sliced.map((c) => String(c._id)),
+    );
+    const out: NearbyServiceListingItem[] = [];
+    for (const c of sliced) {
+      const item = toNearbyServiceListingItem(
+        c,
+        covers.get(String(c._id)) ?? null,
+      );
+      if (item) {
+        out.push(item);
+      }
+    }
+    return out;
   }
 
   async findNearbyGrouped(

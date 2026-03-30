@@ -2,7 +2,9 @@ import { Controller, Get, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { DomaineService } from '../domaines/domaine.service';
 import { EtablissementsService } from '../etablissements/etablissements.service';
+import { SliderService } from '../sliders/slider.service';
 import { MobileBestProvidersQueryDto } from './dto/mobile-best-providers-query.dto';
+import { MobileHeroSlidersQueryDto } from './dto/mobile-hero-sliders-query.dto';
 import { MobileNearbyGroupedRecommendationQueryDto } from './dto/mobile-nearby-grouped-recommendation-query.dto';
 import { MobileNearbyRecommendationQueryDto } from './dto/mobile-nearby-recommendation-query.dto';
 import {
@@ -10,6 +12,7 @@ import {
   mobileDomainsSuccess,
   mobileNearbyEstablishmentServicesSuccess,
   mobileNearbyGroupedEstablishmentServicesSuccess,
+  mobileHeroSlidersSuccess,
 } from './mobile-api-response';
 import {
   type EtabBestProviderLean,
@@ -34,6 +37,7 @@ export class MobileController {
     private readonly etablissementsService: EtablissementsService,
     private readonly nearbyEstablishmentServicesService: MobileNearbyEstablishmentServicesService,
     private readonly domaineService: DomaineService,
+    private readonly sliderService: SliderService,
   ) {}
 
   /**
@@ -52,6 +56,22 @@ export class MobileController {
   async domainsForHome() {
     const data = await this.domaineService.findActiveForMobileHome();
     return mobileDomainsSuccess(data);
+  }
+
+  /**
+   * Slides du hero Home (carrousel) : actifs, dans la fenêtre de publication.
+   * Déclaré avant les routes à segments variables pour éviter les collisions.
+   */
+  @Get('hero/sliders')
+  @ApiOperation({
+    summary: 'Slides hero (carrousel accueil)',
+    description:
+      'Public. Sliders actifs, `starts_at` / `ends_at` respectés si renseignés, tri `sort_order` puis date de création.',
+  })
+  async heroSliders(@Query() query: MobileHeroSlidersQueryDto) {
+    const limit = query.limit ?? 15;
+    const data = await this.sliderService.findActiveForMobileHero(limit);
+    return mobileHeroSlidersSuccess(data);
   }
 
   @Get('providers/best')

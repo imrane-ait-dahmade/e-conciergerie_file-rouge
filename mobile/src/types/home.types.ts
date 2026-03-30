@@ -16,6 +16,8 @@ export type HeroItem = {
   type?: string;
   /** Lieu (affiché sous le sous-titre si renseigné) */
   location?: string;
+  /** URL du CTA si renvoyée par l’API (ex. slider `button_link`) */
+  buttonLink?: string;
 };
 
 export type ServiceItem = {

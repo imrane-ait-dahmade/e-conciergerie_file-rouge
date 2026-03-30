@@ -1,35 +1,43 @@
+import type { CompositeNavigationProp } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
+import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Linking, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { DomainBar } from '@/src/components/home/DomainBar';
-import { HeroCarousel } from '@/src/components/home/HeroCarousel';
+import { HeroCarouselSection } from '@/src/components/home/HeroCarouselSection';
+import { HomeLocationSection } from '@/src/components/home/HomeLocationSection';
 import { SectionHeader } from '@/src/components/home/SectionHeader';
 import { ServiceCard } from '@/src/components/home/ServiceCard';
 import { Colors, FontSize, LineHeight, Spacing } from '@/src/constants/theme';
-import {
-  MOCK_ACTIVITIES,
-  MOCK_HERO_ITEMS,
-  MOCK_HOTELS,
-  MOCK_RESTAURANTS,
-} from '@/src/data/home.mock';
+import { MOCK_ACTIVITIES, MOCK_HOTELS, MOCK_RESTAURANTS } from '@/src/data/home.mock';
+import { useHeroSlider } from '@/src/hooks/useHeroSlider';
 import { useMobileDomains } from '@/src/hooks/useMobileDomains';
-import type { HomeStackParamList } from '@/src/navigation/navigationTypes';
+import type { HomeStackParamList, MainTabParamList } from '@/src/navigation/navigationTypes';
 import type { ServiceItem } from '@/src/types/home.types';
 
-type HomeNav = NativeStackNavigationProp<HomeStackParamList, 'HomeMain'>;
+type HomeNav = CompositeNavigationProp<
+  NativeStackNavigationProp<HomeStackParamList, 'HomeMain'>,
+  BottomTabNavigationProp<MainTabParamList>
+>;
 
 function applyFavorites(items: ServiceItem[], fav: Set<string>): ServiceItem[] {
   return items.map((i) => ({ ...i, isFavorite: fav.has(i.id) }));
 }
 
 /**
- * Accueil conciergerie : domaines (API), hero et listes (mocks pour l’instant).
+ * Accueil conciergerie : domaines + hero (API), listes services (mocks pour l’instant).
  */
 export function HomeScreen() {
   const navigation = useNavigation<HomeNav>();
+  const {
+    items: heroItems,
+    loading: heroLoading,
+    error: heroError,
+    refetch: refetchHero,
+  } = useHeroSlider();
   const { domains, loading: domainsLoading, error: domainsError, refetch: refetchDomains } =
     useMobileDomains();
   const [selectedDomainId, setSelectedDomainId] = useState('');
@@ -94,10 +102,35 @@ export function HomeScreen() {
           onRetry={refetchDomains}
         />
 
-        <HeroCarousel
-          items={MOCK_HERO_ITEMS}
+        <HeroCarouselSection
+          items={heroItems}
+          loading={heroLoading}
+          error={heroError}
+          onRetry={refetchHero}
           onCtaPress={(item) => {
+            const url = item.buttonLink?.trim();
+            if (url && /^https?:\/\//i.test(url)) {
+              Linking.openURL(url).catch(() => {});
+              return;
+            }
             navigation.navigate('ServiceDetail', { serviceId: item.id });
+          }}
+        />
+
+        <HomeLocationSection
+          favorites={favorites}
+          onToggleFavorite={toggleFav}
+          onNearbyServicePress={(serviceId) => {
+            navigation.navigate('ServiceDetail', { serviceId });
+          }}
+          onFallbackServicePress={(serviceId) => {
+            navigation.navigate('ServiceDetail', { serviceId });
+          }}
+          onSeeAllNearby={() => {
+            navigation.navigate('Map');
+          }}
+          onSeeAllFallback={() => {
+            onSeeAll('selection');
           }}
         />
 

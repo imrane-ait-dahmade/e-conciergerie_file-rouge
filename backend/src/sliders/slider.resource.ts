@@ -7,6 +7,7 @@ export interface SliderApiResource {
   id: string;
   title: string;
   description: string | null;
+  badge: string | null;
   picture: string;
   color: string | null;
   is_active: boolean;
@@ -23,6 +24,7 @@ type SliderDocLike = {
   _id: Types.ObjectId;
   title?: string;
   description?: string | null;
+  badge?: string | null;
   picture?: string;
   color?: string | null;
   isActive?: boolean;
@@ -47,6 +49,7 @@ export function formatSlider(doc: SliderDocLike): SliderApiResource {
     id: doc._id.toString(),
     title: doc.title ?? '',
     description: doc.description ?? null,
+    badge: doc.badge ?? null,
     picture: doc.picture ?? '',
     color: doc.color ?? null,
     is_active: doc.isActive ?? false,
