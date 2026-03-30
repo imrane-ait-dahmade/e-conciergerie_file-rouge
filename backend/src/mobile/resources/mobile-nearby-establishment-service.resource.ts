@@ -259,6 +259,11 @@ export type NearbyServiceListingItem = {
   title: string;
   image: string | null;
   locationLabel: string | null;
+  /** Point affiché sur la carte (offre ou établissement). */
+  latitude: number;
+  longitude: number;
+  /** Origine géographique du pin (liaison géolocalisée vs repli établissement). */
+  geoSource: NearbyGeoSource;
   distanceKm: number;
   rating: number | null;
   priceLabel: string | null;
@@ -297,6 +302,9 @@ export function toNearbyServiceListingItem(
     title: row.svc.nom?.trim() || 'Service',
     image,
     locationLabel: row.location_label?.trim() || null,
+    latitude: coords.latitude,
+    longitude: coords.longitude,
+    geoSource: row._geoSource,
     distanceKm: roundDistanceKm(row.distanceMeters),
     rating:
       typeof row.etab.averageRating === 'number'

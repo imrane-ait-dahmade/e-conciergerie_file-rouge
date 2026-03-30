@@ -36,6 +36,7 @@ import { Abonnement, AbonnementSchema } from './abonnements/schemas/abonnement.s
 import { MediaModule } from './media/media.module';
 import { SliderModule } from './sliders/slider.module';
 import { MobileModule } from './mobile/mobile.module';
+import { MapModule } from './map/map.module';
 import { Admin, AdminSchema } from './admins/schemas/admin.schema';
 import { Prestataire, PrestataireSchema } from './prestataires/schemas/prestataire.schema';
 import { Voyageur, VoyageurSchema } from './voyageurs/schemas/voyageur.schema';
@@ -115,6 +116,7 @@ import { RequestContextMiddleware } from './common/middleware/request-context.mi
     MediaModule,
     SliderModule,
     MobileModule,
+    MapModule,
   ],
   controllers: [AppController],
   providers: [

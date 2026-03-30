@@ -6,6 +6,9 @@ export type NearbyService = {
   title: string;
   image: string | null;
   locationLabel: string | null;
+  /** Point carte (GET /services/nearby). */
+  latitude: number;
+  longitude: number;
   distanceKm: number;
   rating: number | null;
   priceLabel: string | null;

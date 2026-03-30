@@ -28,6 +28,6 @@ import { Service, ServiceSchema } from './schemas/service.schema';
   ],
   controllers: [ServiceController],
   providers: [ServiceService, ServicesNearbyService, ServicesSearchService],
-  exports: [ServiceService],
+  exports: [ServiceService, ServicesNearbyService],
 })
 export class ServiceModule {}
