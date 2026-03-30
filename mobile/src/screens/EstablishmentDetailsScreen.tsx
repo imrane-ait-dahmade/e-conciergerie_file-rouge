@@ -3,7 +3,7 @@ import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-nat
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useFocusEffect } from '@react-navigation/native';
 
-import { AppColors } from '@/src/constants/theme';
+import { Colors, FontSize, LineHeight, Spacing } from '@/src/constants/theme';
 import type { EstablishmentsStackParamList } from '@/src/navigation/navigationTypes';
 import { ApiError, getEtablissementById, type EtablissementApi } from '@/src/services/api';
 
@@ -42,7 +42,7 @@ export function EstablishmentDetailsScreen({ route }: Props) {
   if (loading) {
     return (
       <View style={styles.centered}>
-        <ActivityIndicator size="large" color={AppColors.primary} />
+        <ActivityIndicator size="large" color={Colors.primary} />
       </View>
     );
   }
@@ -86,36 +86,36 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: AppColors.background,
-    padding: 24,
+    backgroundColor: Colors.background,
+    padding: Spacing.xl,
   },
   container: {
-    padding: 20,
-    paddingBottom: 40,
-    backgroundColor: AppColors.background,
+    padding: Spacing.lg,
+    paddingBottom: Spacing.xxl + Spacing.sm,
+    backgroundColor: Colors.background,
   },
   title: {
-    fontSize: 22,
+    fontSize: FontSize.xl + 2,
     fontWeight: '700',
-    color: AppColors.text,
-    marginBottom: 12,
+    color: Colors.text,
+    marginBottom: Spacing.md,
   },
   body: {
-    fontSize: 15,
-    color: AppColors.textMuted,
-    lineHeight: 22,
-    marginBottom: 16,
+    fontSize: FontSize.sm + 1,
+    color: Colors.textMuted,
+    lineHeight: LineHeight.normal,
+    marginBottom: Spacing.base,
   },
   row: {
-    fontSize: 15,
-    color: AppColors.text,
-    marginBottom: 8,
+    fontSize: FontSize.sm + 1,
+    color: Colors.text,
+    marginBottom: Spacing.sm,
   },
   label: {
     fontWeight: '600',
   },
   error: {
-    color: AppColors.error,
+    color: Colors.error,
     textAlign: 'center',
   },
 });

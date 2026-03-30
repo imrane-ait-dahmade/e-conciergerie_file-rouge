@@ -5,6 +5,7 @@ import { headersJsonAuth, readErrorMessage, requireApiBase } from "./client";
 export type CreateDomainePayload = {
   nom: string;
   description?: string;
+  icon?: string;
 };
 
 export async function fetchDomaines(): Promise<DomaineDoc[]> {

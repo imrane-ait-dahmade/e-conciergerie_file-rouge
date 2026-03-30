@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { DomaineService } from '../domaines/domaine.service';
 import { EtablissementsService } from '../etablissements/etablissements.service';
@@ -7,8 +7,11 @@ import { MobileBestProvidersQueryDto } from './dto/mobile-best-providers-query.d
 import { MobileHeroSlidersQueryDto } from './dto/mobile-hero-sliders-query.dto';
 import { MobileNearbyGroupedRecommendationQueryDto } from './dto/mobile-nearby-grouped-recommendation-query.dto';
 import { MobileNearbyRecommendationQueryDto } from './dto/mobile-nearby-recommendation-query.dto';
+import { MobileDomainDetailsQueryDto } from './dto/mobile-domain-details-query.dto';
+import { MobileDomainDetailsPayloadDto } from './dto/mobile-domain-details-response.dto';
 import {
   mobileBestProvidersSuccess,
+  mobileDomainDetailsSuccess,
   mobileDomainsSuccess,
   mobileNearbyEstablishmentServicesSuccess,
   mobileNearbyGroupedEstablishmentServicesSuccess,
@@ -18,6 +21,7 @@ import {
   type EtabBestProviderLean,
   toMobileBestProviderResource,
 } from './resources/mobile-best-provider.resource';
+import { MobileDomainDetailsService } from './services/mobile-domain-details.service';
 import { MobileNearbyEstablishmentServicesService } from './services/mobile-nearby-establishment-services.service';
 
 /**
@@ -38,6 +42,7 @@ export class MobileController {
     private readonly nearbyEstablishmentServicesService: MobileNearbyEstablishmentServicesService,
     private readonly domaineService: DomaineService,
     private readonly sliderService: SliderService,
+    private readonly mobileDomainDetailsService: MobileDomainDetailsService,
   ) {}
 
   /**
@@ -56,6 +61,34 @@ export class MobileController {
   async domainsForHome() {
     const data = await this.domaineService.findActiveForMobileHome();
     return mobileDomainsSuccess(data);
+  }
+
+  /**
+   * Page domaine mobile : domaine + sous-services (catalogue) + offres actives, en un seul appel.
+   *
+   * Query optionnelle : `serviceId` pour ne retourner que les offres de ce sous-service.
+   */
+  @Get('domains/:domainId/details')
+  @ApiOperation({
+    summary: 'Détail domaine (sous-services + offres)',
+    description:
+      'Public. Domaine actif uniquement ; domaine inexistant ou inactif → 404. ' +
+      'Les offres sont des liaisons `etablissement_services` actives dont le service catalogue ' +
+      'appartient au domaine, avec établissement actif.',
+  })
+  @ApiOkResponse({
+    description: 'Envelope `{ success, message, data }` avec `domain`, `services`, `items`',
+    type: MobileDomainDetailsPayloadDto,
+  })
+  async domainDetails(
+    @Param('domainId') domainId: string,
+    @Query() query: MobileDomainDetailsQueryDto,
+  ) {
+    const data = await this.mobileDomainDetailsService.getDomainDetails(
+      domainId,
+      query,
+    );
+    return mobileDomainDetailsSuccess(data);
   }
 
   /**

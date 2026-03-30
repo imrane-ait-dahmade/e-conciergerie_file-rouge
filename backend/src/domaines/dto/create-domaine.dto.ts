@@ -27,18 +27,13 @@ export class CreateDomaineDto {
 
   @ApiPropertyOptional({
     description:
-      'Clé d’icône pour les apps (ex. bed, plane, car, utensils, map, sparkles)',
+      'Clé d’icône (bed, plane, …) ou URL d’image — optionnel, max 512 caractères',
     example: 'bed',
   })
   @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   @IsOptional()
   @IsString()
-  @MaxLength(64)
-  @ValidateIf((_, v) => v !== undefined && v !== null && v !== '')
-  @Matches(/^[a-z0-9_-]+$/i, {
-    message:
-      'icon doit être une clé simple (lettres, chiffres, tirets ou underscores)',
-  })
+  @MaxLength(512)
   icon?: string;
 
   @ApiPropertyOptional({

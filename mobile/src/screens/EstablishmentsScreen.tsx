@@ -12,7 +12,7 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { EstablishmentCard } from '@/src/components/EstablishmentCard';
-import { AppColors } from '@/src/constants/theme';
+import { Colors } from '@/src/constants/theme';
 import type { EstablishmentsStackParamList } from '@/src/navigation/navigationTypes';
 import { ApiError, getEtablissements, type EtablissementApi } from '@/src/services/api';
 
@@ -57,7 +57,7 @@ export function EstablishmentsScreen() {
   if (loading && items.length === 0) {
     return (
       <View style={styles.centered}>
-        <ActivityIndicator size="large" color={AppColors.primary} />
+        <ActivityIndicator size="large" color={Colors.primary} />
         <Text style={styles.muted}>Chargement des établissements…</Text>
       </View>
     );
@@ -75,8 +75,8 @@ export function EstablishmentsScreen() {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={() => load(true)}
-            colors={[AppColors.primary]}
-            tintColor={AppColors.primary}
+            colors={[Colors.primary]}
+            tintColor={Colors.primary}
           />
         }
         contentContainerStyle={items.length === 0 ? styles.emptyList : styles.list}
@@ -93,33 +93,33 @@ export function EstablishmentsScreen() {
 }
 
 const styles = StyleSheet.create({
-  flex: { flex: 1, backgroundColor: AppColors.background },
+  flex: { flex: 1, backgroundColor: Colors.background },
   centered: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: AppColors.background,
+    backgroundColor: Colors.background,
   },
   screenTitle: {
     fontSize: 24,
     fontWeight: '800',
-    color: AppColors.text,
+    color: Colors.text,
     paddingHorizontal: 20,
     paddingTop: 8,
   },
   screenSub: {
     fontSize: 14,
-    color: AppColors.textMuted,
+    color: Colors.textMuted,
     paddingHorizontal: 20,
     paddingBottom: 12,
     marginTop: 4,
   },
   list: { paddingHorizontal: 16, paddingBottom: 32 },
   emptyList: { flexGrow: 1, justifyContent: 'center', alignItems: 'center', padding: 24 },
-  muted: { color: AppColors.textMuted, marginTop: 8, textAlign: 'center' },
+  muted: { color: Colors.textMuted, marginTop: 8, textAlign: 'center' },
   errorBanner: {
-    backgroundColor: '#fdecea',
-    color: AppColors.error,
+    backgroundColor: Colors.errorListBg,
+    color: Colors.error,
     padding: 10,
     marginHorizontal: 16,
     marginBottom: 8,

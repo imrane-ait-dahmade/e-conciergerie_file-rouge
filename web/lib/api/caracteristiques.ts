@@ -4,6 +4,7 @@ import { headersJsonAuth, readErrorMessage, requireApiBase } from "./client";
 
 export type CreateCaracteristiquePayload = {
   libelle: string;
+  icon?: string;
   service?: string;
 };
 

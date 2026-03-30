@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import { AppColors } from '@/src/constants/theme';
+import { Colors } from '@/src/constants/theme';
 import type { AuthStackParamList } from '@/src/navigation/navigationTypes';
 import { LoginScreen } from '@/src/screens/LoginScreen';
 import { SignupScreen } from '@/src/screens/SignupScreen';
@@ -17,10 +17,10 @@ export function AuthNavigator() {
     <Stack.Navigator
       initialRouteName="Welcome"
       screenOptions={{
-        headerStyle: { backgroundColor: AppColors.card },
-        headerTintColor: AppColors.text,
+        headerStyle: { backgroundColor: Colors.card },
+        headerTintColor: Colors.text,
         headerShadowVisible: false,
-        contentStyle: { backgroundColor: AppColors.background },
+        contentStyle: { backgroundColor: Colors.background },
       }}
     >
       <Stack.Screen name="Welcome" component={WelcomeScreen} options={{ headerShown: false }} />

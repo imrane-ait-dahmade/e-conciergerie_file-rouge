@@ -5,6 +5,8 @@ import { Pencil, Plus, Search, Trash2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
+import { AdminIconCell } from "@/components/admin/admin-icon-cell";
+import { IconField } from "@/components/admin/icon-field";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,6 +28,7 @@ import {
 import { fetchServices } from "@/lib/api/services";
 import { displayRefName } from "@/lib/catalog-display";
 import type { CommonDictionary } from "@/lib/get-dictionary";
+import { CARACTERISTIQUE_ICON_PRESETS } from "@/lib/admin-icon-presets";
 import type { CaracteristiqueDoc, ServiceDoc } from "@/lib/types/catalog";
 import { cn } from "@/lib/utils";
 
@@ -45,6 +48,7 @@ function normalizeQuery(q: string) {
 
 type CaracteristiqueFormValues = {
   libelle: string;
+  icon: string;
   service: string;
 };
 
@@ -105,7 +109,8 @@ export function CaracteristiquesTable({ labels, className }: CaracteristiquesTab
       const lib = r.libelle?.toLowerCase() ?? "";
       const typeLabel = resolveTypeLabel(resolveTypeKey(r), labels).toLowerCase();
       const linked = displayRefName(r.service).toLowerCase();
-      return lib.includes(q) || typeLabel.includes(q) || linked.includes(q);
+      const icon = (r.icon ?? "").toLowerCase();
+      return lib.includes(q) || typeLabel.includes(q) || linked.includes(q) || icon.includes(q);
     });
   }, [query, rows, labels]);
 
@@ -198,6 +203,9 @@ export function CaracteristiquesTable({ labels, className }: CaracteristiquesTab
             <TableHeader>
               <TableRow className="border-border/60 bg-muted/40 hover:bg-muted/40">
                 <TableHead className="font-semibold text-foreground">{labels.colLibelle}</TableHead>
+                <TableHead className="w-[88px] max-w-[88px] text-center font-semibold text-foreground">
+                  {labels.colIcon}
+                </TableHead>
                 <TableHead className="font-semibold text-foreground">{labels.colType}</TableHead>
                 <TableHead className="font-semibold text-foreground">{labels.colLinked}</TableHead>
                 <TableHead className="font-semibold text-foreground">{labels.colDateCreation}</TableHead>
@@ -209,7 +217,7 @@ export function CaracteristiquesTable({ labels, className }: CaracteristiquesTab
             <TableBody>
               {!loading && filtered.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="h-24 text-center text-muted-foreground">
+                  <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
                     {labels.caracteristiquesEmpty}
                   </TableCell>
                 </TableRow>
@@ -221,6 +229,9 @@ export function CaracteristiquesTable({ labels, className }: CaracteristiquesTab
                   return (
                     <TableRow key={row._id} className="border-border/50">
                       <TableCell className="font-medium text-foreground">{row.libelle}</TableCell>
+                      <TableCell className="align-middle text-center">
+                        <AdminIconCell value={row.icon} />
+                      </TableCell>
                       <TableCell>
                         <Badge variant="outline" className="font-normal">
                           {resolveTypeLabel(typeKey, labels)}
@@ -312,6 +323,7 @@ function CaracteristiqueFormModal({
   } = useForm<CaracteristiqueFormValues>({
     defaultValues: {
       libelle: "",
+      icon: "",
       service: EMPTY_SELECT,
     },
   });
@@ -321,6 +333,7 @@ function CaracteristiqueFormModal({
     const sId = initialRow ? refId(initialRow.service) : "";
     reset({
       libelle: initialRow?.libelle ?? "",
+      icon: initialRow?.icon ?? "",
       service: sId || EMPTY_SELECT,
     });
   }, [open, editingId, initialRow, reset]);
@@ -340,25 +353,30 @@ function CaracteristiqueFormModal({
     }
 
     const serviceId = values.service === EMPTY_SELECT ? "" : values.service;
-
-    const payload: Parameters<typeof createCaracteristique>[0] = {
-      libelle,
-      ...(serviceId ? { service: serviceId } : {}),
-    };
+    const iconTrim = values.icon.trim();
 
     setSubmitting(true);
     try {
       if (isEdit && editingId) {
-        await updateCaracteristique(editingId, payload);
+        await updateCaracteristique(editingId, {
+          libelle,
+          ...(serviceId ? { service: serviceId } : {}),
+          icon: iconTrim,
+        });
         message.success("Caractéristique mise à jour.");
       } else {
-        await createCaracteristique(payload);
+        await createCaracteristique({
+          libelle,
+          ...(serviceId ? { service: serviceId } : {}),
+          ...(iconTrim ? { icon: iconTrim } : {}),
+        });
         message.success("Caractéristique créée.");
       }
       await onSuccess();
       onClose();
       reset({
         libelle: "",
+        icon: "",
         service: EMPTY_SELECT,
       });
     } catch (e) {
@@ -404,6 +422,36 @@ function CaracteristiqueFormModal({
           />
           {errors.libelle ? <p className="text-sm text-destructive">Requis</p> : null}
         </div>
+        <Controller
+          name="icon"
+          control={control}
+          rules={{ maxLength: { value: 512, message: labels.iconFieldMaxLength } }}
+          render={({ field }) => (
+            <IconField
+              id={`${formId}-icon`}
+              name={field.name}
+              label={labels.iconFieldLabel}
+              helperText={labels.iconFieldHelp}
+              placeholder={labels.iconFieldPlaceholder}
+              error={errors.icon?.message}
+              presets={CARACTERISTIQUE_ICON_PRESETS}
+              value={field.value ?? ""}
+              onChange={field.onChange}
+              onBlur={field.onBlur}
+              disabled={submitting}
+              i18n={{
+                tabLibrary: labels.iconPickerTabLibrary,
+                tabCustom: labels.iconPickerTabCustom,
+                none: labels.iconPickerNone,
+                upload: labels.iconPickerUpload,
+                uploading: labels.iconPickerUploading,
+                customHint: labels.iconPickerCustomHint,
+                preview: labels.iconPickerPreview,
+                unknownKeyHint: labels.iconPickerUnknownKeyHint,
+              }}
+            />
+          )}
+        />
         <div className="space-y-2">
           <Label>{labels.caracteristiqueTypeService}</Label>
           <Controller

@@ -52,7 +52,7 @@ export function ServiceHeader({
           <Ionicons
             name={isFavorite ? 'heart' : 'heart-outline'}
             size={22}
-            color={isFavorite ? '#E11D48' : Colors.text}
+            color={isFavorite ? Colors.favorite : Colors.text}
           />
         </Pressable>
       </View>
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(15, 23, 42, 0.12)',
+    backgroundColor: Colors.imageOverlay,
   },
   toolbar: {
     position: 'absolute',
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     borderColor: Colors.border,
     ...Platform.select({
       ios: {
-        shadowColor: '#000',
+        shadowColor: Colors.shadow,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.08,
         shadowRadius: 6,

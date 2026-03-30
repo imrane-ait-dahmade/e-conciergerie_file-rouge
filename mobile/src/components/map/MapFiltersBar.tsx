@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
   bar: {
     paddingTop: Spacing.xs,
     paddingBottom: Spacing.sm,
-    backgroundColor: 'rgba(255,255,255,0.92)',
+    backgroundColor: Colors.mapBarBg,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: Colors.border,
     pointerEvents: 'box-none',
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     borderRadius: Radius.xl,
     borderWidth: 1,
     borderColor: Colors.primary,
-    backgroundColor: '#EFF6FF',
+    backgroundColor: Colors.filterResetBg,
     marginRight: Spacing.base,
   },
   resetBtnPressed: {

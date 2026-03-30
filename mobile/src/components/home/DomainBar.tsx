@@ -8,6 +8,8 @@ export type DomainBarProps = {
   domains: DomainBarItem[];
   selectedDomainId: string;
   onSelectDomain: (domainId: string) => void;
+  /** Ex. ouvrir `DomainDetail` avec métadonnées complètes. */
+  onDomainPress?: (domain: DomainBarItem) => void;
   loading?: boolean;
   error?: string | null;
   onRetry?: () => void;
@@ -27,6 +29,7 @@ export function DomainBar({
   domains,
   selectedDomainId,
   onSelectDomain,
+  onDomainPress,
   loading = false,
   error = null,
   onRetry,
@@ -84,7 +87,10 @@ export function DomainBar({
           return (
             <Pressable
               key={domain.id}
-              onPress={() => onSelectDomain(domain.id)}
+              onPress={() => {
+                onSelectDomain(domain.id);
+                onDomainPress?.(domain);
+              }}
               style={({ pressed }) => [
                 styles.chip,
                 active ? styles.chipActive : styles.chipIdle,
@@ -97,7 +103,7 @@ export function DomainBar({
               <DomainGlyphIcon
                 iconKey={domain.iconKey}
                 size={22}
-                color={active ? Colors.primary : Colors.textMuted}
+                color={active ? Colors.iconPrimary : Colors.textMuted}
               />
               <Text style={[styles.chipLabel, active && styles.chipLabelActive]} numberOfLines={2}>
                 {domain.label}
@@ -112,7 +118,7 @@ export function DomainBar({
 
 const chipShadow = Platform.select({
   ios: {
-    shadowColor: '#0F172A',
+    shadowColor: Colors.shadow,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.06,
     shadowRadius: 3,
@@ -149,8 +155,8 @@ const styles = StyleSheet.create({
     borderColor: Colors.border,
   },
   chipActive: {
-    backgroundColor: 'rgba(37, 99, 235, 0.09)',
-    borderColor: Colors.primary,
+    backgroundColor: Colors.chipSelectedBg,
+    borderColor: Colors.chipSelectedBorder,
   },
   chipLabel: {
     fontSize: FontSize.xs,

@@ -99,6 +99,14 @@ export function HomeScreen() {
           domains={domains}
           selectedDomainId={selectedDomainId}
           onSelectDomain={setSelectedDomainId}
+          onDomainPress={(d) => {
+            navigation.navigate('DomainDetail', {
+              domainId: d.id,
+              domainName: d.label,
+              domainSlug: d.slug,
+              iconKey: d.iconKey,
+            });
+          }}
           onRetry={refetchDomains}
         />
 

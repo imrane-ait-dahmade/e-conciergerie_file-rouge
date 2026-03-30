@@ -66,7 +66,7 @@ export function BottomNav({ state, descriptors, navigation }: BottomTabBarProps)
               <Ionicons
                 name={iconName}
                 size={24}
-                color={isFocused ? Colors.primary : Colors.textMuted}
+                color={isFocused ? Colors.tabBarActive : Colors.tabBarInactive}
               />
               <Text style={[styles.label, isFocused && styles.labelFocused]} numberOfLines={1}>
                 {label}
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     borderTopColor: Colors.border,
     ...Platform.select({
       ios: {
-        shadowColor: '#0F172A',
+        shadowColor: Colors.shadow,
         shadowOffset: { width: 0, height: -2 },
         shadowOpacity: 0.06,
         shadowRadius: 8,
@@ -111,10 +111,10 @@ const styles = StyleSheet.create({
   label: {
     fontSize: FontSize.xs,
     fontWeight: '500',
-    color: Colors.textMuted,
+    color: Colors.tabBarInactive,
   },
   labelFocused: {
-    color: Colors.primary,
+    color: Colors.tabBarActive,
     fontWeight: '700',
   },
 });

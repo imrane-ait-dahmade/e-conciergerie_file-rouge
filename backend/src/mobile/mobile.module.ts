@@ -15,6 +15,7 @@ import { Media, MediaSchema } from '../media/schemas/media.schema';
 import { Service, ServiceSchema } from '../services/schemas/service.schema';
 import { SliderModule } from '../sliders/slider.module';
 import { MobileController } from './mobile.controller';
+import { MobileDomainDetailsService } from './services/mobile-domain-details.service';
 import { MobileNearbyEstablishmentServicesService } from './services/mobile-nearby-establishment-services.service';
 
 @Module({
@@ -31,7 +32,7 @@ import { MobileNearbyEstablishmentServicesService } from './services/mobile-near
     ]),
   ],
   controllers: [MobileController],
-  providers: [MobileNearbyEstablishmentServicesService],
-  exports: [MobileNearbyEstablishmentServicesService],
+  providers: [MobileNearbyEstablishmentServicesService, MobileDomainDetailsService],
+  exports: [MobileNearbyEstablishmentServicesService, MobileDomainDetailsService],
 })
 export class MobileModule {}

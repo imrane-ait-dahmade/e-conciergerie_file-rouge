@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: Spacing.sm,
-    backgroundColor: 'rgba(255,255,255,0.95)',
+    backgroundColor: Colors.overlayLight,
     paddingHorizontal: Spacing.lg,
     paddingVertical: Spacing.md,
     borderRadius: 12,

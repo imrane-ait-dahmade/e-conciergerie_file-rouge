@@ -5,6 +5,14 @@ import type { NavigatorScreenParams } from '@react-navigation/native';
  */
 export type HomeStackParamList = {
   HomeMain: undefined;
+  /** Sous-services + offres pour un domaine (`domainId` requis). */
+  DomainDetail: {
+    domainId: string;
+    domainName?: string;
+    domainSlug?: string;
+    /** Clé icône API / `DomainBar` → `DomainGlyphIcon` */
+    iconKey?: string;
+  };
   ServiceDetail: { serviceId?: string };
 };
 

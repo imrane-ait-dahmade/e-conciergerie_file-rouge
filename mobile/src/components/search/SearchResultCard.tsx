@@ -35,7 +35,7 @@ export function SearchResultCard({ item, onPress }: Props) {
           </Text>
           {item.rating != null ? (
             <View style={styles.ratingPill}>
-              <Ionicons name="star" size={12} color="#FBBF24" />
+              <Ionicons name="star" size={12} color={Colors.star} />
               <Text style={styles.ratingText}>{item.rating.toFixed(1)}</Text>
             </View>
           ) : null}
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.md,
     ...Platform.select({
       ios: {
-        shadowColor: '#0F172A',
+        shadowColor: Colors.shadow,
         shadowOffset: { width: 0, height: 3 },
         shadowOpacity: 0.08,
         shadowRadius: 8,
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 3,
-    backgroundColor: '#FFFBEB',
+    backgroundColor: Colors.badgeWarmBg,
     borderRadius: Radius.sm,
     paddingHorizontal: Spacing.xs + 2,
     paddingVertical: 3,

@@ -68,25 +68,25 @@
 
   --radius: 0.625rem;
 
-  /* Primary blues (hue ~258) */
-  --blue-50: oklch(0.97 0.02 258);
-  --blue-100: oklch(0.93 0.04 258);
-  --blue-200: oklch(0.86 0.08 258);
-  --blue-300: oklch(0.75 0.12 258);
-  --blue-400: oklch(0.65 0.16 258);
-  --blue-500: oklch(0.58 0.19 258);
-  --blue-600: oklch(0.5 0.18 258);
-  --blue-700: oklch(0.42 0.15 258);
-  --blue-800: oklch(0.32 0.1 258);
-  --blue-900: oklch(0.24 0.07 258);
-  --blue-950: oklch(0.18 0.05 265);
+  /* Primary blues (marque ~#2F64E1 / #27408B — hue ~264) */
+  --blue-50: oklch(0.97 0.022 264);
+  --blue-100: oklch(0.93 0.045 264);
+  --blue-200: oklch(0.86 0.085 264);
+  --blue-300: oklch(0.75 0.125 264);
+  --blue-400: oklch(0.65 0.165 264);
+  --blue-500: oklch(0.56 0.195 264);
+  --blue-600: oklch(0.515 0.195 264);
+  --blue-700: oklch(0.42 0.155 264);
+  --blue-800: oklch(0.32 0.1 264);
+  --blue-900: oklch(0.24 0.075 264);
+  --blue-950: oklch(0.18 0.055 265);
 
-  /* Secondary / accent yellows (hue ~92) */
+  /* Or / accent CTA (marque ~#F4C021 — hue ~92) */
   --yellow-50: oklch(0.99 0.03 92);
-  --yellow-100: oklch(0.96 0.06 92);
-  --yellow-200: oklch(0.92 0.1 92);
-  --yellow-300: oklch(0.88 0.14 92);
-  --yellow-400: oklch(0.86 0.16 92);
+  --yellow-100: oklch(0.96 0.065 92);
+  --yellow-200: oklch(0.92 0.11 92);
+  --yellow-300: oklch(0.88 0.155 92);
+  --yellow-400: oklch(0.84 0.17 92);
   --yellow-500: oklch(0.78 0.16 92);
   --yellow-600: oklch(0.68 0.14 92);
 

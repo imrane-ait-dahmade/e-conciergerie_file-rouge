@@ -378,6 +378,19 @@ export type CommonDictionary = {
     colEtablissement: string;
     colDomaine: string;
     colLinked: string;
+    colIcon: string;
+    iconFieldLabel: string;
+    iconFieldHelp: string;
+    iconFieldPlaceholder: string;
+    iconFieldMaxLength: string;
+    iconPickerTabLibrary: string;
+    iconPickerTabCustom: string;
+    iconPickerNone: string;
+    iconPickerUpload: string;
+    iconPickerUploading: string;
+    iconPickerCustomHint: string;
+    iconPickerPreview: string;
+    iconPickerUnknownKeyHint: string;
     domainesSearchPlaceholder: string;
     domainesAddButton: string;
     colStatut: string;
@@ -1139,6 +1152,21 @@ const DEFAULT_COMMON_DICTIONARY: CommonDictionary = {
     colEtablissement: "Establishment",
     colDomaine: "Domain",
     colLinked: "Linked to",
+    colIcon: "Icon",
+    iconFieldLabel: "Icon",
+    iconFieldHelp:
+      "Icon key (e.g. bed, wifi) or absolute image URL. Leave empty for no icon.",
+    iconFieldPlaceholder: "e.g. bed or https://…",
+    iconFieldMaxLength: "Maximum 512 characters.",
+    iconPickerTabLibrary: "Icon library",
+    iconPickerTabCustom: "Image or URL",
+    iconPickerNone: "None",
+    iconPickerUpload: "Upload image",
+    iconPickerUploading: "Uploading…",
+    iconPickerCustomHint: "Paste an HTTPS URL or upload an image (stored on MinIO).",
+    iconPickerPreview: "Preview",
+    iconPickerUnknownKeyHint:
+      "This value is not in the list. Switch to “Image or URL” to edit it, or pick an icon above.",
     domainesSearchPlaceholder: "Search domains…",
     domainesAddButton: "Add domain",
     colStatut: "Status",
@@ -2768,6 +2796,58 @@ function normalizeDictionary(value: unknown): CommonDictionary {
       colLinked: asString(
         adminServicesCatalog.colLinked,
         DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.colLinked
+      ),
+      colIcon: asString(
+        adminServicesCatalog.colIcon,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.colIcon
+      ),
+      iconFieldLabel: asString(
+        adminServicesCatalog.iconFieldLabel,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.iconFieldLabel
+      ),
+      iconFieldHelp: asString(
+        adminServicesCatalog.iconFieldHelp,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.iconFieldHelp
+      ),
+      iconFieldPlaceholder: asString(
+        adminServicesCatalog.iconFieldPlaceholder,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.iconFieldPlaceholder
+      ),
+      iconFieldMaxLength: asString(
+        adminServicesCatalog.iconFieldMaxLength,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.iconFieldMaxLength
+      ),
+      iconPickerTabLibrary: asString(
+        adminServicesCatalog.iconPickerTabLibrary,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.iconPickerTabLibrary
+      ),
+      iconPickerTabCustom: asString(
+        adminServicesCatalog.iconPickerTabCustom,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.iconPickerTabCustom
+      ),
+      iconPickerNone: asString(
+        adminServicesCatalog.iconPickerNone,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.iconPickerNone
+      ),
+      iconPickerUpload: asString(
+        adminServicesCatalog.iconPickerUpload,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.iconPickerUpload
+      ),
+      iconPickerUploading: asString(
+        adminServicesCatalog.iconPickerUploading,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.iconPickerUploading
+      ),
+      iconPickerCustomHint: asString(
+        adminServicesCatalog.iconPickerCustomHint,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.iconPickerCustomHint
+      ),
+      iconPickerPreview: asString(
+        adminServicesCatalog.iconPickerPreview,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.iconPickerPreview
+      ),
+      iconPickerUnknownKeyHint: asString(
+        adminServicesCatalog.iconPickerUnknownKeyHint,
+        DEFAULT_COMMON_DICTIONARY.adminServicesCatalog.iconPickerUnknownKeyHint
       ),
       domainesSearchPlaceholder: asString(
         adminServicesCatalog.domainesSearchPlaceholder,

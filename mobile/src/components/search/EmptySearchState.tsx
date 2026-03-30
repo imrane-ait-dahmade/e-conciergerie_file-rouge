@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.sm + 2,
   },
   buttonText: {
-    color: '#FFFFFF',
+    color: Colors.textOnPrimary,
     fontSize: FontSize.sm,
     fontWeight: '700',
   },

@@ -64,11 +64,11 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#EFF6FF',
+    backgroundColor: Colors.infoSurface,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: '#E0E7FF',
+    borderColor: Colors.infoBorder,
   },
   label: {
     flex: 1,

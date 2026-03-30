@@ -1,6 +1,6 @@
 import { Marker } from 'react-native-maps';
 
-import { Brand } from '@/src/constants/colors';
+import { Brand, Colors } from '@/src/constants/colors';
 import type { MapNearbyItem } from '@/src/types/map.types';
 
 type Props = {
@@ -22,7 +22,7 @@ export function MapMarkerItem({ item, selected, onPress }: Props) {
       title={item.title}
       description={item.subtitle || undefined}
       onPress={() => onPress(item)}
-      pinColor={selected ? Brand.blue : '#64748B'}
+      pinColor={selected ? Brand.blue : Colors.pinDefault}
       zIndex={selected ? 1000 : 1}
       tracksViewChanges={false}
     />

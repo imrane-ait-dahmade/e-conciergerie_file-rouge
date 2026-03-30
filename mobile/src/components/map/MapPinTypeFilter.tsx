@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
   },
   chipSelected: {
     borderColor: Colors.primary,
-    backgroundColor: '#DBEAFE',
+    backgroundColor: Colors.chipSelectedBg,
   },
   chipText: {
     fontSize: FontSize.sm,

@@ -44,7 +44,7 @@ export function ServiceCard({ item, onPress, onToggleFavorite }: Props) {
           />
         </Pressable>
         <View style={styles.ratingPill}>
-          <Ionicons name="star" size={14} color="#FBBF24" />
+          <Ionicons name="star" size={14} color={Colors.star} />
           <Text style={styles.ratingText}>{item.rating.toFixed(1)}</Text>
         </View>
       </View>
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     borderColor: Colors.border,
     ...Platform.select({
       ios: {
-        shadowColor: '#0F172A',
+        shadowColor: Colors.shadow,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.08,
         shadowRadius: 12,
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
   },
   imageOverlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(15, 23, 42, 0.12)',
+    backgroundColor: Colors.imageOverlay,
   },
   favBtn: {
     position: 'absolute',
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: 'rgba(15, 23, 42, 0.45)',
+    backgroundColor: Colors.scrim,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: 'rgba(255,255,255,0.95)',
+    backgroundColor: Colors.overlayLight,
     paddingHorizontal: Spacing.sm,
     paddingVertical: 4,
     borderRadius: Radius.sm,

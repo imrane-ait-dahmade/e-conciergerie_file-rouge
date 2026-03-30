@@ -5,6 +5,7 @@ import { headersJsonAuth, readErrorMessage, requireApiBase } from "./client";
 export type CreateServicePayload = {
   nom: string;
   description?: string;
+  icon?: string;
   domaine: string;
 };
 

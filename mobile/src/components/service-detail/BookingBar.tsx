@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.base,
     ...Platform.select({
       ios: {
-        shadowColor: '#000',
+        shadowColor: Colors.shadow,
         shadowOffset: { width: 0, height: -4 },
         shadowOpacity: 0.06,
         shadowRadius: 12,

@@ -10,6 +10,10 @@ export class Caracteristique {
   @Prop({ required: true, trim: true })
   libelle: string;
 
+  /** Clé d’icône client ou URL (optionnel). */
+  @Prop({ required: false, trim: true })
+  icon?: string;
+
   /** Optionnel : caractéristique liée à un type de service. */
   @Prop({ type: Types.ObjectId, ref: 'Service', required: false })
   service?: Types.ObjectId;

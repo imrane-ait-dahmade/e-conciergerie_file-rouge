@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import { IsMongoId, IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
 
 export class CreateCaracteristiqueDto {
@@ -7,6 +8,16 @@ export class CreateCaracteristiqueDto {
   @IsString()
   @MaxLength(200)
   libelle: string;
+
+  @ApiPropertyOptional({
+    description: 'Clé d’icône (wifi, parking-circle, …) ou URL — optionnel',
+    example: 'wifi',
+  })
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
+  @IsOptional()
+  @IsString()
+  @MaxLength(512)
+  icon?: string;
 
   @ApiPropertyOptional({ description: 'ObjectId du service (optionnel)' })
   @IsOptional()

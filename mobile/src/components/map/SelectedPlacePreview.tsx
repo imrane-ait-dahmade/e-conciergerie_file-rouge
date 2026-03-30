@@ -65,7 +65,7 @@ export function SelectedPlacePreview({ item, onClose, onOpenDetail }: Props) {
           <View style={styles.heroOverlay} />
           {item.rating != null && !Number.isNaN(item.rating) ? (
             <View style={styles.ratingPill}>
-              <Ionicons name="star" size={14} color="#FBBF24" />
+              <Ionicons name="star" size={14} color={Colors.star} />
               <Text style={styles.ratingPillText}>{item.rating.toFixed(1)}</Text>
             </View>
           ) : null}
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
     borderColor: Colors.border,
     ...Platform.select({
       ios: {
-        shadowColor: '#0F172A',
+        shadowColor: Colors.shadow,
         shadowOffset: { width: 0, height: 10 },
         shadowOpacity: 0.14,
         shadowRadius: 20,
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: 'rgba(255,255,255,0.95)',
+    backgroundColor: Colors.overlayLight,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
   },
   heroOverlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(15, 23, 42, 0.1)',
+    backgroundColor: Colors.imageOverlay,
   },
   ratingPill: {
     position: 'absolute',
@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: 'rgba(255,255,255,0.96)',
+    backgroundColor: Colors.overlayLight,
     paddingHorizontal: Spacing.sm,
     paddingVertical: 5,
     borderRadius: Radius.sm,
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: 'rgba(255,255,255,0.96)',
+    backgroundColor: Colors.overlayLight,
     paddingHorizontal: Spacing.sm,
     paddingVertical: 5,
     borderRadius: Radius.sm,
@@ -244,7 +244,7 @@ const styles = StyleSheet.create({
     color: Colors.textMuted,
   },
   chipPrimary: {
-    backgroundColor: 'rgba(37, 99, 235, 0.1)',
+    backgroundColor: Colors.primaryAlpha10,
     paddingHorizontal: Spacing.sm,
     paddingVertical: 4,
     borderRadius: Radius.sm,

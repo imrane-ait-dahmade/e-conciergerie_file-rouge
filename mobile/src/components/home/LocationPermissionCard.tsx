@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.md,
     padding: Spacing.md,
     borderRadius: Radius.lg,
-    backgroundColor: 'rgba(37, 99, 235, 0.06)',
+    backgroundColor: Colors.primaryAlpha06,
     borderWidth: 1,
     borderColor: Colors.border,
   },
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
     borderRadius: Radius.md,
     backgroundColor: Colors.card,
     borderWidth: 1,
-    borderColor: 'rgba(37, 99, 235, 0.35)',
+    borderColor: Colors.primaryBorderMuted,
   },
   ctaPressed: {
     opacity: 0.88,

@@ -42,6 +42,13 @@ export const DEFAULT_DOMAINES = [
     order: 5,
     description: 'Excursions, loisirs et expériences.',
   },
+  {
+    nom: 'Événements',
+    slug: 'evenements',
+    icon: 'ticket',
+    order: 6,
+    description: 'Concerts, festivals et billetterie.',
+  },
 ] as const;
 
 export type DefaultDomaineSeed = (typeof DEFAULT_DOMAINES)[number];

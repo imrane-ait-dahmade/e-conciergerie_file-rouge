@@ -43,7 +43,7 @@ export function ProviderCard({ provider, onPress }: Props) {
           ) : null}
           {provider.premium ? (
             <View style={[styles.badge, styles.badgePremium]}>
-              <Ionicons name="diamond-outline" size={14} color="#B45309" />
+              <Ionicons name="diamond-outline" size={14} color={Colors.premiumIcon} />
               <Text style={styles.badgePremiumText}>Premium</Text>
             </View>
           ) : null}
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     gap: Spacing.md,
     ...Platform.select({
       ios: {
-        shadowColor: '#000',
+        shadowColor: Colors.shadow,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.06,
         shadowRadius: 8,
@@ -132,12 +132,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: '#EFF6FF',
+    backgroundColor: Colors.infoSurface,
     paddingHorizontal: Spacing.sm,
     paddingVertical: 2,
     borderRadius: Radius.sm,
     borderWidth: 1,
-    borderColor: '#BFDBFE',
+    borderColor: Colors.infoBorder,
   },
   badgeText: {
     fontSize: FontSize.xs,
@@ -145,12 +145,12 @@ const styles = StyleSheet.create({
     color: Colors.primary,
   },
   badgePremium: {
-    backgroundColor: '#FFFBEB',
-    borderColor: '#FDE68A',
+    backgroundColor: Colors.premiumSurface,
+    borderColor: Colors.premiumBorder,
   },
   badgePremiumText: {
     fontSize: FontSize.xs,
     fontWeight: '600',
-    color: '#B45309',
+    color: Colors.premiumIcon,
   },
 });

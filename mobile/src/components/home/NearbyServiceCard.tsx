@@ -51,7 +51,7 @@ export function NearbyServiceCard({ item, onPress }: Props) {
         <View style={styles.imageOverlay} />
         {item.rating != null && !Number.isNaN(item.rating) ? (
           <View style={styles.ratingPill}>
-            <Ionicons name="star" size={14} color="#FBBF24" />
+            <Ionicons name="star" size={14} color={Colors.star} />
             <Text style={styles.ratingText}>{item.rating.toFixed(1)}</Text>
           </View>
         ) : null}
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     borderColor: Colors.border,
     ...Platform.select({
       ios: {
-        shadowColor: '#0F172A',
+        shadowColor: Colors.shadow,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.08,
         shadowRadius: 12,
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
   },
   imageOverlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(15, 23, 42, 0.12)',
+    backgroundColor: Colors.imageOverlay,
   },
   ratingPill: {
     position: 'absolute',
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: 'rgba(255,255,255,0.95)',
+    backgroundColor: Colors.overlayLight,
     paddingHorizontal: Spacing.sm,
     paddingVertical: 4,
     borderRadius: Radius.sm,
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: 'rgba(255,255,255,0.95)',
+    backgroundColor: Colors.overlayLight,
     paddingHorizontal: Spacing.sm,
     paddingVertical: 4,
     borderRadius: Radius.sm,

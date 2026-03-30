@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     pointerEvents: 'auto',
   },
   card: {
-    backgroundColor: 'rgba(255,255,255,0.96)',
+    backgroundColor: Colors.overlayLight,
     borderRadius: Radius.xl,
     padding: Spacing.lg,
     borderWidth: 1,

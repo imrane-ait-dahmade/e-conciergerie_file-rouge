@@ -223,10 +223,10 @@ const styles = StyleSheet.create({
     marginHorizontal: Spacing.base,
     marginBottom: Spacing.md,
     padding: Spacing.md,
-    backgroundColor: '#FEF3C7',
+    backgroundColor: Colors.warningBg,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#FCD34D',
+    borderColor: Colors.warningBorder,
   },
   bannerText: {
     fontSize: FontSize.sm,

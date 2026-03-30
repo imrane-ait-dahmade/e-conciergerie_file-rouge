@@ -2,6 +2,7 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Types } from 'mongoose';
+import { Domaine } from '../domaines/schemas/domaine.schema';
 import { Service } from '../services/schemas/service.schema';
 import { CreateCaracteristiqueDto } from './dto/create-caracteristique.dto';
 import { UpdateCaracteristiqueDto } from './dto/update-caracteristique.dto';
@@ -26,10 +27,24 @@ describe('CaracteristiqueService', () => {
     findById: jest.fn(),
     findByIdAndUpdate: jest.fn(),
     findByIdAndDelete: jest.fn(),
+    findOne: jest.fn().mockReturnValue({
+      exec: jest.fn().mockResolvedValue(null),
+    }),
+    findOneAndUpdate: jest.fn(),
+    updateOne: jest.fn(),
   };
 
   const serviceModel = {
     findById: jest.fn(),
+    findOne: jest.fn().mockReturnValue({
+      lean: jest.fn().mockReturnValue({
+        exec: jest.fn().mockResolvedValue(null),
+      }),
+    }),
+  };
+
+  const domaineModel = {
+    findOne: jest.fn().mockResolvedValue(null),
   };
 
   function mockServiceFindById(doc: unknown | null) {
@@ -92,6 +107,7 @@ describe('CaracteristiqueService', () => {
           useValue: caracteristiqueModel,
         },
         { provide: getModelToken(Service.name), useValue: serviceModel },
+        { provide: getModelToken(Domaine.name), useValue: domaineModel },
       ],
     }).compile();
 
@@ -172,7 +188,7 @@ describe('CaracteristiqueService', () => {
       expect(caracteristiqueModel.find).toHaveBeenCalled();
       expect(chain.sort).toHaveBeenCalledWith({ libelle: 1 });
       expect(chain.populate).toHaveBeenCalledWith([
-        { path: 'service', select: 'nom description' },
+        { path: 'service', select: 'nom description icon' },
       ]);
       expect(result).toEqual(rows);
     });
@@ -226,7 +242,7 @@ describe('CaracteristiqueService', () => {
       expect(serviceModel.findById).toHaveBeenCalledWith(SERVICE_ID);
       expect(caracteristiqueModel.findByIdAndUpdate).toHaveBeenCalledWith(
         CARAC_ID,
-        { service: new Types.ObjectId(SERVICE_ID) },
+        { $set: { service: new Types.ObjectId(SERVICE_ID) } },
         { new: true },
       );
     });
@@ -240,7 +256,7 @@ describe('CaracteristiqueService', () => {
       expect(serviceModel.findById).not.toHaveBeenCalled();
       expect(caracteristiqueModel.findByIdAndUpdate).toHaveBeenCalledWith(
         CARAC_ID,
-        { libelle: 'N' },
+        { $set: { libelle: 'N' } },
         { new: true },
       );
     });

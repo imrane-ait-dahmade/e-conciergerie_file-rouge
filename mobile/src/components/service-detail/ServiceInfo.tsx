@@ -25,11 +25,11 @@ function Stars({ rating }: { rating: number }) {
   const stars: ReactElement[] = [];
   for (let i = 0; i < 5; i += 1) {
     if (i < full) {
-      stars.push(<Ionicons key={i} name="star" size={16} color="#F59E0B" />);
+      stars.push(<Ionicons key={i} name="star" size={16} color={Colors.star} />);
     } else if (i === full && half) {
-      stars.push(<Ionicons key={i} name="star-half" size={16} color="#F59E0B" />);
+      stars.push(<Ionicons key={i} name="star-half" size={16} color={Colors.star} />);
     } else {
-      stars.push(<Ionicons key={i} name="star-outline" size={16} color="#CBD5E1" />);
+      stars.push(<Ionicons key={i} name="star-outline" size={16} color={Colors.borderLight} />);
     }
   }
   return <View style={styles.starsRow}>{stars}</View>;
@@ -91,12 +91,12 @@ const styles = StyleSheet.create({
   },
   categoryPill: {
     alignSelf: 'flex-start',
-    backgroundColor: '#EFF6FF',
+    backgroundColor: Colors.infoSurface,
     paddingHorizontal: Spacing.md,
     paddingVertical: Spacing.xs + 2,
     borderRadius: Radius.md,
     borderWidth: 1,
-    borderColor: '#BFDBFE',
+    borderColor: Colors.infoBorder,
   },
   categoryText: {
     fontSize: FontSize.xs,

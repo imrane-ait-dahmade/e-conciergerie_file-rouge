@@ -79,7 +79,7 @@ function PrefRow({
           onValueChange={
             item.preferenceKey === 'notifications' ? onNotifChange : onLocChange
           }
-          trackColor={{ false: Colors.border, true: '#93C5FD' }}
+          trackColor={{ false: Colors.border, true: Colors.switchTrackOn }}
           thumbColor={value ? Colors.primary : Colors.surfaceMuted}
         />
       ) : (
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     ...Platform.select({
       ios: {
-        shadowColor: '#0F172A',
+        shadowColor: Colors.shadow,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.07,
         shadowRadius: 12,
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: Radius.md,
-    backgroundColor: 'rgba(37, 99, 235, 0.08)',
+    backgroundColor: Colors.primaryAlpha08,
     alignItems: 'center',
     justifyContent: 'center',
   },

@@ -46,11 +46,11 @@ const styles = StyleSheet.create({
     borderRadius: Radius.md,
     backgroundColor: Colors.card,
     borderWidth: 1,
-    borderColor: 'rgba(220, 38, 38, 0.35)',
+    borderColor: Colors.errorMuted,
   },
   btnPressed: {
     opacity: 0.88,
-    backgroundColor: '#FEF2F2',
+    backgroundColor: Colors.errorSurface,
   },
   btnDisabled: {
     opacity: 0.5,

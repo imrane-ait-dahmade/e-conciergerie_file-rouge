@@ -13,6 +13,10 @@ export class Service {
   @Prop({ required: false, trim: true })
   description?: string;
 
+  /** Clé d’icône client ou URL (optionnel). */
+  @Prop({ required: false, trim: true })
+  icon?: string;
+
   /** Secteur métier (ex. hébergement, restauration). */
   @Prop({ type: Types.ObjectId, ref: 'Domaine', required: true })
   domaine: Types.ObjectId;

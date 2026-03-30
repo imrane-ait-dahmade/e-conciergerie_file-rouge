@@ -56,10 +56,18 @@
   width: 3rem;
   height: 3rem;
   padding: 0;
-  border: none;
+  border: 1px solid $border-default;
   border-radius: $radius-sm;
-  background: oklch(0.45 0 0);
+  background: $background-muted;
   cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+
+  &:hover {
+    background: $background-page;
+    border-color: $border-strong;
+  }
 
   &:focus-visible {
     @include focus-ring;
@@ -128,8 +136,9 @@
 .home-hero {
   background: linear-gradient(
     180deg,
-    oklch(0.97 0.02 258) 0%,
-    $background-page 100%
+    oklch(0.965 0.035 264) 0%,
+    $background-page 55%,
+    oklch(0.98 0.02 92 / 35%) 100%
   );
 }
 
@@ -180,8 +189,8 @@
   border-radius: $radius-lg;
   background: linear-gradient(
     160deg,
-    $background-muted 0%,
-    rgb(255 255 255 / 0.9) 100%
+    oklch(0.94 0.04 264) 0%,
+    rgb(255 255 255 / 0.95) 100%
   );
 
   @include respond-min($breakpoint-md) {
@@ -319,7 +328,7 @@
 .home-subscription {
   background: linear-gradient(
     180deg,
-    $background-muted 0%,
+    oklch(0.94 0.03 264) 0%,
     $background-page 100%
   );
 }
@@ -351,8 +360,8 @@
   min-height: 14rem;
   background: linear-gradient(
     145deg,
-    $background-muted 0%,
-    rgb(255 255 255 / 0.96) 100%
+    oklch(0.93 0.045 264) 0%,
+    rgb(255 255 255 / 0.97) 100%
   );
 
   @include respond-min($breakpoint-md) {
@@ -447,7 +456,9 @@
   white-space: nowrap;
   background: $accent;
   color: $text-on-accent;
-  box-shadow: 0 1px 2px rgb(30 58 138 / 0.12);
+  box-shadow:
+    0 1px 2px rgb(47 100 225 / 0.14),
+    0 2px 12px rgb(244 192 33 / 0.12);
   transition: background 0.15s ease;
 
   &:hover {

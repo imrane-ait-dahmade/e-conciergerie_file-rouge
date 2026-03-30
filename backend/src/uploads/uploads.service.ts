@@ -9,6 +9,8 @@ export type UploadResult = {
   key: string;
   originalName: string;
   size: number;
+  /** URL publique de l’objet (MinIO path-style : `{publicUrl}/{bucket}/{key}`). */
+  url: string;
 };
 
 function s3ErrorCode(err: unknown): string {
@@ -48,6 +50,7 @@ export class UploadsService {
   private readonly minio: Client;
   private readonly bucket: string;
   private readonly bucketRegion: string;
+  private readonly publicBase: string;
 
   constructor(private readonly config: ConfigService) {
     /* eslint-disable @typescript-eslint/no-unsafe-assignment -- ConfigService keys validated by Joi */
@@ -65,6 +68,16 @@ export class UploadsService {
     });
     /* eslint-enable @typescript-eslint/no-unsafe-assignment */
     this.bucket = this.config.getOrThrow<string>('minio.bucket');
+    this.publicBase = (
+      this.config.get<string>('minio.publicUrl', { infer: true }) ??
+      'http://localhost:9000'
+    ).replace(/\/$/, '');
+  }
+
+  /** URL publique path-style pour persistance en base (ex. champ `icon`). */
+  private buildPublicObjectUrl(objectKey: string): string {
+    const segments = objectKey.split('/').map((s) => encodeURIComponent(s));
+    return `${this.publicBase}/${encodeURIComponent(this.bucket)}/${segments.join('/')}`;
   }
 
   /**
@@ -116,6 +129,7 @@ export class UploadsService {
       key,
       originalName: file.originalname,
       size,
+      url: this.buildPublicObjectUrl(key),
     };
   }
 
@@ -136,6 +150,7 @@ export class UploadsService {
       key: objectKey,
       originalName: file.originalname,
       size,
+      url: this.buildPublicObjectUrl(objectKey),
     };
   }
 
