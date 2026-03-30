@@ -1,6 +1,14 @@
 import type { NavigatorScreenParams } from '@react-navigation/native';
 
 /**
+ * Pile « Accueil » : home mock → détail service.
+ */
+export type HomeStackParamList = {
+  HomeMain: undefined;
+  ServiceDetail: { serviceId?: string };
+};
+
+/**
  * Paramètres des écrans de la pile « Établissements » (liste + détail).
  */
 export type EstablishmentsStackParamList = {
@@ -9,11 +17,12 @@ export type EstablishmentsStackParamList = {
 };
 
 /**
- * Onglets principaux une fois connecté : Accueil, Établissements, Profil.
+ * Onglets principaux une fois connecté : Accueil, Recherche (établissements), Carte, Profil.
  */
 export type MainTabParamList = {
-  Home: undefined;
-  Establishments: NavigatorScreenParams<EstablishmentsStackParamList>;
+  Home: NavigatorScreenParams<HomeStackParamList>;
+  Search: NavigatorScreenParams<EstablishmentsStackParamList>;
+  Map: undefined;
   Profile: undefined;
 };
 

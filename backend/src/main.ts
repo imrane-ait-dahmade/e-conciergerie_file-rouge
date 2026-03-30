@@ -21,12 +21,22 @@ async function bootstrap() {
     }),
   );
 
-  // CORS : le front Next.js (ex. http://localhost:3000) appelle l’API sur un autre port (ex. 3001)
+  // CORS : Next.js (web) + app mobile (Expo Metro / dev server, souvent :8081)
   const frontendUrl = (
     process.env.FRONTEND_URL ?? 'http://localhost:3001'
   ).replace(/\/$/, '');
+  const mobileDevOrigin = (
+    process.env.MOBILE_DEV_ORIGIN ?? 'http://localhost:8081'
+  ).replace(/\/$/, '');
   const allowedOrigins = [
-    ...new Set([frontendUrl, 'http://localhost:3001', 'http://127.0.0.1:3001']),
+    ...new Set([
+      frontendUrl,
+      'http://localhost:3001',
+      'http://127.0.0.1:3001',
+      mobileDevOrigin,
+      'http://localhost:8081',
+      'http://127.0.0.1:8081',
+    ]),
   ];
 
   app.enableCors({

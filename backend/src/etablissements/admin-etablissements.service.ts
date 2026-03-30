@@ -18,6 +18,10 @@ import { Reservation } from '../reservations/schemas/reservation.schema';
 import { ROLE_NAMES } from '../roles/seeds/roles.seed';
 import { User } from '../users/schemas/user.schema';
 import { Ville } from '../villes/schemas/ville.schema';
+import {
+  assertLatLngPair,
+  assertLatLngPairForPatch,
+} from '../common/validation/lat-lng-pair.util';
 import { normalizeAdminEtablissementDoc } from './admin-etablissement.resource';
 import { AdminCreateEtablissementDto } from './dto/admin-create-etablissement.dto';
 import { AdminUpdateEtablissementDto } from './dto/admin-update-etablissement.dto';
@@ -148,7 +152,7 @@ export class AdminEtablissementsService {
         select: 'nom prenom email isActive',
         populate: { path: 'role', select: 'name label' },
       },
-      { path: 'domaine', select: 'nom description' },
+      { path: 'domaine', select: 'nom description icon' },
       { path: 'pays', select: 'nom code' },
       {
         path: 'ville',
@@ -253,6 +257,7 @@ export class AdminEtablissementsService {
   }
 
   async create(dto: AdminCreateEtablissementDto) {
+    assertLatLngPair(dto);
     await this.assertPrestataireUser(dto.prestataire);
 
     if (dto.domaine) {
@@ -265,12 +270,20 @@ export class AdminEtablissementsService {
       quartier: dto.quartier,
     });
 
+    const hasCoords =
+      dto.latitude !== undefined &&
+      dto.longitude !== undefined &&
+      dto.latitude !== null &&
+      dto.longitude !== null;
+
     const doc = await this.etablissementModel.create({
       nom: dto.nom.trim(),
       prestataire: new Types.ObjectId(dto.prestataire),
       adresse: dto.adresse?.trim(),
-      latitude: dto.latitude,
-      longitude: dto.longitude,
+      ...(hasCoords && {
+        latitude: dto.latitude as number,
+        longitude: dto.longitude as number,
+      }),
       description: dto.description?.trim(),
       telephone: dto.telephone?.trim(),
       email: dto.email?.toLowerCase().trim(),
@@ -294,6 +307,7 @@ export class AdminEtablissementsService {
   }
 
   async update(id: string, dto: AdminUpdateEtablissementDto) {
+    assertLatLngPairForPatch(dto);
     this.assertValidObjectId(id);
     const existing = await this.etablissementModel.findById(id).lean();
     if (!existing) {

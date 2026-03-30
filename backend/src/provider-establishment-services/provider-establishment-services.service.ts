@@ -10,7 +10,14 @@ import {
   ensurePrestataireOwnsEtablissement,
   ensurePrestataireOwnsEtablissementService,
 } from '../auth/ownership/prestataire-ownership.util';
+import {
+  assertLatLngPair,
+  assertLatLngPairForPatch,
+} from '../common/validation/lat-lng-pair.util';
+import { withEtablissementLocationApiFields } from '../etablissements/etablissement-api-fields.resource';
 import { Etablissement } from '../etablissements/schemas/etablissement.schema';
+import { resolveAdresseLineForDto } from '../etablissement-services/etablissement-service-adresse.util';
+import { withEtablissementServiceLocationApiFields } from '../etablissement-services/etablissement-service-api-fields.resource';
 import { Service } from '../services/schemas/service.schema';
 import { CreateEtablissementServiceDto } from '../etablissement-services/dto/create-etablissement-service.dto';
 import { UpdateEtablissementServiceDto } from '../etablissement-services/dto/update-etablissement-service.dto';
@@ -45,16 +52,28 @@ export class ProviderEstablishmentServicesService {
     private readonly serviceModel: Model<Service>,
   ) {}
 
+  private mapLiaisonResponse(doc: Record<string, unknown>): Record<string, unknown> {
+    const root = withEtablissementServiceLocationApiFields({ ...doc });
+    const etab = root.etablissement;
+    if (etab && typeof etab === 'object' && !Array.isArray(etab)) {
+      root.etablissement = withEtablissementLocationApiFields(
+        etab as Record<string, unknown>,
+      );
+    }
+    return root;
+  }
+
   private populateAssignment() {
     return [
       {
         path: 'etablissement',
-        select: 'nom adresse isActive prestataire',
+        select:
+          'nom adresse latitude longitude location isActive prestataire',
       },
       {
         path: 'service',
         select: 'nom description',
-        populate: { path: 'domaine', select: 'nom' },
+        populate: { path: 'domaine', select: 'nom icon' },
       },
     ] as const;
   }
@@ -91,12 +110,15 @@ export class ProviderEstablishmentServicesService {
     if (etabIds.length === 0) {
       return [];
     }
-    return this.liaisonModel
+    const rows = await this.liaisonModel
       .find({ etablissement: { $in: etabIds } })
       .sort({ createdAt: -1 })
       .populate([...this.populateAssignment()])
       .lean()
       .exec();
+    return rows.map((d) =>
+      this.mapLiaisonResponse(d as unknown as Record<string, unknown>),
+    );
   }
 
   /** Assignations pour un établissement donné (après vérification propriétaire). */
@@ -109,15 +131,19 @@ export class ProviderEstablishmentServicesService {
       etablissementId,
       userId,
     );
-    return this.liaisonModel
+    const rows = await this.liaisonModel
       .find({ etablissement: new Types.ObjectId(etablissementId) })
       .sort({ createdAt: -1 })
       .populate([...this.populateAssignment()])
       .lean()
       .exec();
+    return rows.map((d) =>
+      this.mapLiaisonResponse(d as unknown as Record<string, unknown>),
+    );
   }
 
   async createForProvider(dto: CreateEtablissementServiceDto, userId: string) {
+    assertLatLngPair(dto);
     await ensurePrestataireOwnsEtablissement(
       this.etablissementModel,
       dto.etablissement,
@@ -139,12 +165,31 @@ export class ProviderEstablishmentServicesService {
     }
 
     try {
+      const hasCoords =
+        dto.latitude !== undefined &&
+        dto.longitude !== undefined &&
+        dto.latitude !== null &&
+        dto.longitude !== null;
+
+      const adresseLine = resolveAdresseLineForDto(dto);
+
       const created = await this.liaisonModel.create({
         etablissement: etabOid,
         service: serviceOid,
         ...(dto.prix !== undefined && { prix: dto.prix }),
         ...(dto.commentaire !== undefined && {
           commentaire: dto.commentaire.trim(),
+        }),
+        ...(adresseLine !== undefined && { adresse: adresseLine }),
+        ...(hasCoords && {
+          latitude: dto.latitude as number,
+          longitude: dto.longitude as number,
+        }),
+        ...(dto.location_label !== undefined && {
+          location_label: dto.location_label.trim(),
+        }),
+        ...(dto.location_type !== undefined && {
+          location_type: dto.location_type.trim(),
         }),
       });
       return this.findOnePopulatedForProvider(String(created._id), userId);
@@ -176,7 +221,7 @@ export class ProviderEstablishmentServicesService {
     if (!doc) {
       throw new NotFoundException('Assignation introuvable');
     }
-    return doc;
+    return this.mapLiaisonResponse(doc as unknown as Record<string, unknown>);
   }
 
   async updateForProvider(
@@ -184,6 +229,7 @@ export class ProviderEstablishmentServicesService {
     dto: UpdateEtablissementServiceDto,
     userId: string,
   ) {
+    assertLatLngPairForPatch(dto);
     await ensurePrestataireOwnsEtablissementService(
       this.liaisonModel,
       this.etablissementModel,
@@ -195,6 +241,17 @@ export class ProviderEstablishmentServicesService {
     if (dto.prix !== undefined) set.prix = dto.prix;
     if (dto.commentaire !== undefined) {
       set.commentaire = dto.commentaire.trim();
+    }
+    if (dto.adresse !== undefined || dto.address !== undefined) {
+      set.adresse = resolveAdresseLineForDto(dto);
+    }
+    if (dto.latitude !== undefined) set.latitude = dto.latitude;
+    if (dto.longitude !== undefined) set.longitude = dto.longitude;
+    if (dto.location_label !== undefined) {
+      set.location_label = dto.location_label.trim();
+    }
+    if (dto.location_type !== undefined) {
+      set.location_type = dto.location_type.trim();
     }
 
     if (Object.keys(set).length === 0) {
@@ -210,7 +267,7 @@ export class ProviderEstablishmentServicesService {
     if (!updated) {
       throw new NotFoundException('Assignation introuvable');
     }
-    return updated;
+    return this.mapLiaisonResponse(updated as unknown as Record<string, unknown>);
   }
 
   async removeForProvider(id: string, userId: string): Promise<void> {

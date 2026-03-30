@@ -532,6 +532,7 @@ export type CommonDictionary = {
     formEmail: string;
     formVille: string;
     formQuartier: string;
+    formQuartierNeedVille: string;
     formCancel: string;
     formSave: string;
     selectVille: string;
@@ -539,6 +540,21 @@ export type CommonDictionary = {
     actionEdit: string;
     saveError: string;
     statusError: string;
+    mainLocationTitle: string;
+    mainLocationHelp: string;
+    addressLineLabel: string;
+    mapsLoading: string;
+    mapsLoadError: string;
+    mapsMissingKey: string;
+    mapsSearchPlaceholder: string;
+    mapsUseTypedCoords: string;
+    mapsResetLocation: string;
+    mapsPickerHint: string;
+    formLatitude: string;
+    formLongitude: string;
+    validationLatRange: string;
+    validationLngRange: string;
+    validationLatLngPair: string;
   };
   /** Prestataire — `/[locale]/prestataire/medias` */
   providerMedias: {
@@ -622,6 +638,25 @@ export type CommonDictionary = {
     deleteError: string;
     deleteSuccess: string;
     noServiceAvailable: string;
+    saveSuccess: string;
+    specificLocationToggle: string;
+    specificLocationOffHelp: string;
+    formAdresse: string;
+    formLatitude: string;
+    formLongitude: string;
+    formLocationLabel: string;
+    formLocationType: string;
+    addressLineLabel: string;
+    mapsLoading: string;
+    mapsLoadError: string;
+    mapsMissingKey: string;
+    mapsSearchPlaceholder: string;
+    mapsUseTypedCoords: string;
+    mapsResetLocation: string;
+    mapsPickerHint: string;
+    validationLatRange: string;
+    validationLngRange: string;
+    validationLatLngPair: string;
   };
   /** Prestataire — `/[locale]/prestataire/caracteristiques` (caractéristiques d’offre) */
   providerEstablishmentServiceCaracteristiques: {
@@ -1253,6 +1288,7 @@ const DEFAULT_COMMON_DICTIONARY: CommonDictionary = {
     formEmail: "Email",
     formVille: "City",
     formQuartier: "District",
+    formQuartierNeedVille: "Choose a city first to filter districts.",
     formCancel: "Cancel",
     formSave: "Save",
     selectVille: "Select a city",
@@ -1260,6 +1296,24 @@ const DEFAULT_COMMON_DICTIONARY: CommonDictionary = {
     actionEdit: "Edit",
     saveError: "Could not save.",
     statusError: "Could not update status.",
+    mainLocationTitle: "Main location",
+    mainLocationHelp:
+      "This is the main establishment location and may be used as fallback for services without a specific place.",
+    addressLineLabel: "Address",
+    mapsLoading: "Loading map…",
+    mapsLoadError: "Google Maps could not be loaded. Check your connection and API key.",
+    mapsMissingKey:
+      "Maps are disabled: set NEXT_PUBLIC_GOOGLE_MAPS_API_KEY in web/.env.local (Maps JavaScript API + Places).",
+    mapsSearchPlaceholder: "Search for an address…",
+    mapsUseTypedCoords: "Use typed coordinates",
+    mapsResetLocation: "Reset location",
+    mapsPickerHint:
+      "Pick a place from suggestions, click the map, or drag the marker — coordinates update automatically.",
+    formLatitude: "Latitude (WGS84)",
+    formLongitude: "Longitude (WGS84)",
+    validationLatRange: "Latitude must be between -90 and 90.",
+    validationLngRange: "Longitude must be between -180 and 180.",
+    validationLatLngPair: "Provide both latitude and longitude, or leave both empty.",
   },
   providerMedias: {
     pageTitle: "Media library",
@@ -1331,7 +1385,7 @@ const DEFAULT_COMMON_DICTIONARY: CommonDictionary = {
     prixPlaceholder: "e.g. 150",
     commentairePlaceholder: "Note or conditions…",
     prixInvalid: "Enter a valid positive number.",
-    editHint: "Only price and comment can be changed.",
+    editHint: "Price, comment, and optional service-specific location (map) can be changed.",
     actionEdit: "Edit",
     actionDelete: "Remove",
     deleteConfirmTitle: "Remove this assignment?",
@@ -1342,6 +1396,27 @@ const DEFAULT_COMMON_DICTIONARY: CommonDictionary = {
     deleteError: "Could not remove.",
     deleteSuccess: "Assignment removed.",
     noServiceAvailable: "All catalog services are already assigned.",
+    saveSuccess: "Saved.",
+    specificLocationToggle: "This service has a specific location",
+    specificLocationOffHelp: "This service will use the main establishment location.",
+    formAdresse: "Address",
+    formLatitude: "Latitude (WGS84)",
+    formLongitude: "Longitude (WGS84)",
+    formLocationLabel: "Location label",
+    formLocationType: "Location type",
+    addressLineLabel: "Address",
+    mapsLoading: "Loading map…",
+    mapsLoadError: "Google Maps could not be loaded. Check your connection and API key.",
+    mapsMissingKey:
+      "Maps are disabled: set NEXT_PUBLIC_GOOGLE_MAPS_API_KEY in web/.env.local (Maps JavaScript API + Places).",
+    mapsSearchPlaceholder: "Search for an address…",
+    mapsUseTypedCoords: "Use typed coordinates",
+    mapsResetLocation: "Reset location",
+    mapsPickerHint:
+      "Pick a place from suggestions, click the map, or drag the marker — coordinates update automatically.",
+    validationLatRange: "Latitude must be between -90 and 90.",
+    validationLngRange: "Longitude must be between -180 and 180.",
+    validationLatLngPair: "Provide both latitude and longitude, or leave both empty.",
   },
   providerEstablishmentServiceCaracteristiques: {
     pageTitle: "Offer characteristics",
@@ -3251,6 +3326,10 @@ function normalizeDictionary(value: unknown): CommonDictionary {
         providerEtablissements.formQuartier,
         DEFAULT_COMMON_DICTIONARY.providerEtablissements.formQuartier
       ),
+      formQuartierNeedVille: asString(
+        providerEtablissements.formQuartierNeedVille,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.formQuartierNeedVille
+      ),
       formCancel: asString(
         providerEtablissements.formCancel,
         DEFAULT_COMMON_DICTIONARY.providerEtablissements.formCancel
@@ -3278,6 +3357,66 @@ function normalizeDictionary(value: unknown): CommonDictionary {
       statusError: asString(
         providerEtablissements.statusError,
         DEFAULT_COMMON_DICTIONARY.providerEtablissements.statusError
+      ),
+      mainLocationTitle: asString(
+        providerEtablissements.mainLocationTitle,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.mainLocationTitle
+      ),
+      mainLocationHelp: asString(
+        providerEtablissements.mainLocationHelp,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.mainLocationHelp
+      ),
+      addressLineLabel: asString(
+        providerEtablissements.addressLineLabel,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.addressLineLabel
+      ),
+      mapsLoading: asString(
+        providerEtablissements.mapsLoading,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.mapsLoading
+      ),
+      mapsLoadError: asString(
+        providerEtablissements.mapsLoadError,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.mapsLoadError
+      ),
+      mapsMissingKey: asString(
+        providerEtablissements.mapsMissingKey,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.mapsMissingKey
+      ),
+      mapsSearchPlaceholder: asString(
+        providerEtablissements.mapsSearchPlaceholder,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.mapsSearchPlaceholder
+      ),
+      mapsUseTypedCoords: asString(
+        providerEtablissements.mapsUseTypedCoords,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.mapsUseTypedCoords
+      ),
+      mapsResetLocation: asString(
+        providerEtablissements.mapsResetLocation,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.mapsResetLocation
+      ),
+      mapsPickerHint: asString(
+        providerEtablissements.mapsPickerHint,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.mapsPickerHint
+      ),
+      formLatitude: asString(
+        providerEtablissements.formLatitude,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.formLatitude
+      ),
+      formLongitude: asString(
+        providerEtablissements.formLongitude,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.formLongitude
+      ),
+      validationLatRange: asString(
+        providerEtablissements.validationLatRange,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.validationLatRange
+      ),
+      validationLngRange: asString(
+        providerEtablissements.validationLngRange,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.validationLngRange
+      ),
+      validationLatLngPair: asString(
+        providerEtablissements.validationLatLngPair,
+        DEFAULT_COMMON_DICTIONARY.providerEtablissements.validationLatLngPair
       ),
     },
     providerMedias: {
@@ -3587,6 +3726,82 @@ function normalizeDictionary(value: unknown): CommonDictionary {
       noServiceAvailable: asString(
         providerEstablishmentServices.noServiceAvailable,
         DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.noServiceAvailable
+      ),
+      saveSuccess: asString(
+        providerEstablishmentServices.saveSuccess,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.saveSuccess
+      ),
+      specificLocationToggle: asString(
+        providerEstablishmentServices.specificLocationToggle,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.specificLocationToggle
+      ),
+      specificLocationOffHelp: asString(
+        providerEstablishmentServices.specificLocationOffHelp,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.specificLocationOffHelp
+      ),
+      formAdresse: asString(
+        providerEstablishmentServices.formAdresse,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.formAdresse
+      ),
+      formLatitude: asString(
+        providerEstablishmentServices.formLatitude,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.formLatitude
+      ),
+      formLongitude: asString(
+        providerEstablishmentServices.formLongitude,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.formLongitude
+      ),
+      formLocationLabel: asString(
+        providerEstablishmentServices.formLocationLabel,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.formLocationLabel
+      ),
+      formLocationType: asString(
+        providerEstablishmentServices.formLocationType,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.formLocationType
+      ),
+      addressLineLabel: asString(
+        providerEstablishmentServices.addressLineLabel,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.addressLineLabel
+      ),
+      mapsLoading: asString(
+        providerEstablishmentServices.mapsLoading,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.mapsLoading
+      ),
+      mapsLoadError: asString(
+        providerEstablishmentServices.mapsLoadError,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.mapsLoadError
+      ),
+      mapsMissingKey: asString(
+        providerEstablishmentServices.mapsMissingKey,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.mapsMissingKey
+      ),
+      mapsSearchPlaceholder: asString(
+        providerEstablishmentServices.mapsSearchPlaceholder,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.mapsSearchPlaceholder
+      ),
+      mapsUseTypedCoords: asString(
+        providerEstablishmentServices.mapsUseTypedCoords,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.mapsUseTypedCoords
+      ),
+      mapsResetLocation: asString(
+        providerEstablishmentServices.mapsResetLocation,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.mapsResetLocation
+      ),
+      mapsPickerHint: asString(
+        providerEstablishmentServices.mapsPickerHint,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.mapsPickerHint
+      ),
+      validationLatRange: asString(
+        providerEstablishmentServices.validationLatRange,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.validationLatRange
+      ),
+      validationLngRange: asString(
+        providerEstablishmentServices.validationLngRange,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.validationLngRange
+      ),
+      validationLatLngPair: asString(
+        providerEstablishmentServices.validationLatLngPair,
+        DEFAULT_COMMON_DICTIONARY.providerEstablishmentServices.validationLatLngPair
       ),
     },
     providerEstablishmentServiceCaracteristiques: {

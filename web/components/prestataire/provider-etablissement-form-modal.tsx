@@ -1,13 +1,15 @@
 "use client";
 
 import { Modal, message } from "antd";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 
+import { LocationPicker } from "@/components/shared/LocationPicker";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { ApiRequestError, matchBackendMessagesToFields } from "@/lib/api/api-request-error";
 import { fetchCities, type CityListItem } from "@/lib/api/cities";
 import { fetchDistricts, type DistrictListItem } from "@/lib/api/districts";
 import {
@@ -16,6 +18,8 @@ import {
   type ProviderEtablissement,
 } from "@/lib/api/provider-etablissements";
 import type { CommonDictionary } from "@/lib/get-dictionary";
+import { validateAssignmentGeoStrings } from "@/lib/location/etablissement-service-location";
+import { parseCoordField } from "@/lib/validation/coordinates";
 import { cn } from "@/lib/utils";
 
 type Labels = CommonDictionary["providerEtablissements"];
@@ -29,11 +33,17 @@ function geoId(ref: unknown): string {
   return "";
 }
 
+function lineAdresse(e: ProviderEtablissement): string {
+  return (e.adresse ?? e.address ?? "").trim();
+}
+
 const FORM_ID = "provider-etablissement-form";
 
 type FormValues = {
   nom: string;
   adresse: string;
+  latitude: string;
+  longitude: string;
   description: string;
   telephone: string;
   email: string;
@@ -74,11 +84,15 @@ export function ProviderEtablissementFormModal({
     reset,
     watch,
     setValue,
+    setError,
+    clearErrors,
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
       nom: "",
       adresse: "",
+      latitude: "",
+      longitude: "",
       description: "",
       telephone: "",
       email: "",
@@ -87,7 +101,41 @@ export function ProviderEtablissementFormModal({
     },
   });
 
+  useEffect(() => {
+    register("adresse");
+    register("latitude");
+    register("longitude");
+  }, [register]);
+
   const villeId = watch("villeId");
+  const adresse = watch("adresse");
+  const latitude = watch("latitude");
+  const longitude = watch("longitude");
+
+  const locationPickerLabels = useMemo(
+    () => ({
+      addressLineLabel: labels.addressLineLabel,
+      mapsLoading: labels.mapsLoading,
+      mapsLoadError: labels.mapsLoadError,
+      mapsMissingKey: labels.mapsMissingKey,
+      mapsSearchPlaceholder: labels.mapsSearchPlaceholder,
+      mapsUseTypedCoords: labels.mapsUseTypedCoords,
+      mapsResetLocation: labels.mapsResetLocation,
+      mapsPickerHint: labels.mapsPickerHint,
+      formLatitude: labels.formLatitude,
+      formLongitude: labels.formLongitude,
+    }),
+    [labels],
+  );
+
+  const selectClass = useMemo(
+    () =>
+      cn(
+        "flex min-h-11 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm",
+        "ring-offset-background focus-visible:ring-2 focus-visible:ring-ring",
+      ),
+    [],
+  );
 
   useEffect(() => {
     if (!open) return;
@@ -112,9 +160,13 @@ export function ProviderEtablissementFormModal({
   useEffect(() => {
     if (!open) return;
     if (isEdit && initialRow) {
+      const lat = initialRow.latitude;
+      const lng = initialRow.longitude;
       reset({
         nom: initialRow.nom,
-        adresse: initialRow.adresse ?? "",
+        adresse: lineAdresse(initialRow),
+        latitude: lat != null && !Number.isNaN(Number(lat)) ? String(lat) : "",
+        longitude: lng != null && !Number.isNaN(Number(lng)) ? String(lng) : "",
         description: initialRow.description ?? "",
         telephone: initialRow.telephone ?? "",
         email: initialRow.email ?? "",
@@ -126,6 +178,8 @@ export function ProviderEtablissementFormModal({
       reset({
         nom: "",
         adresse: "",
+        latitude: "",
+        longitude: "",
         description: "",
         telephone: "",
         email: "",
@@ -135,83 +189,134 @@ export function ProviderEtablissementFormModal({
     }
   }, [open, isEdit, initialRow, reset]);
 
-  const onSubmit = handleSubmit(async (values) => {
+  const handleClose = () => {
+    if (submitting) return;
+    onClose();
+  };
+
+  const onSubmit = async (values: FormValues) => {
+    clearErrors(["latitude", "longitude", "adresse"]);
+    const geoErr = validateAssignmentGeoStrings(values.latitude, values.longitude, labels);
+    if (geoErr) {
+      if (geoErr.latitude) setError("latitude", { message: geoErr.latitude });
+      if (geoErr.longitude) setError("longitude", { message: geoErr.longitude });
+      return;
+    }
+
+    const lat = parseCoordField(values.latitude);
+    const lng = parseCoordField(values.longitude);
+
     setSubmitting(true);
     try {
-      const payload = {
+      const common = {
         nom: values.nom.trim(),
-        adresse: values.adresse.trim() || undefined,
         description: values.description.trim() || undefined,
         telephone: values.telephone.trim() || undefined,
         email: values.email.trim() || undefined,
-        ville: values.villeId || undefined,
-        quartier: values.quartierId || undefined,
+        adresse: values.adresse.trim() || undefined,
+        ville: values.villeId.trim() || undefined,
+        quartier: values.quartierId.trim() || undefined,
+        ...(lat !== null && lng !== null ? { latitude: lat, longitude: lng } : {}),
       };
+
       if (isEdit && etablissementId) {
-        await updateProviderEtablissement(etablissementId, payload);
+        await updateProviderEtablissement(etablissementId, common);
       } else {
-        await createProviderEtablissement({ ...payload, isActive: true });
+        await createProviderEtablissement({ ...common, isActive: true });
       }
-      message.success("OK");
+      message.success(labels.formSave);
       onSuccess();
       onClose();
-    } catch {
-      message.error(labels.saveError);
+    } catch (e) {
+      if (e instanceof ApiRequestError) {
+        const mapped = matchBackendMessagesToFields(e.messages);
+        if (mapped.adresse) setError("adresse", { message: mapped.adresse });
+        if (mapped.latitude) setError("latitude", { message: mapped.latitude });
+        if (mapped.longitude) setError("longitude", { message: mapped.longitude });
+      }
+      message.error(e instanceof Error ? e.message : labels.saveError);
     } finally {
       setSubmitting(false);
     }
-  });
+  };
 
   return (
     <Modal
       title={title}
       open={open}
-      onCancel={onClose}
-      footer={null}
+      onCancel={handleClose}
+      footer={
+        <div className="flex justify-end gap-2 pt-2">
+          <Button type="button" variant="outline" onClick={handleClose} disabled={submitting}>
+            {labels.formCancel}
+          </Button>
+          <Button type="submit" form={FORM_ID} disabled={submitting || loadingRefs}>
+            {labels.formSave}
+          </Button>
+        </div>
+      }
       destroyOnClose
-      width={560}
+      width={720}
     >
-      <form id={FORM_ID} className="mt-4 space-y-4" onSubmit={onSubmit}>
-        <div className="space-y-2">
-          <Label htmlFor="pe-nom">{labels.formNom}</Label>
-          <Input
-            id="pe-nom"
-            {...register("nom", { required: true })}
-            aria-invalid={errors.nom ? "true" : undefined}
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="pe-adresse">{labels.formAdresse}</Label>
-          <Input id="pe-adresse" {...register("adresse")} />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="pe-desc">{labels.formDescription}</Label>
-          <Textarea id="pe-desc" rows={3} {...register("description")} />
-        </div>
-        <div className="grid gap-4 sm:grid-cols-2">
+      {loadingRefs ? (
+        <p className="text-sm text-muted-foreground">{labels.loading}</p>
+      ) : (
+        <form
+          id={FORM_ID}
+          className="max-h-[75vh] space-y-4 overflow-y-auto pr-1"
+          onSubmit={handleSubmit(onSubmit)}
+        >
           <div className="space-y-2">
-            <Label htmlFor="pe-tel">{labels.formTelephone}</Label>
-            <Input id="pe-tel" {...register("telephone")} />
+            <Label htmlFor="pe-nom">{labels.formNom}</Label>
+            <Input
+              id="pe-nom"
+              {...register("nom", { required: true })}
+              aria-invalid={errors.nom ? "true" : undefined}
+            />
+            {errors.nom ? <p className="text-xs text-destructive">Requis.</p> : null}
           </div>
           <div className="space-y-2">
-            <Label htmlFor="pe-email">{labels.formEmail}</Label>
-            <Input id="pe-email" type="email" {...register("email")} />
+            <Label htmlFor="pe-desc">{labels.formDescription}</Label>
+            <Textarea id="pe-desc" rows={3} {...register("description")} />
           </div>
-        </div>
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="space-y-2">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="pe-tel">{labels.formTelephone}</Label>
+              <Input id="pe-tel" {...register("telephone")} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="pe-email">{labels.formEmail}</Label>
+              <Input id="pe-email" type="email" {...register("email")} />
+            </div>
+          </div>
+
+          <section className="space-y-3 rounded-xl border border-border/60 bg-card/40 p-4">
+            <div>
+              <h3 className="text-sm font-semibold text-foreground">{labels.mainLocationTitle}</h3>
+              <p className="mt-1 text-xs text-muted-foreground">{labels.mainLocationHelp}</p>
+            </div>
+            <LocationPicker
+              value={{
+                address: adresse ?? "",
+                latitude: latitude ?? "",
+                longitude: longitude ?? "",
+              }}
+              onChange={(next) => {
+                setValue("adresse", next.address, { shouldDirty: true, shouldValidate: true });
+                setValue("latitude", next.latitude, { shouldDirty: true, shouldValidate: true });
+                setValue("longitude", next.longitude, { shouldDirty: true, shouldValidate: true });
+              }}
+              labels={locationPickerLabels}
+              disabled={submitting}
+            />
+            {errors.adresse ? <p className="text-xs text-destructive">{errors.adresse.message}</p> : null}
+            {errors.latitude ? <p className="text-xs text-destructive">{errors.latitude.message}</p> : null}
+            {errors.longitude ? <p className="text-xs text-destructive">{errors.longitude.message}</p> : null}
+          </section>
+
+          <div className="grid gap-2">
             <Label htmlFor="pe-ville">{labels.formVille}</Label>
-            <select
-              id="pe-ville"
-              className={cn(
-                "flex h-9 w-full rounded-lg border border-input bg-background px-3 text-sm",
-                "outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40",
-              )}
-              disabled={loadingRefs}
-              {...register("villeId", {
-                onChange: () => setValue("quartierId", ""),
-              })}
-            >
+            <select id="pe-ville" className={selectClass} {...register("villeId")}>
               <option value="">{labels.selectVille}</option>
               {cities.map((c) => (
                 <option key={c._id} value={c._id}>
@@ -220,16 +325,14 @@ export function ProviderEtablissementFormModal({
               ))}
             </select>
           </div>
-          <div className="space-y-2">
+
+          <div className="grid gap-2">
             <Label htmlFor="pe-quartier">{labels.formQuartier}</Label>
             <select
               id="pe-quartier"
-              className={cn(
-                "flex h-9 w-full rounded-lg border border-input bg-background px-3 text-sm",
-                "outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40",
-              )}
-              disabled={!villeId}
+              className={selectClass}
               {...register("quartierId")}
+              disabled={!villeId}
             >
               <option value="">{labels.selectQuartier}</option>
               {districts.map((d) => (
@@ -238,17 +341,10 @@ export function ProviderEtablissementFormModal({
                 </option>
               ))}
             </select>
+            {!villeId ? <p className="text-xs text-muted-foreground">{labels.formQuartierNeedVille}</p> : null}
           </div>
-        </div>
-        <div className="flex justify-end gap-2 pt-2">
-          <Button type="button" variant="ghost" onClick={onClose}>
-            {labels.formCancel}
-          </Button>
-          <Button type="submit" disabled={submitting}>
-            {labels.formSave}
-          </Button>
-        </div>
-      </form>
+        </form>
+      )}
     </Modal>
   );
 }

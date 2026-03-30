@@ -8,7 +8,12 @@ import Constants from 'expo-constants';
 function getApiBaseUrl(): string {
   const fromEnv = process.env.EXPO_PUBLIC_API_URL;
   if (fromEnv && fromEnv.length > 0) {
-    return fromEnv.replace(/\/$/, '');
+    let base = fromEnv.replace(/\/$/, '');
+    // Sans schéma, fetch résout en URL relative → préfixe incorrect (ex. localhost:8081/192.168…)
+    if (!/^https?:\/\//i.test(base)) {
+      base = `http://${base}`;
+    }
+    return base;
   }
   const extra = Constants.expoConfig?.extra as { apiUrl?: string } | undefined;
   if (extra?.apiUrl) {

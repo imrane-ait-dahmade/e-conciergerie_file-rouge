@@ -10,7 +10,7 @@ import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
 import { Service } from './schemas/service.schema';
 
-const populatePaths = [{ path: 'domaine', select: 'nom description' }] as const;
+const populatePaths = [{ path: 'domaine', select: 'nom description icon' }] as const;
 
 @Injectable()
 export class ServiceService {

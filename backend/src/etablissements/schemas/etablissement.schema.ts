@@ -10,6 +10,7 @@
  */
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
+import { registerGeoPointFromLatLng } from '../../common/geo/register-geo-point.middleware';
 
 @Schema({ timestamps: true })
 export class Etablissement {
@@ -25,6 +26,23 @@ export class Etablissement {
 
   @Prop({ required: false })
   longitude?: number;
+
+  /**
+   * Point GeoJSON dérivé de `latitude` / `longitude` (sync middleware).
+   * Index 2dsphere pour proximité ; ne pas écrire à la main si lat/lng sont utilisés.
+   */
+  @Prop({
+    type: {
+      type: String,
+      enum: ['Point'],
+      default: 'Point',
+    },
+    coordinates: {
+      type: [Number],
+    },
+    _id: false,
+  })
+  location?: { type: 'Point'; coordinates: [number, number] };
 
   @Prop({ required: false })
   description?: string;
@@ -102,6 +120,9 @@ export class Etablissement {
 }
 
 export const EtablissementSchema = SchemaFactory.createForClass(Etablissement);
+
+registerGeoPointFromLatLng(EtablissementSchema);
+EtablissementSchema.index({ location: '2dsphere' });
 
 /**
  * Index pour filtres accueil / admin (slug gère déjà un index via unique sparse sur le champ).

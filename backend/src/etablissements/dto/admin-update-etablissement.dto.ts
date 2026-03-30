@@ -11,6 +11,7 @@ import {
   MaxLength,
   Min,
   Max,
+  ValidateIf,
 } from 'class-validator';
 
 /**
@@ -32,18 +33,24 @@ export class AdminUpdateEtablissementDto {
   adresse?: string;
 
   @IsOptional()
+  @ValidateIf(
+    (o) => o.latitude !== null && o.latitude !== undefined,
+  )
   @IsNumber()
   @Min(-90)
   @Max(90)
   @Type(() => Number)
-  latitude?: number;
+  latitude?: number | null;
 
   @IsOptional()
+  @ValidateIf(
+    (o) => o.longitude !== null && o.longitude !== undefined,
+  )
   @IsNumber()
   @Min(-180)
   @Max(180)
   @Type(() => Number)
-  longitude?: number;
+  longitude?: number | null;
 
   @IsOptional()
   @IsString()

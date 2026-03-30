@@ -1,12 +1,21 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { DomaineService } from '../domaines/domaine.service';
 import { EtablissementsService } from '../etablissements/etablissements.service';
 import { MobileBestProvidersQueryDto } from './dto/mobile-best-providers-query.dto';
-import { mobileBestProvidersSuccess } from './mobile-api-response';
+import { MobileNearbyGroupedRecommendationQueryDto } from './dto/mobile-nearby-grouped-recommendation-query.dto';
+import { MobileNearbyRecommendationQueryDto } from './dto/mobile-nearby-recommendation-query.dto';
+import {
+  mobileBestProvidersSuccess,
+  mobileDomainsSuccess,
+  mobileNearbyEstablishmentServicesSuccess,
+  mobileNearbyGroupedEstablishmentServicesSuccess,
+} from './mobile-api-response';
 import {
   type EtabBestProviderLean,
   toMobileBestProviderResource,
 } from './resources/mobile-best-provider.resource';
+import { MobileNearbyEstablishmentServicesService } from './services/mobile-nearby-establishment-services.service';
 
 /**
  * API mobile / app (routes publiques).
@@ -21,7 +30,29 @@ import {
 @ApiTags('Mobile')
 @Controller('mobile')
 export class MobileController {
-  constructor(private readonly etablissementsService: EtablissementsService) {}
+  constructor(
+    private readonly etablissementsService: EtablissementsService,
+    private readonly nearbyEstablishmentServicesService: MobileNearbyEstablishmentServicesService,
+    private readonly domaineService: DomaineService,
+  ) {}
+
+  /**
+   * Domaines pour la barre horizontale de la Home : actifs uniquement, tri par `order` puis nom.
+   */
+  @Get('domains')
+  @ApiOperation({
+    summary: 'Liste des domaines pour la Home mobile',
+    description:
+      'Public. Retourne uniquement les domaines actifs (`isActive !== false`), triés par `order` croissant puis nom. ' +
+      'Réponse vide si aucun domaine actif.',
+  })
+  @ApiOkResponse({
+    description: 'Envelope `{ success, message, data }` où `data` est le tableau de domaines',
+  })
+  async domainsForHome() {
+    const data = await this.domaineService.findActiveForMobileHome();
+    return mobileDomainsSuccess(data);
+  }
 
   @Get('providers/best')
   @ApiOperation({
@@ -34,5 +65,43 @@ export class MobileController {
       toMobileBestProviderResource(row as EtabBestProviderLean),
     );
     return mobileBestProvidersSuccess(data);
+  }
+
+  /**
+   * Recommandations proximité : offre géolocalisée d’abord, sinon siège établissement.
+   *
+   * Exemple : `GET /mobile/recommendation-establishment-services?latitude=33.5731&longitude=-7.5898&maxDistance=50000&limit=20`
+   */
+  @Get('recommendation-establishment-services')
+  @ApiOperation({
+    summary: 'Offres établissement à proximité (non groupées)',
+    description:
+      'Paramètres : latitude, longitude (obligatoires), maxDistance (m, optionnel), limit (optionnel). ' +
+      'Réponses vides si aucun point géo côté offre ni établissement.',
+  })
+  async nearbyEstablishmentServices(@Query() query: MobileNearbyRecommendationQueryDto) {
+    const data =
+      await this.nearbyEstablishmentServicesService.findNearby(query);
+    return mobileNearbyEstablishmentServicesSuccess(data);
+  }
+
+  /**
+   * Même logique de proximité, groupée par domaine métier (Service.domaine).
+   *
+   * Exemple : `GET /mobile/recommendation-establishment-services/grouped?latitude=33.5731&longitude=-7.5898&limitPerGroup=5`
+   */
+  @Get('recommendation-establishment-services/grouped')
+  @ApiOperation({
+    summary: 'Offres à proximité groupées par domaine',
+    description:
+      'Paramètres : latitude, longitude (obligatoires), maxDistance (m, optionnel), limitPerGroup (optionnel). ' +
+      'Chaque catégorie expose id, name, slug et icon. Le slug peut être persisté sur le domaine ou dérivé du nom.',
+  })
+  async nearbyEstablishmentServicesGrouped(
+    @Query() query: MobileNearbyGroupedRecommendationQueryDto,
+  ) {
+    const data =
+      await this.nearbyEstablishmentServicesService.findNearbyGrouped(query);
+    return mobileNearbyGroupedEstablishmentServicesSuccess(data);
   }
 }

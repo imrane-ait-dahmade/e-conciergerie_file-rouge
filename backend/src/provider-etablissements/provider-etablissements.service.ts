@@ -5,6 +5,11 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
+import {
+  assertLatLngPair,
+  assertLatLngPairForPatch,
+} from '../common/validation/lat-lng-pair.util';
+import { withEtablissementLocationApiFields } from '../etablissements/etablissement-api-fields.resource';
 import { Etablissement } from '../etablissements/schemas/etablissement.schema';
 import { UpdateEtablissementStatusDto } from '../etablissements/dto/update-etablissement-status.dto';
 import { ProviderCreateEtablissementDto } from './dto/provider-create-etablissement.dto';
@@ -39,7 +44,7 @@ export class ProviderEtablissementsService {
   }
 
   async findAllForProvider(userId: string) {
-    return this.etablissementModel
+    const rows = await this.etablissementModel
       .find({ prestataire: new Types.ObjectId(userId) })
       .sort({ updatedAt: -1 })
       .populate([
@@ -48,6 +53,9 @@ export class ProviderEtablissementsService {
       ])
       .lean()
       .exec();
+    return rows.map((d) =>
+      withEtablissementLocationApiFields(d as unknown as Record<string, unknown>),
+    );
   }
 
   async findOneForProvider(id: string, userId: string) {
@@ -66,17 +74,27 @@ export class ProviderEtablissementsService {
     if (!doc) {
       throw new NotFoundException('Établissement introuvable');
     }
-    return doc;
+    return withEtablissementLocationApiFields(
+      doc as unknown as Record<string, unknown>,
+    );
   }
 
   async createForProvider(dto: ProviderCreateEtablissementDto, userId: string) {
+    assertLatLngPair(dto);
     const prestataireOid = new Types.ObjectId(userId);
+    const hasCoords =
+      dto.latitude !== undefined &&
+      dto.longitude !== undefined &&
+      dto.latitude !== null &&
+      dto.longitude !== null;
     const created = await this.etablissementModel.create({
       nom: dto.nom,
       prestataire: prestataireOid,
       ...(dto.adresse !== undefined && { adresse: dto.adresse }),
-      ...(dto.latitude !== undefined && { latitude: dto.latitude }),
-      ...(dto.longitude !== undefined && { longitude: dto.longitude }),
+      ...(hasCoords && {
+        latitude: dto.latitude as number,
+        longitude: dto.longitude as number,
+      }),
       ...(dto.description !== undefined && { description: dto.description }),
       ...(dto.telephone !== undefined && { telephone: dto.telephone }),
       ...(dto.email !== undefined && { email: dto.email }),
@@ -87,7 +105,9 @@ export class ProviderEtablissementsService {
       ...(dto.quartier !== undefined && { quartier: this.optionalRef(dto.quartier) }),
       ...(dto.isActive !== undefined && { isActive: dto.isActive }),
     });
-    return created;
+    return withEtablissementLocationApiFields(
+      this.documentToPlain(created) as Record<string, unknown>,
+    );
   }
 
   async updateForProvider(
@@ -95,6 +115,7 @@ export class ProviderEtablissementsService {
     dto: ProviderUpdateEtablissementDto,
     userId: string,
   ) {
+    assertLatLngPairForPatch(dto);
     this.assertValidId(id);
     const owned = await this.etablissementModel
       .findOne({
@@ -108,8 +129,12 @@ export class ProviderEtablissementsService {
 
     if (dto.nom !== undefined) owned.nom = dto.nom;
     if (dto.adresse !== undefined) owned.adresse = dto.adresse;
-    if (dto.latitude !== undefined) owned.latitude = dto.latitude;
-    if (dto.longitude !== undefined) owned.longitude = dto.longitude;
+    if (dto.latitude !== undefined) {
+      owned.set('latitude', dto.latitude);
+    }
+    if (dto.longitude !== undefined) {
+      owned.set('longitude', dto.longitude);
+    }
     if (dto.description !== undefined) owned.description = dto.description;
     if (dto.telephone !== undefined) owned.telephone = dto.telephone;
     if (dto.email !== undefined) owned.email = dto.email;
@@ -120,7 +145,22 @@ export class ProviderEtablissementsService {
     if (dto.quartier !== undefined) owned.quartier = this.optionalRef(dto.quartier);
 
     await owned.save();
-    return owned;
+    return withEtablissementLocationApiFields(
+      this.documentToPlain(owned) as Record<string, unknown>,
+    );
+  }
+
+  /** Compatible tests (mocks sans `toObject`) et documents Mongoose. */
+  private documentToPlain(doc: unknown): Record<string, unknown> {
+    if (
+      doc &&
+      typeof doc === 'object' &&
+      'toObject' in doc &&
+      typeof (doc as { toObject: () => unknown }).toObject === 'function'
+    ) {
+      return (doc as { toObject: () => Record<string, unknown> }).toObject();
+    }
+    return doc as Record<string, unknown>;
   }
 
   async updateStatusForProvider(

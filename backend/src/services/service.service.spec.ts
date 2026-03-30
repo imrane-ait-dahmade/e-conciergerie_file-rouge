@@ -156,7 +156,7 @@ describe('ServiceService', () => {
       expect(serviceModel.find).toHaveBeenCalled();
       expect(chain.sort).toHaveBeenCalledWith({ nom: 1 });
       expect(chain.populate).toHaveBeenCalledWith([
-        { path: 'domaine', select: 'nom description' },
+        { path: 'domaine', select: 'nom description icon' },
       ]);
       expect(result).toEqual(rows);
     });

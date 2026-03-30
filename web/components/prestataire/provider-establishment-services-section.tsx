@@ -3,13 +3,14 @@
 import { Modal, message } from "antd";
 import { Pencil, Trash2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
 
+import {
+  ProviderEstablishmentServiceCreateModal,
+  ProviderEstablishmentServiceEditModal,
+} from "@/components/prestataire/provider-establishment-service-modals";
 import { Button } from "@/components/ui/button";
 import { buttonVariants } from "@/components/ui/button-variants";
 import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Table,
   TableBody,
@@ -18,14 +19,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Textarea } from "@/components/ui/textarea";
 import { fetchProviderEtablissements } from "@/lib/api/provider-etablissements";
 import {
-  createProviderEstablishmentService,
   deleteProviderEstablishmentService,
   fetchProviderEstablishmentServices,
-  updateProviderEstablishmentService,
-  type UpdateProviderEtablissementServicePayload,
 } from "@/lib/api/provider-establishment-services";
 import { fetchServices } from "@/lib/api/services";
 import { displayRefName } from "@/lib/catalog-display";
@@ -78,31 +75,6 @@ function formatPrix(n: number | undefined): string {
   if (n === undefined || n === null || Number.isNaN(n)) return "—";
   return new Intl.NumberFormat(undefined, { maximumFractionDigits: 2 }).format(n);
 }
-
-function assignedServiceIdsForEtablissement(
-  rows: EtablissementServiceAssignment[],
-  etablissementId: string,
-): Set<string> {
-  const set = new Set<string>();
-  for (const r of rows) {
-    if (refId(r.etablissement) === etablissementId) {
-      set.add(refId(r.service));
-    }
-  }
-  return set;
-}
-
-type CreateFormValues = {
-  etablissement: string;
-  service: string;
-  prix: string;
-  commentaire: string;
-};
-
-type EditFormValues = {
-  prix: string;
-  commentaire: string;
-};
 
 export function ProviderEstablishmentServicesSection({
   labels,
@@ -163,99 +135,13 @@ export function ProviderEstablishmentServicesSection({
     return rows.filter((r) => refId(r.etablissement) === filterEtabId);
   }, [rows, filterEtabId]);
 
-  const createForm = useForm<CreateFormValues>({
-    defaultValues: {
-      etablissement: "",
-      service: "",
-      prix: "",
-      commentaire: "",
-    },
-  });
-
-  const editForm = useForm<EditFormValues>({
-    defaultValues: { prix: "", commentaire: "" },
-  });
-
-  const watchEtab = createForm.watch("etablissement");
-
-  const assignedForSelected = useMemo(
-    () => (watchEtab ? assignedServiceIdsForEtablissement(rows, watchEtab) : new Set<string>()),
-    [rows, watchEtab],
-  );
-
-  const availableServices = useMemo(() => {
-    return catalog.filter((s) => !assignedForSelected.has(s._id));
-  }, [catalog, assignedForSelected]);
-
   function openCreate() {
-    createForm.reset({
-      etablissement: filterEtabId || "",
-      service: "",
-      prix: "",
-      commentaire: "",
-    });
     setCreateOpen(true);
   }
 
   function openEdit(row: EtablissementServiceAssignment) {
     setEditRow(row);
-    editForm.reset({
-      prix: row.prix != null ? String(row.prix) : "",
-      commentaire: row.commentaire ?? "",
-    });
     setEditOpen(true);
-  }
-
-  async function submitCreate(values: CreateFormValues) {
-    if (!values.etablissement || !values.service) {
-      message.warning(labels.selectPlaceholder);
-      return;
-    }
-    let prix: number | undefined;
-    if (values.prix.trim()) {
-      const n = Number(values.prix.replace(",", "."));
-      if (Number.isNaN(n) || n < 0) {
-        message.error(labels.prixInvalid);
-        return;
-      }
-      prix = n;
-    }
-    try {
-      await createProviderEstablishmentService({
-        etablissement: values.etablissement,
-        service: values.service,
-        ...(prix !== undefined && { prix }),
-        ...(values.commentaire.trim() && { commentaire: values.commentaire.trim() }),
-      });
-      message.success(labels.formSave);
-      setCreateOpen(false);
-      await loadAssignments();
-    } catch {
-      message.error(labels.saveError);
-    }
-  }
-
-  async function submitEdit(values: EditFormValues) {
-    if (!editRow) return;
-    const payload: UpdateProviderEtablissementServicePayload = {};
-    if (values.prix.trim()) {
-      const n = Number(values.prix.replace(",", "."));
-      if (Number.isNaN(n) || n < 0) {
-        message.error(labels.prixInvalid);
-        return;
-      }
-      payload.prix = n;
-    }
-    payload.commentaire = values.commentaire.trim();
-    try {
-      await updateProviderEstablishmentService(editRow._id, payload);
-      message.success(labels.formSave);
-      setEditOpen(false);
-      setEditRow(null);
-      await loadAssignments();
-    } catch {
-      message.error(labels.saveError);
-    }
   }
 
   function confirmDelete(row: EtablissementServiceAssignment) {
@@ -410,130 +296,34 @@ export function ProviderEstablishmentServicesSection({
         </CardContent>
       </Card>
 
-      <Modal
-        title={labels.formCreateTitle}
+      <ProviderEstablishmentServiceCreateModal
         open={createOpen}
-        onCancel={() => setCreateOpen(false)}
-        footer={null}
-        destroyOnClose
-        width={520}
-      >
-        <form
-          className="mt-4 space-y-4"
-          onSubmit={createForm.handleSubmit(submitCreate)}
-        >
-          <div className="space-y-2">
-            <Label>{labels.formEtablissement}</Label>
-            <select
-              className={cn(
-                "flex h-9 w-full rounded-lg border border-input bg-background px-3 text-sm",
-                "outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40",
-              )}
-              {...createForm.register("etablissement", {
-                onChange: () => createForm.setValue("service", ""),
-              })}
-            >
-              <option value="">{labels.selectPlaceholder}</option>
-              {etabs.map((e) => (
-                <option key={e._id} value={e._id}>
-                  {e.nom}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="space-y-2">
-            <Label>{labels.formService}</Label>
-            <select
-              className={cn(
-                "flex h-9 w-full rounded-lg border border-input bg-background px-3 text-sm",
-                "outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40",
-              )}
-              disabled={!watchEtab}
-              {...createForm.register("service")}
-            >
-              <option value="">{labels.selectPlaceholder}</option>
-              {availableServices.map((s) => (
-                <option key={s._id} value={s._id}>
-                  {s.nom}
-                </option>
-              ))}
-            </select>
-            {watchEtab && availableServices.length === 0 ? (
-              <p className="text-xs text-amber-700 dark:text-amber-400">{labels.noServiceAvailable}</p>
-            ) : null}
-          </div>
-          <div className="space-y-2">
-            <Label>{labels.formPrix}</Label>
-            <Input
-              type="text"
-              inputMode="decimal"
-              placeholder={labels.prixPlaceholder}
-              {...createForm.register("prix")}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label>{labels.formCommentaire}</Label>
-            <Textarea
-              rows={3}
-              placeholder={labels.commentairePlaceholder}
-              {...createForm.register("commentaire")}
-            />
-          </div>
-          <div className="flex justify-end gap-2 pt-2">
-            <Button type="button" variant="ghost" onClick={() => setCreateOpen(false)}>
-              {labels.formCancel}
-            </Button>
-            <Button type="submit" disabled={!watchEtab || availableServices.length === 0}>
-              {labels.formSave}
-            </Button>
-          </div>
-        </form>
-      </Modal>
+        onClose={() => setCreateOpen(false)}
+        labels={labels}
+        rows={rows}
+        etabs={etabs}
+        catalog={catalog}
+        initialEtabId={filterEtabId}
+        onSuccess={async () => {
+          await loadAssignments();
+          setCreateOpen(false);
+        }}
+      />
 
-      <Modal
-        title={labels.formEditTitle}
+      <ProviderEstablishmentServiceEditModal
         open={editOpen}
-        onCancel={() => {
+        onClose={() => {
           setEditOpen(false);
           setEditRow(null);
         }}
-        footer={null}
-        destroyOnClose
-        width={480}
-      >
-        <p className="text-xs text-muted-foreground">{labels.editHint}</p>
-        <form
-          className="mt-4 space-y-4"
-          onSubmit={editForm.handleSubmit(submitEdit)}
-        >
-          <div className="space-y-2">
-            <Label>{labels.formPrix}</Label>
-            <Input
-              type="text"
-              inputMode="decimal"
-              placeholder={labels.prixPlaceholder}
-              {...editForm.register("prix")}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label>{labels.formCommentaire}</Label>
-            <Textarea rows={3} {...editForm.register("commentaire")} />
-          </div>
-          <div className="flex justify-end gap-2 pt-2">
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={() => {
-                setEditOpen(false);
-                setEditRow(null);
-              }}
-            >
-              {labels.formCancel}
-            </Button>
-            <Button type="submit">{labels.formSave}</Button>
-          </div>
-        </form>
-      </Modal>
+        labels={labels}
+        row={editRow}
+        onSuccess={async () => {
+          await loadAssignments();
+          setEditOpen(false);
+          setEditRow(null);
+        }}
+      />
     </div>
   );
 }

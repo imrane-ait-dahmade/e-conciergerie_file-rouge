@@ -4,6 +4,7 @@
 import { getApiBaseUrl } from "@/lib/api";
 import { getAccessToken } from "@/lib/auth-storage";
 import { readErrorMessage } from "@/lib/api/client";
+import { throwIfNotOk } from "@/lib/api/read-json-error";
 
 export type ProviderEtablissementGeo = { _id: string; nom?: string };
 
@@ -12,9 +13,13 @@ export type ProviderEtablissement = {
   _id: string;
   nom: string;
   adresse?: string;
+  /** Alias API (`withEtablissementLocationApiFields`). */
+  address?: string | null;
   description?: string;
   telephone?: string;
   email?: string;
+  latitude?: number | null;
+  longitude?: number | null;
   isActive: boolean;
   createdAt?: string;
   updatedAt?: string;
@@ -28,6 +33,8 @@ export type ProviderCreateEtablissementPayload = {
   description?: string;
   telephone?: string;
   email?: string;
+  latitude?: number;
+  longitude?: number;
   ville?: string;
   quartier?: string;
   isActive?: boolean;
@@ -39,6 +46,8 @@ export type ProviderUpdateEtablissementPayload = {
   description?: string;
   telephone?: string;
   email?: string;
+  latitude?: number;
+  longitude?: number;
   ville?: string;
   quartier?: string;
 };
@@ -82,7 +91,7 @@ export async function fetchProviderEtablissement(id: string): Promise<ProviderEt
     headers: headersJsonAuth(),
     cache: "no-store",
   });
-  if (!res.ok) throw new Error(await readErrorMessage(res));
+  if (!res.ok) await throwIfNotOk(res);
   return res.json() as Promise<ProviderEtablissement>;
 }
 
@@ -95,7 +104,7 @@ export async function createProviderEtablissement(
     headers: headersJsonAuth(),
     body: JSON.stringify(payload),
   });
-  if (!res.ok) throw new Error(await readErrorMessage(res));
+  if (!res.ok) await throwIfNotOk(res);
   return res.json() as Promise<ProviderEtablissement>;
 }
 
@@ -109,7 +118,7 @@ export async function updateProviderEtablissement(
     headers: headersJsonAuth(),
     body: JSON.stringify(payload),
   });
-  if (!res.ok) throw new Error(await readErrorMessage(res));
+  if (!res.ok) await throwIfNotOk(res);
   return res.json() as Promise<ProviderEtablissement>;
 }
 

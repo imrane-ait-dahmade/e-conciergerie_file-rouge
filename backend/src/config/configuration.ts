@@ -28,6 +28,8 @@ export default () => ({
     useSsl: process.env.MINIO_USE_SSL === 'true',
     accessKey: process.env.MINIO_ACCESS_KEY ?? 'minioadmin',
     secretKey: process.env.MINIO_SECRET_KEY ?? 'minioadmin',
+    /** Fixe la région pour éviter l’appel S3 GetBucketLocation (souvent 503 avec MinIO local). */
+    region: process.env.MINIO_REGION ?? 'us-east-1',
     bucket: process.env.MINIO_BUCKET ?? 'uploads',
     publicUrl: process.env.MINIO_PUBLIC_URL ?? 'http://localhost:9000',
   },

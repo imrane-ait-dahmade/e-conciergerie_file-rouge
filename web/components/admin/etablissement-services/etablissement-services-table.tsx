@@ -38,11 +38,11 @@ import type { EtablissementListItem, ServiceDoc } from "@/lib/types/catalog";
 import type { EtablissementServiceAssignment } from "@/lib/types/etablissement-service";
 import { refId } from "@/lib/types/etablissement-service";
 import {
-  isLatLngPairComplete,
-  isLatValid,
-  isLngValid,
-  parseCoordField,
-} from "@/lib/validation/coordinates";
+  hasSpecificGeo,
+  lineAdresseService,
+  validateAssignmentGeoStrings,
+} from "@/lib/location/etablissement-service-location";
+import { parseCoordField } from "@/lib/validation/coordinates";
 import { cn } from "@/lib/utils";
 
 const FORM_CREATE_ID = "admin-etab-svc-create";
@@ -114,23 +114,6 @@ function assignedServiceIdsForEtablissement(
   return set;
 }
 
-function lineAdresseService(row: EtablissementServiceAssignment): string {
-  return (row.adresse ?? row.address ?? "").trim();
-}
-
-function hasSpecificGeo(row: EtablissementServiceAssignment): boolean {
-  const lat = row.latitude;
-  const lng = row.longitude;
-  const hasPair =
-    lat != null &&
-    lng != null &&
-    !Number.isNaN(Number(lat)) &&
-    !Number.isNaN(Number(lng));
-  const hasLine = lineAdresseService(row).length > 0;
-  const hasMeta = !!(row.location_label?.trim() || row.location_type?.trim());
-  return hasPair || hasLine || hasMeta;
-}
-
 type CreateFormValues = {
   etablissement: string;
   service: string;
@@ -154,24 +137,6 @@ type EditFormValues = {
   location_label: string;
   location_type: string;
 };
-
-function validateGeo(
-  latStr: string,
-  lngStr: string,
-  labels: Labels,
-): { latitude?: string; longitude?: string } | null {
-  const lat = parseCoordField(latStr);
-  const lng = parseCoordField(lngStr);
-  const errs: { latitude?: string; longitude?: string } = {};
-  if (!isLatLngPairComplete(lat, lng)) {
-    errs.latitude = labels.validationLatLngPair;
-    errs.longitude = labels.validationLatLngPair;
-    return errs;
-  }
-  if (lat !== null && !isLatValid(lat)) errs.latitude = labels.validationLatRange;
-  if (lng !== null && !isLngValid(lng)) errs.longitude = labels.validationLngRange;
-  return Object.keys(errs).length ? errs : null;
-}
 
 export function EtablissementServicesTable({ labels, className }: EtablissementServicesTableProps) {
   const [query, setQuery] = useState("");
@@ -566,7 +531,7 @@ function CreateAssignmentModal({
 
     if (values.useSpecificLocation) {
       clearErrors(["latitude", "longitude", "adresse"]);
-      const geoErr = validateGeo(values.latitude, values.longitude, labels);
+      const geoErr = validateAssignmentGeoStrings(values.latitude, values.longitude, labels);
       if (geoErr) {
         if (geoErr.latitude) setError("latitude", { message: geoErr.latitude });
         if (geoErr.longitude) setError("longitude", { message: geoErr.longitude });
@@ -903,7 +868,7 @@ function EditAssignmentModal({
 
     if (values.useSpecificLocation) {
       clearErrors(["latitude", "longitude", "adresse"]);
-      const geoErr = validateGeo(values.latitude, values.longitude, labels);
+      const geoErr = validateAssignmentGeoStrings(values.latitude, values.longitude, labels);
       if (geoErr) {
         if (geoErr.latitude) setError("latitude", { message: geoErr.latitude });
         if (geoErr.longitude) setError("longitude", { message: geoErr.longitude });
