@@ -2,7 +2,9 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  Logger,
   NotFoundException,
+  OnApplicationBootstrap,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
@@ -10,6 +12,10 @@ import {
   assertLatLngPair,
   assertLatLngPairForPatch,
 } from '../common/validation/lat-lng-pair.util';
+import { Domaine } from '../domaines/schemas/domaine.schema';
+import {
+  EtablissementServiceCaracteristique,
+} from '../etablissement-service-caracteristiques/schemas/etablissement-service-caracteristique.schema';
 import { withEtablissementLocationApiFields } from '../etablissements/etablissement-api-fields.resource';
 import { Etablissement } from '../etablissements/schemas/etablissement.schema';
 import { Service } from '../services/schemas/service.schema';
@@ -19,17 +25,36 @@ import { CreateEtablissementServiceDto } from './dto/create-etablissement-servic
 import { ListEtablissementServicesQueryDto } from './dto/list-etablissement-services-query.dto';
 import { UpdateEtablissementServiceDto } from './dto/update-etablissement-service.dto';
 import { EtablissementService } from './schemas/etablissement-service.schema';
+import { seedDemoEtablissementServices } from './seeds/demo-etablissement-services.seed';
 
 @Injectable()
-export class EtablissementServicesService {
+export class EtablissementServicesService implements OnApplicationBootstrap {
+  private readonly logger = new Logger(EtablissementServicesService.name);
+
   constructor(
     @InjectModel(EtablissementService.name)
     private readonly liaisonModel: Model<EtablissementService>,
+    @InjectModel(EtablissementServiceCaracteristique.name)
+    private readonly escModel: Model<EtablissementServiceCaracteristique>,
     @InjectModel(Etablissement.name)
     private readonly etablissementModel: Model<Etablissement>,
     @InjectModel(Service.name)
     private readonly serviceModel: Model<Service>,
+    @InjectModel(Domaine.name)
+    private readonly domaineModel: Model<Domaine>,
   ) {}
+
+  /** Après établissements & catalogue services : offres démo Kénitra (voir seeds/). */
+  async onApplicationBootstrap(): Promise<void> {
+    await seedDemoEtablissementServices(
+      this.liaisonModel,
+      this.escModel,
+      this.etablissementModel,
+      this.serviceModel,
+      this.domaineModel,
+      this.logger,
+    );
+  }
 
   private assertValidObjectId(id: string, label: string): void {
     if (!Types.ObjectId.isValid(id)) {

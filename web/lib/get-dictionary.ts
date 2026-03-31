@@ -477,6 +477,22 @@ export type CommonDictionary = {
     pieUsers: string;
     pieBookings: string;
     pieListings: string;
+    kpiProviders: string;
+    kpiEstablishmentServices: string;
+    loading: string;
+    loadError: string;
+    retry: string;
+    recentSectionTitle: string;
+    colName: string;
+    colEmail: string;
+    colCity: string;
+    colDomain: string;
+    colService: string;
+    colEstablishment: string;
+    colActive: string;
+    colDate: string;
+    colPrice: string;
+    emptyState: string;
   };
   /** Barre latérale `/[locale]/prestataire` */
   providerSidebar: {
@@ -1235,14 +1251,14 @@ const DEFAULT_COMMON_DICTIONARY: CommonDictionary = {
   adminStats: {
     pageIntro: "Admin console — snapshot of platform metrics.",
     sectionTitle: "Platform overview",
-    sectionLead: "Key figures and trends (sample data for now).",
+    sectionLead: "Live aggregates from the API (GET /admin/dashboard/stats).",
     kpiUsers: "Registered users",
     kpiEstablishments: "Listed establishments",
     kpiMonthlyBookings: "Bookings this month",
-    chartServicesByType: "Published services by type",
-    chartVolumeTrend: "Transaction volume (12 periods)",
-    chartTrafficMix: "Traffic mix",
-    mockNote: "Illustrative data — connect your API later.",
+    chartServicesByType: "Establishments by domain",
+    chartVolumeTrend: "Establishments by city (top)",
+    chartTrafficMix: "Users by role",
+    mockNote: "Source: admin API.",
     tooltipValue: "Value",
     serviceLodging: "Lodging",
     serviceDining: "Dining",
@@ -1251,6 +1267,22 @@ const DEFAULT_COMMON_DICTIONARY: CommonDictionary = {
     pieUsers: "User sessions",
     pieBookings: "Bookings",
     pieListings: "Listings views",
+    kpiProviders: "Providers",
+    kpiEstablishmentServices: "Establishment offers",
+    loading: "Loading…",
+    loadError: "Could not load dashboard statistics.",
+    retry: "Retry",
+    recentSectionTitle: "Recently added",
+    colName: "Name",
+    colEmail: "Email",
+    colCity: "City",
+    colDomain: "Domain",
+    colService: "Service",
+    colEstablishment: "Establishment",
+    colActive: "Active",
+    colDate: "Date",
+    colPrice: "Price",
+    emptyState: "No data",
   },
   providerSidebar: {
     title: "Provider space",
@@ -3164,6 +3196,34 @@ function normalizeDictionary(value: unknown): CommonDictionary {
         adminStats.pieListings,
         DEFAULT_COMMON_DICTIONARY.adminStats.pieListings
       ),
+      kpiProviders: asString(
+        adminStats.kpiProviders,
+        DEFAULT_COMMON_DICTIONARY.adminStats.kpiProviders
+      ),
+      kpiEstablishmentServices: asString(
+        adminStats.kpiEstablishmentServices,
+        DEFAULT_COMMON_DICTIONARY.adminStats.kpiEstablishmentServices
+      ),
+      loading: asString(adminStats.loading, DEFAULT_COMMON_DICTIONARY.adminStats.loading),
+      loadError: asString(adminStats.loadError, DEFAULT_COMMON_DICTIONARY.adminStats.loadError),
+      retry: asString(adminStats.retry, DEFAULT_COMMON_DICTIONARY.adminStats.retry),
+      recentSectionTitle: asString(
+        adminStats.recentSectionTitle,
+        DEFAULT_COMMON_DICTIONARY.adminStats.recentSectionTitle
+      ),
+      colName: asString(adminStats.colName, DEFAULT_COMMON_DICTIONARY.adminStats.colName),
+      colEmail: asString(adminStats.colEmail, DEFAULT_COMMON_DICTIONARY.adminStats.colEmail),
+      colCity: asString(adminStats.colCity, DEFAULT_COMMON_DICTIONARY.adminStats.colCity),
+      colDomain: asString(adminStats.colDomain, DEFAULT_COMMON_DICTIONARY.adminStats.colDomain),
+      colService: asString(adminStats.colService, DEFAULT_COMMON_DICTIONARY.adminStats.colService),
+      colEstablishment: asString(
+        adminStats.colEstablishment,
+        DEFAULT_COMMON_DICTIONARY.adminStats.colEstablishment
+      ),
+      colActive: asString(adminStats.colActive, DEFAULT_COMMON_DICTIONARY.adminStats.colActive),
+      colDate: asString(adminStats.colDate, DEFAULT_COMMON_DICTIONARY.adminStats.colDate),
+      colPrice: asString(adminStats.colPrice, DEFAULT_COMMON_DICTIONARY.adminStats.colPrice),
+      emptyState: asString(adminStats.emptyState, DEFAULT_COMMON_DICTIONARY.adminStats.emptyState),
     },
     providerSidebar: {
       title: asString(

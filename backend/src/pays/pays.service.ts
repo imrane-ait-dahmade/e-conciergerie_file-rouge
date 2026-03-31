@@ -1,22 +1,39 @@
 import {
   BadRequestException,
   Injectable,
+  Logger,
   NotFoundException,
+  OnModuleInit,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
+import { Quartier } from '../quartiers/schemas/quartier.schema';
 import { Ville } from '../villes/schemas/ville.schema';
 import { CreatePaysDto } from './dto/create-pays.dto';
 import { UpdatePaysDto } from './dto/update-pays.dto';
 import { Pays } from './schemas/pays.schema';
+import { seedGeographieKenitra } from './seeds/geographie-kenitra.seed';
 
 @Injectable()
-export class PaysService {
+export class PaysService implements OnModuleInit {
+  private readonly logger = new Logger(PaysService.name);
+
   constructor(
     @InjectModel(Pays.name) private paysModel: Model<Pays>,
     @InjectModel(Ville.name) private villeModel: Model<Ville>,
+    @InjectModel(Quartier.name) private quartierModel: Model<Quartier>,
   ) {}
+
+  /** Référentiel Maroc / Kénitra / quartiers — idempotent, voir `seeds/geographie-kenitra.seed.ts`. */
+  async onModuleInit(): Promise<void> {
+    await seedGeographieKenitra(
+      this.paysModel,
+      this.villeModel,
+      this.quartierModel,
+      this.logger,
+    );
+  }
 
   async create(dto: CreatePaysDto) {
     const payload = {

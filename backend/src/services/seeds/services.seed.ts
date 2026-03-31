@@ -4,45 +4,85 @@ import { Domaine } from '../../domaines/schemas/domaine.schema';
 import { Service } from '../schemas/service.schema';
 
 /**
- * Services catalogue — clés `icon` alignées admin (Lucide) / mobile (mapping Ionicons côté app).
- * Idempotent : upsert par couple (nom, domaine) après résolution du domaine par `slug`.
+ * Services catalogue par domaine — clés `icon` (Lucide / mapping mobile).
+ * Idempotent : upsert par couple (`nom`, `domaine`) après résolution du domaine par `slug`.
  */
 export const DEFAULT_SERVICES = [
+  // Hébergements
   {
     nom: 'Hôtel',
     domainSlug: 'hebergements',
     icon: 'building',
-    description: 'Établissements hôteliers classiques.',
+    description: 'Établissements hôteliers et réservations.',
   },
   {
     nom: 'Riad',
     domainSlug: 'hebergements',
     icon: 'home',
-    description: 'Séjours en maisons d’hôtes traditionnelles.',
+    description: 'Maisons d’hôtes et séjours typiques.',
   },
   {
-    nom: 'Transfert aéroport',
-    domainSlug: 'transport',
-    icon: 'plane-landing',
-    description: 'Navettes et prise en charge aéroport.',
+    nom: 'Appartement meublé',
+    domainSlug: 'hebergements',
+    icon: 'layout-grid',
+    description: 'Locations meublées pour séjours moyens ou longs.',
   },
+  // Restaurants
   {
     nom: 'Restaurant gastronomique',
     domainSlug: 'restaurants',
     icon: 'chef-hat',
-    description: 'Tables haute gastronomie et chefs.',
+    description: 'Tables gastronomie et cartes du chef.',
   },
   {
-    nom: 'Excursion guidée',
+    nom: 'Café',
+    domainSlug: 'restaurants',
+    icon: 'coffee',
+    description: 'Cafés et pauses gourmandes.',
+  },
+  {
+    nom: 'Brunch premium',
+    domainSlug: 'restaurants',
+    icon: 'sunrise',
+    description: 'Brunch et formules petit-déjeuner.',
+  },
+  // Transport
+  {
+    nom: 'Chauffeur privé',
+    domainSlug: 'transport',
+    icon: 'car-front',
+    description: 'Mise à disposition et trajets sur mesure.',
+  },
+  {
+    nom: 'Transfert gare / aéroport',
+    domainSlug: 'transport',
+    icon: 'plane-landing',
+    description: 'Navettes gare, aéroport et prise en charge.',
+  },
+  {
+    nom: 'Location voiture',
+    domainSlug: 'transport',
+    icon: 'car',
+    description: 'Véhicules de location pour la région.',
+  },
+  // Activités
+  {
+    nom: 'Excursion',
     domainSlug: 'activites',
-    icon: 'map',
-    description: 'Sorties accompagnées et découvertes.',
+    icon: 'compass',
+    description: 'Sorties et découvertes guidées.',
   },
   {
-    nom: 'Billetterie',
-    domainSlug: 'evenements',
+    nom: 'Visite guidée',
+    domainSlug: 'activites',
+    icon: 'map-pin',
+    description: 'Parcours commentés et visites culturelles.',
+  },
+  {
+    nom: 'Événement',
+    domainSlug: 'activites',
     icon: 'ticket',
-    description: 'Places et accès événements.',
+    description: 'Concerts, festivals et billetterie.',
   },
 ] as const;
 

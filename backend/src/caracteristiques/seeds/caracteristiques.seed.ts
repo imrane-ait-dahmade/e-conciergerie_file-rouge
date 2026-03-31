@@ -5,8 +5,8 @@ import { Service } from '../../services/schemas/service.schema';
 import { Caracteristique } from '../schemas/caracteristique.schema';
 
 /**
- * Caractéristiques catalogue — optionnellement liées à un service (nom + domaine slug).
- * Idempotent : mise à jour de l’`icon` si trouvé, sinon création.
+ * Caractéristiques catalogue — rattachées à un service (nom + domaine slug).
+ * Idempotent : clé `(libelle, service)`.
  */
 export const DEFAULT_CARACTERISTIQUES = [
   {
@@ -22,16 +22,22 @@ export const DEFAULT_CARACTERISTIQUES = [
     domainSlug: 'hebergements',
   },
   {
-    libelle: 'Caméra de surveillance',
-    icon: 'shield-check',
-    serviceNom: 'Hôtel',
-    domainSlug: 'hebergements',
-  },
-  {
     libelle: 'Climatisation',
     icon: 'snowflake',
     serviceNom: 'Riad',
     domainSlug: 'hebergements',
+  },
+  {
+    libelle: 'Caméra extérieure',
+    icon: 'camera',
+    serviceNom: 'Hôtel',
+    domainSlug: 'hebergements',
+  },
+  {
+    libelle: 'Petit-déjeuner',
+    icon: 'coffee',
+    serviceNom: 'Brunch premium',
+    domainSlug: 'restaurants',
   },
   {
     libelle: 'Piscine',
@@ -40,16 +46,16 @@ export const DEFAULT_CARACTERISTIQUES = [
     domainSlug: 'hebergements',
   },
   {
-    libelle: 'Café',
-    icon: 'coffee',
-    serviceNom: 'Restaurant gastronomique',
-    domainSlug: 'restaurants',
+    libelle: 'Navette',
+    icon: 'bus',
+    serviceNom: 'Transfert gare / aéroport',
+    domainSlug: 'transport',
   },
   {
-    libelle: 'Salle de sport',
-    icon: 'dumbbell',
-    serviceNom: null,
-    domainSlug: null,
+    libelle: 'Vue sur ville',
+    icon: 'landmark',
+    serviceNom: 'Appartement meublé',
+    domainSlug: 'hebergements',
   },
 ] as const;
 
@@ -84,52 +90,29 @@ export async function seedCaracteristiques(
 ): Promise<void> {
   let synced = 0;
   for (const row of DEFAULT_CARACTERISTIQUES) {
-    if (row.serviceNom && row.domainSlug) {
-      const serviceId = await resolveServiceId(
-        serviceModel,
-        domaineModel,
-        row.serviceNom,
-        row.domainSlug,
+    const serviceId = await resolveServiceId(
+      serviceModel,
+      domaineModel,
+      row.serviceNom,
+      row.domainSlug,
+    );
+    if (!serviceId) {
+      logger?.warn(
+        `Seed caractéristiques : service "${row.serviceNom}" / "${row.domainSlug}" introuvable — ${row.libelle} ignoré.`,
       );
-      if (!serviceId) {
-        logger?.warn(
-          `Seed caractéristiques : service "${row.serviceNom}" / "${row.domainSlug}" introuvable — ${row.libelle} ignoré.`,
-        );
-        continue;
-      }
-      await caracteristiqueModel.findOneAndUpdate(
-        { libelle: row.libelle, service: serviceId },
-        {
-          $set: {
-            libelle: row.libelle,
-            icon: row.icon,
-            service: serviceId,
-          },
-        },
-        { upsert: true, new: true },
-      );
-      synced += 1;
       continue;
     }
-
-    const loose = await caracteristiqueModel
-      .findOne({
-        libelle: row.libelle,
-        $or: [{ service: null }, { service: { $exists: false } }],
-      })
-      .exec();
-
-    if (loose) {
-      await caracteristiqueModel.updateOne(
-        { _id: loose._id },
-        { $set: { libelle: row.libelle, icon: row.icon } },
-      );
-    } else {
-      await caracteristiqueModel.create({
-        libelle: row.libelle,
-        icon: row.icon,
-      });
-    }
+    await caracteristiqueModel.findOneAndUpdate(
+      { libelle: row.libelle, service: serviceId },
+      {
+        $set: {
+          libelle: row.libelle,
+          icon: row.icon,
+          service: serviceId,
+        },
+      },
+      { upsert: true, new: true },
+    );
     synced += 1;
   }
   logger?.log(

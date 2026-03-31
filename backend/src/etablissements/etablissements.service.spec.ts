@@ -5,6 +5,11 @@ import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Types } from 'mongoose';
+import { Domaine } from '../domaines/schemas/domaine.schema';
+import { Pays } from '../pays/schemas/pays.schema';
+import { Quartier } from '../quartiers/schemas/quartier.schema';
+import { User } from '../users/schemas/user.schema';
+import { Ville } from '../villes/schemas/ville.schema';
 import { Etablissement } from './schemas/etablissement.schema';
 import { EtablissementsService } from './etablissements.service';
 
@@ -41,7 +46,14 @@ describe('EtablissementsService', () => {
     findById: jest.fn(),
     findByIdAndUpdate: jest.fn(),
     findByIdAndDelete: jest.fn(),
+    findOneAndUpdate: jest.fn(),
   };
+
+  const userModel = { findOne: jest.fn() };
+  const domaineModel = { findOne: jest.fn() };
+  const paysModel = { findOne: jest.fn() };
+  const villeModel = { findOne: jest.fn() };
+  const quartierModel = { findOne: jest.fn() };
 
   beforeEach(async () => {
     jest.clearAllMocks();
@@ -50,6 +62,8 @@ describe('EtablissementsService', () => {
     etablissementModel.findByIdAndUpdate.mockResolvedValue(mockEtablissement);
     etablissementModel.findByIdAndDelete.mockResolvedValue(mockEtablissement);
 
+    userModel.findOne.mockReturnValue({ lean: jest.fn().mockResolvedValue(null) });
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         EtablissementsService,
@@ -57,6 +71,11 @@ describe('EtablissementsService', () => {
           provide: getModelToken(Etablissement.name),
           useValue: etablissementModel,
         },
+        { provide: getModelToken(User.name), useValue: userModel },
+        { provide: getModelToken(Domaine.name), useValue: domaineModel },
+        { provide: getModelToken(Pays.name), useValue: paysModel },
+        { provide: getModelToken(Ville.name), useValue: villeModel },
+        { provide: getModelToken(Quartier.name), useValue: quartierModel },
       ],
     }).compile();
 
