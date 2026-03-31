@@ -15,10 +15,12 @@ import {
   CalendarOutlined,
   AppstoreOutlined,
   SettingOutlined,
+  LogoutOutlined,
 } from "@ant-design/icons";
 import { usePathname, useRouter } from "next/navigation";
 
 import { useAdminSidebarAccess } from "@/hooks/use-admin-sidebar-access";
+import { logoutSession } from "@/lib/api";
 import { cn } from "@/lib/utils";
 
 const { Sider } = Layout;
@@ -38,6 +40,7 @@ export type AdminSidebarLabels = {
   reservations: string;
   services: string;
   settings: string;
+  logout: string;
 };
 
 export type AdminSidebarProps = {
@@ -87,6 +90,7 @@ export function AdminSidebar({
   const access = useAdminSidebarAccess();
 
   const [internalCollapsed, setInternalCollapsed] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
   const collapsed = externalCollapsed !== undefined ? externalCollapsed : internalCollapsed;
 
   const base = adminBasePath(locale);
@@ -213,6 +217,17 @@ export function AdminSidebar({
     else setInternalCollapsed(next);
   };
 
+  const handleLogout = async () => {
+    setLoggingOut(true);
+    try {
+      await logoutSession();
+    } finally {
+      setLoggingOut(false);
+      router.replace(`/${locale}/login`);
+      router.refresh();
+    }
+  };
+
   return (
     <Sider
       data-glass-sidebar
@@ -222,7 +237,7 @@ export function AdminSidebar({
       width={280}
       collapsedWidth={72}
       className={cn(
-        "sidebar-glass min-h-0 !border-r !border-border/80 shadow-[1px_0_0_0_color-mix(in_oklch,var(--foreground)_6%,transparent)] backdrop-blur-xl",
+        "sidebar-glass flex min-h-0 flex-col !border-r !border-border/80 shadow-[1px_0_0_0_color-mix(in_oklch,var(--foreground)_6%,transparent)] backdrop-blur-xl",
         className,
       )}
     >
@@ -245,15 +260,31 @@ export function AdminSidebar({
         </div>
       </div>
 
-      <div className="flex max-h-[calc(100vh-8rem)] flex-1 flex-col overflow-hidden">
-        <Menu
-          mode="inline"
-          inlineCollapsed={collapsed}
-          selectedKeys={selectedKeys}
-          items={menuItems}
-          onClick={handleMenuClick}
-          className="admin-sidebar-menu !border-0 bg-transparent font-medium"
-        />
+      <div className="flex min-h-0 flex-1 flex-col">
+        <div className="min-h-0 flex-1 overflow-y-auto">
+          <Menu
+            mode="inline"
+            inlineCollapsed={collapsed}
+            selectedKeys={selectedKeys}
+            items={menuItems}
+            onClick={handleMenuClick}
+            className="admin-sidebar-menu !border-0 bg-transparent font-medium"
+          />
+        </div>
+        <div className="border-t border-border/70 p-2">
+          <Button
+            type="text"
+            danger
+            block
+            loading={loggingOut}
+            icon={<LogoutOutlined />}
+            onClick={() => void handleLogout()}
+            className="justify-start text-muted-foreground hover:!text-destructive"
+            title={labels.logout}
+          >
+            {!collapsed ? labels.logout : null}
+          </Button>
+        </div>
       </div>
     </Sider>
   );

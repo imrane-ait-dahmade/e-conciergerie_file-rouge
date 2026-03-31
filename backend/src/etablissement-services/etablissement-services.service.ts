@@ -2,27 +2,59 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  Logger,
   NotFoundException,
+  OnApplicationBootstrap,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
+import {
+  assertLatLngPair,
+  assertLatLngPairForPatch,
+} from '../common/validation/lat-lng-pair.util';
+import { Domaine } from '../domaines/schemas/domaine.schema';
+import {
+  EtablissementServiceCaracteristique,
+} from '../etablissement-service-caracteristiques/schemas/etablissement-service-caracteristique.schema';
+import { withEtablissementLocationApiFields } from '../etablissements/etablissement-api-fields.resource';
 import { Etablissement } from '../etablissements/schemas/etablissement.schema';
 import { Service } from '../services/schemas/service.schema';
+import { resolveAdresseLineForDto } from './etablissement-service-adresse.util';
+import { withEtablissementServiceLocationApiFields } from './etablissement-service-api-fields.resource';
 import { CreateEtablissementServiceDto } from './dto/create-etablissement-service.dto';
 import { ListEtablissementServicesQueryDto } from './dto/list-etablissement-services-query.dto';
 import { UpdateEtablissementServiceDto } from './dto/update-etablissement-service.dto';
 import { EtablissementService } from './schemas/etablissement-service.schema';
+import { seedDemoEtablissementServices } from './seeds/demo-etablissement-services.seed';
 
 @Injectable()
-export class EtablissementServicesService {
+export class EtablissementServicesService implements OnApplicationBootstrap {
+  private readonly logger = new Logger(EtablissementServicesService.name);
+
   constructor(
     @InjectModel(EtablissementService.name)
     private readonly liaisonModel: Model<EtablissementService>,
+    @InjectModel(EtablissementServiceCaracteristique.name)
+    private readonly escModel: Model<EtablissementServiceCaracteristique>,
     @InjectModel(Etablissement.name)
     private readonly etablissementModel: Model<Etablissement>,
     @InjectModel(Service.name)
     private readonly serviceModel: Model<Service>,
+    @InjectModel(Domaine.name)
+    private readonly domaineModel: Model<Domaine>,
   ) {}
+
+  /** Après établissements & catalogue services : offres démo Kénitra (voir seeds/). */
+  async onApplicationBootstrap(): Promise<void> {
+    await seedDemoEtablissementServices(
+      this.liaisonModel,
+      this.escModel,
+      this.etablissementModel,
+      this.serviceModel,
+      this.domaineModel,
+      this.logger,
+    );
+  }
 
   private assertValidObjectId(id: string, label: string): void {
     if (!Types.ObjectId.isValid(id)) {
@@ -30,16 +62,28 @@ export class EtablissementServicesService {
     }
   }
 
+  private mapLiaisonResponse(doc: Record<string, unknown>): Record<string, unknown> {
+    const root = withEtablissementServiceLocationApiFields({ ...doc });
+    const etab = root.etablissement;
+    if (etab && typeof etab === 'object' && !Array.isArray(etab)) {
+      root.etablissement = withEtablissementLocationApiFields(
+        etab as Record<string, unknown>,
+      );
+    }
+    return root;
+  }
+
   private populateAssignment() {
     return [
       {
         path: 'etablissement',
-        select: 'nom adresse isActive prestataire',
+        select:
+          'nom adresse latitude longitude location isActive prestataire',
       },
       {
         path: 'service',
         select: 'nom description',
-        populate: { path: 'domaine', select: 'nom' },
+        populate: { path: 'domaine', select: 'nom icon' },
       },
     ] as const;
   }
@@ -61,6 +105,7 @@ export class EtablissementServicesService {
   }
 
   async create(dto: CreateEtablissementServiceDto) {
+    assertLatLngPair(dto);
     await this.assertEtablissementExists(dto.etablissement);
     await this.assertServiceCatalogExists(dto.service);
 
@@ -78,12 +123,31 @@ export class EtablissementServicesService {
     }
 
     try {
+      const hasCoords =
+        dto.latitude !== undefined &&
+        dto.longitude !== undefined &&
+        dto.latitude !== null &&
+        dto.longitude !== null;
+
+      const adresseLine = resolveAdresseLineForDto(dto);
+
       const created = await this.liaisonModel.create({
         etablissement: etabOid,
         service: serviceOid,
         ...(dto.prix !== undefined && { prix: dto.prix }),
         ...(dto.commentaire !== undefined && {
           commentaire: dto.commentaire.trim(),
+        }),
+        ...(adresseLine !== undefined && { adresse: adresseLine }),
+        ...(hasCoords && {
+          latitude: dto.latitude as number,
+          longitude: dto.longitude as number,
+        }),
+        ...(dto.location_label !== undefined && {
+          location_label: dto.location_label.trim(),
+        }),
+        ...(dto.location_type !== undefined && {
+          location_type: dto.location_type.trim(),
         }),
       });
       return this.findOne(String(created._id));
@@ -120,7 +184,7 @@ export class EtablissementServicesService {
       filter.etablissement = new Types.ObjectId(query.etablissementId);
     }
 
-    const [data, total] = await Promise.all([
+    const [raw, total] = await Promise.all([
       this.liaisonModel
         .find(filter)
         .sort({ createdAt: -1 })
@@ -132,6 +196,9 @@ export class EtablissementServicesService {
       this.liaisonModel.countDocuments(filter).exec(),
     ]);
 
+    const data = raw.map((d) =>
+      this.mapLiaisonResponse(d as unknown as Record<string, unknown>),
+    );
     return { data, total, page, limit };
   }
 
@@ -139,12 +206,15 @@ export class EtablissementServicesService {
     this.assertValidObjectId(etablissementId, 'établissement');
     await this.assertEtablissementExists(etablissementId);
 
-    return this.liaisonModel
+    const rows = await this.liaisonModel
       .find({ etablissement: new Types.ObjectId(etablissementId) })
       .sort({ createdAt: -1 })
       .populate([...this.populateAssignment()])
       .lean()
       .exec();
+    return rows.map((d) =>
+      this.mapLiaisonResponse(d as unknown as Record<string, unknown>),
+    );
   }
 
   async findOne(id: string) {
@@ -157,10 +227,11 @@ export class EtablissementServicesService {
     if (!doc) {
       throw new NotFoundException('Assignation introuvable');
     }
-    return doc;
+    return this.mapLiaisonResponse(doc as unknown as Record<string, unknown>);
   }
 
   async update(id: string, dto: UpdateEtablissementServiceDto) {
+    assertLatLngPairForPatch(dto);
     this.assertValidObjectId(id, 'liaison');
     await this.findOne(id);
 
@@ -168,6 +239,17 @@ export class EtablissementServicesService {
     if (dto.prix !== undefined) set.prix = dto.prix;
     if (dto.commentaire !== undefined) {
       set.commentaire = dto.commentaire.trim();
+    }
+    if (dto.adresse !== undefined || dto.address !== undefined) {
+      set.adresse = resolveAdresseLineForDto(dto);
+    }
+    if (dto.latitude !== undefined) set.latitude = dto.latitude;
+    if (dto.longitude !== undefined) set.longitude = dto.longitude;
+    if (dto.location_label !== undefined) {
+      set.location_label = dto.location_label.trim();
+    }
+    if (dto.location_type !== undefined) {
+      set.location_type = dto.location_type.trim();
     }
 
     if (Object.keys(set).length === 0) {
@@ -183,7 +265,7 @@ export class EtablissementServicesService {
     if (!updated) {
       throw new NotFoundException('Assignation introuvable');
     }
-    return updated;
+    return this.mapLiaisonResponse(updated as unknown as Record<string, unknown>);
   }
 
   async remove(id: string): Promise<void> {

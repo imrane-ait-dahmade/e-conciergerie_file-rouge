@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { Domaine, DomaineSchema } from '../domaines/schemas/domaine.schema';
 import { Service, ServiceSchema } from '../services/schemas/service.schema';
 import { CaracteristiqueController } from './caracteristique.controller';
 import { CaracteristiqueService } from './caracteristique.service';
@@ -13,6 +14,7 @@ import {
     MongooseModule.forFeature([
       { name: Caracteristique.name, schema: CaracteristiqueSchema },
       { name: Service.name, schema: ServiceSchema },
+      { name: Domaine.name, schema: DomaineSchema },
     ]),
   ],
   controllers: [CaracteristiqueController],

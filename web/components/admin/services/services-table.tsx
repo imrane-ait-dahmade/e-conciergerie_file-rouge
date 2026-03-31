@@ -5,6 +5,8 @@ import { Pencil, Plus, Search, Trash2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
+import { AdminIconCell } from "@/components/admin/admin-icon-cell";
+import { IconField } from "@/components/admin/icon-field";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -23,6 +25,7 @@ import {
   fetchServices,
   updateService,
 } from "@/lib/api/services";
+import { SERVICE_ICON_PRESETS } from "@/lib/admin-icon-presets";
 import { displayRefName } from "@/lib/catalog-display";
 import type { CommonDictionary } from "@/lib/get-dictionary";
 import type { DomaineDoc, ServiceDoc } from "@/lib/types/catalog";
@@ -44,6 +47,7 @@ function normalizeQuery(q: string) {
 type ServiceFormValues = {
   nom: string;
   description: string;
+  icon: string;
   domaine: string;
 };
 
@@ -87,7 +91,8 @@ export function ServicesTable({ labels, className }: ServicesTableProps) {
       const nom = r.nom?.toLowerCase() ?? "";
       const desc = (r.description ?? "").toLowerCase();
       const dom = displayRefName(r.domaine).toLowerCase();
-      return nom.includes(q) || desc.includes(q) || dom.includes(q);
+      const icon = (r.icon ?? "").toLowerCase();
+      return nom.includes(q) || desc.includes(q) || dom.includes(q) || icon.includes(q);
     });
   }, [query, rows]);
 
@@ -180,6 +185,9 @@ export function ServicesTable({ labels, className }: ServicesTableProps) {
             <TableHeader>
               <TableRow className="border-border/60 bg-muted/40 hover:bg-muted/40">
                 <TableHead className="font-semibold text-foreground">{labels.colNom}</TableHead>
+                <TableHead className="w-[88px] max-w-[88px] text-center font-semibold text-foreground">
+                  {labels.colIcon}
+                </TableHead>
                 <TableHead className="font-semibold text-foreground">{labels.colDomaine}</TableHead>
                 <TableHead className="font-semibold text-foreground">{labels.colDescription}</TableHead>
                 <TableHead className="font-semibold text-foreground">{labels.colDateCreation}</TableHead>
@@ -191,7 +199,7 @@ export function ServicesTable({ labels, className }: ServicesTableProps) {
             <TableBody>
               {!loading && filtered.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="h-24 text-center text-muted-foreground">
+                  <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
                     {labels.servicesEmpty}
                   </TableCell>
                 </TableRow>
@@ -199,6 +207,9 @@ export function ServicesTable({ labels, className }: ServicesTableProps) {
                 filtered.map((row) => (
                   <TableRow key={row._id} className="border-border/50">
                     <TableCell className="font-medium text-foreground">{row.nom}</TableCell>
+                    <TableCell className="align-middle text-center">
+                      <AdminIconCell value={row.icon} />
+                    </TableCell>
                     <TableCell className="whitespace-nowrap text-muted-foreground">
                       {displayRefName(row.domaine)}
                     </TableCell>
@@ -294,6 +305,7 @@ function ServiceFormModal({
     defaultValues: {
       nom: "",
       description: "",
+      icon: "",
       domaine: "",
     },
   });
@@ -303,6 +315,7 @@ function ServiceFormModal({
     reset({
       nom: initialRow?.nom ?? "",
       description: initialRow?.description ?? "",
+      icon: initialRow?.icon ?? "",
       domaine: initialRow ? serviceDomaineId(initialRow) : "",
     });
   }, [open, editingId, initialRow, reset]);
@@ -325,6 +338,7 @@ function ServiceFormModal({
       return;
     }
     const description = values.description.trim();
+    const iconTrim = values.icon.trim();
     const payload = {
       nom,
       domaine: values.domaine,
@@ -334,15 +348,18 @@ function ServiceFormModal({
     setSubmitting(true);
     try {
       if (isEdit && editingId) {
-        await updateService(editingId, payload);
+        await updateService(editingId, { ...payload, icon: iconTrim });
         message.success("Service mis à jour.");
       } else {
-        await createService(payload);
+        await createService({
+          ...payload,
+          ...(iconTrim ? { icon: iconTrim } : {}),
+        });
         message.success("Service créé.");
       }
       await onSuccess();
       onClose();
-      reset({ nom: "", description: "", domaine: "" });
+      reset({ nom: "", description: "", icon: "", domaine: "" });
     } catch (e) {
       message.error(e instanceof Error ? e.message : "Une erreur est survenue.");
     } finally {
@@ -384,6 +401,36 @@ function ServiceFormModal({
           <Label htmlFor={`${formId}-description`}>{labels.colDescription}</Label>
           <Input id={`${formId}-description`} {...register("description")} />
         </div>
+        <Controller
+          name="icon"
+          control={control}
+          rules={{ maxLength: { value: 512, message: labels.iconFieldMaxLength } }}
+          render={({ field }) => (
+            <IconField
+              id={`${formId}-icon`}
+              name={field.name}
+              label={labels.iconFieldLabel}
+              helperText={labels.iconFieldHelp}
+              placeholder={labels.iconFieldPlaceholder}
+              error={errors.icon?.message}
+              presets={SERVICE_ICON_PRESETS}
+              value={field.value ?? ""}
+              onChange={field.onChange}
+              onBlur={field.onBlur}
+              disabled={submitting}
+              i18n={{
+                tabLibrary: labels.iconPickerTabLibrary,
+                tabCustom: labels.iconPickerTabCustom,
+                none: labels.iconPickerNone,
+                upload: labels.iconPickerUpload,
+                uploading: labels.iconPickerUploading,
+                customHint: labels.iconPickerCustomHint,
+                preview: labels.iconPickerPreview,
+                unknownKeyHint: labels.iconPickerUnknownKeyHint,
+              }}
+            />
+          )}
+        />
         <div className="space-y-2">
           <Label>{labels.colDomaine}</Label>
           <Controller

@@ -18,9 +18,15 @@ import { Reservation } from '../reservations/schemas/reservation.schema';
 import { ROLE_NAMES } from '../roles/seeds/roles.seed';
 import { User } from '../users/schemas/user.schema';
 import { Ville } from '../villes/schemas/ville.schema';
-import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
+import {
+  assertLatLngPair,
+  assertLatLngPairForPatch,
+} from '../common/validation/lat-lng-pair.util';
+import { normalizeAdminEtablissementDoc } from './admin-etablissement.resource';
 import { AdminCreateEtablissementDto } from './dto/admin-create-etablissement.dto';
 import { AdminUpdateEtablissementDto } from './dto/admin-update-etablissement.dto';
+import { ListAdminEtablissementsQueryDto } from './dto/list-admin-etablissements-query.dto';
+import { PatchEtablissementBestProvidersDto } from './dto/patch-etablissement-best-providers.dto';
 import { UpdateEtablissementStatusDto } from './dto/update-etablissement-status.dto';
 import { Etablissement } from './schemas/etablissement.schema';
 
@@ -146,7 +152,7 @@ export class AdminEtablissementsService {
         select: 'nom prenom email isActive',
         populate: { path: 'role', select: 'name label' },
       },
-      { path: 'domaine', select: 'nom description' },
+      { path: 'domaine', select: 'nom description icon' },
       { path: 'pays', select: 'nom code' },
       {
         path: 'ville',
@@ -165,7 +171,7 @@ export class AdminEtablissementsService {
     ] as const;
   }
 
-  async findAllPaginated(query?: PaginationQueryDto) {
+  async findAllPaginated(query?: ListAdminEtablissementsQueryDto) {
     const page = query?.page != null && query.page > 0 ? query.page : 1;
     const limit = Math.min(
       query?.limit != null && query.limit > 0 ? query.limit : 20,
@@ -173,19 +179,66 @@ export class AdminEtablissementsService {
     );
     const skip = (page - 1) * limit;
 
-    const [data, total] = await Promise.all([
+    const filter = this.buildAdminListFilter(query);
+    const useFeaturedSort =
+      query?.isFeaturedForHomeBestProviders === true;
+    const sort: Record<string, 1 | -1> = useFeaturedSort
+      ? { bestProviderSortOrder: 1, createdAt: -1 }
+      : { createdAt: -1 };
+
+    const [raw, total] = await Promise.all([
       this.etablissementModel
-        .find()
-        .sort({ createdAt: -1 })
+        .find(filter)
+        .sort(sort)
         .skip(skip)
         .limit(limit)
         .populate([...this.populatePaths()])
         .lean()
         .exec(),
-      this.etablissementModel.countDocuments().exec(),
+      this.etablissementModel.countDocuments(filter).exec(),
     ]);
 
+    const data = raw.map((d) =>
+      normalizeAdminEtablissementDoc(d as unknown as Record<string, unknown>),
+    );
+
     return { data, total, page, limit };
+  }
+
+  /**
+   * Liste dédiée : établissements mis en avant pour la section accueil (tous statuts visibles pour l’admin).
+   */
+  async findBestProvidersPaginated(query?: ListAdminEtablissementsQueryDto) {
+    return this.findAllPaginated({
+      page: query?.page,
+      limit: query?.limit,
+      isActive: query?.isActive,
+      search: query?.search,
+      isFeaturedForHomeBestProviders: true,
+    });
+  }
+
+  private buildAdminListFilter(
+    query?: ListAdminEtablissementsQueryDto,
+  ): Record<string, unknown> {
+    const filter: Record<string, unknown> = {};
+    if (query?.isActive === true || query?.isActive === false) {
+      filter.isActive = query.isActive;
+    }
+    if (
+      query?.isFeaturedForHomeBestProviders === true ||
+      query?.isFeaturedForHomeBestProviders === false
+    ) {
+      filter.isFeaturedForHomeBestProviders =
+        query.isFeaturedForHomeBestProviders;
+    }
+    if (query?.search?.trim()) {
+      filter.nom = {
+        $regex: escapeRegex(query.search!.trim()),
+        $options: 'i',
+      };
+    }
+    return filter;
   }
 
   async findOne(id: string) {
@@ -198,10 +251,13 @@ export class AdminEtablissementsService {
     if (!doc) {
       throw new NotFoundException('Établissement introuvable');
     }
-    return doc;
+    return normalizeAdminEtablissementDoc(
+      doc as unknown as Record<string, unknown>,
+    );
   }
 
   async create(dto: AdminCreateEtablissementDto) {
+    assertLatLngPair(dto);
     await this.assertPrestataireUser(dto.prestataire);
 
     if (dto.domaine) {
@@ -214,16 +270,34 @@ export class AdminEtablissementsService {
       quartier: dto.quartier,
     });
 
+    const hasCoords =
+      dto.latitude !== undefined &&
+      dto.longitude !== undefined &&
+      dto.latitude !== null &&
+      dto.longitude !== null;
+
     const doc = await this.etablissementModel.create({
       nom: dto.nom.trim(),
       prestataire: new Types.ObjectId(dto.prestataire),
       adresse: dto.adresse?.trim(),
-      latitude: dto.latitude,
-      longitude: dto.longitude,
+      ...(hasCoords && {
+        latitude: dto.latitude as number,
+        longitude: dto.longitude as number,
+      }),
       description: dto.description?.trim(),
       telephone: dto.telephone?.trim(),
       email: dto.email?.toLowerCase().trim(),
       image: dto.image?.trim(),
+      logo: dto.logo?.trim(),
+      coverImage: dto.coverImage?.trim(),
+      slug: dto.slug?.trim(),
+      ...(dto.averageRating !== undefined && {
+        averageRating: dto.averageRating,
+      }),
+      ...(dto.reviewCount !== undefined && { reviewCount: dto.reviewCount }),
+      isFeaturedForHomeBestProviders:
+        dto.isFeaturedForHomeBestProviders ?? false,
+      bestProviderSortOrder: dto.bestProviderSortOrder ?? 0,
       isActive: dto.isActive ?? true,
       ...(dto.domaine && { domaine: new Types.ObjectId(dto.domaine) }),
       ...geo,
@@ -233,6 +307,7 @@ export class AdminEtablissementsService {
   }
 
   async update(id: string, dto: AdminUpdateEtablissementDto) {
+    assertLatLngPairForPatch(dto);
     this.assertValidObjectId(id);
     const existing = await this.etablissementModel.findById(id).lean();
     if (!existing) {
@@ -296,6 +371,21 @@ export class AdminEtablissementsService {
     if (dto.telephone !== undefined) set.telephone = dto.telephone?.trim();
     if (dto.email !== undefined) set.email = dto.email?.toLowerCase().trim();
     if (dto.image !== undefined) set.image = dto.image?.trim();
+    if (dto.logo !== undefined) set.logo = dto.logo?.trim();
+    if (dto.coverImage !== undefined) set.coverImage = dto.coverImage?.trim();
+    if (dto.slug !== undefined) set.slug = dto.slug?.trim();
+    if (dto.averageRating !== undefined) {
+      set.averageRating = dto.averageRating;
+    }
+    if (dto.reviewCount !== undefined) {
+      set.reviewCount = dto.reviewCount;
+    }
+    if (dto.isFeaturedForHomeBestProviders !== undefined) {
+      set.isFeaturedForHomeBestProviders = dto.isFeaturedForHomeBestProviders;
+    }
+    if (dto.bestProviderSortOrder !== undefined) {
+      set.bestProviderSortOrder = dto.bestProviderSortOrder;
+    }
     if (dto.domaine !== undefined) {
       set.domaine = new Types.ObjectId(dto.domaine);
     }
@@ -310,6 +400,39 @@ export class AdminEtablissementsService {
 
     if (Object.keys(set).length === 0) {
       return this.findOne(id);
+    }
+
+    await this.etablissementModel.findByIdAndUpdate(id, { $set: set }).exec();
+    return this.findOne(id);
+  }
+
+  /**
+   * Mise à jour ciblée des champs Best providers (sans envoyer tout le corps admin).
+   */
+  async updateBestProviders(
+    id: string,
+    dto: PatchEtablissementBestProvidersDto,
+  ) {
+    this.assertValidObjectId(id);
+    if (
+      dto.isFeaturedForHomeBestProviders === undefined &&
+      dto.bestProviderSortOrder === undefined
+    ) {
+      throw new BadRequestException(
+        'Fournir au moins un champ : isFeaturedForHomeBestProviders ou bestProviderSortOrder',
+      );
+    }
+    const existing = await this.etablissementModel.findById(id).lean().exec();
+    if (!existing) {
+      throw new NotFoundException('Établissement introuvable');
+    }
+
+    const set: Record<string, unknown> = {};
+    if (dto.isFeaturedForHomeBestProviders !== undefined) {
+      set.isFeaturedForHomeBestProviders = dto.isFeaturedForHomeBestProviders;
+    }
+    if (dto.bestProviderSortOrder !== undefined) {
+      set.bestProviderSortOrder = dto.bestProviderSortOrder;
     }
 
     await this.etablissementModel.findByIdAndUpdate(id, { $set: set }).exec();
@@ -373,4 +496,8 @@ export class AdminEtablissementsService {
 
     await this.etablissementModel.findByIdAndDelete(id).exec();
   }
+}
+
+function escapeRegex(s: string): string {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }

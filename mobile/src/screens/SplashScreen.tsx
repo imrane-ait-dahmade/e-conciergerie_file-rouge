@@ -1,6 +1,6 @@
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 
-import { AppColors } from '@/src/constants/theme';
+import { Colors, FontSize, Spacing } from '@/src/constants/theme';
 
 /**
  * Affiché pendant la lecture du token dans AsyncStorage (avant de choisir Auth ou App).
@@ -11,7 +11,7 @@ export function SplashScreen() {
     <View style={styles.container}>
       <Text style={styles.title}>E‑Conciergerie</Text>
       <Text style={styles.subtitle}>Chargement…</Text>
-      <ActivityIndicator size="large" color={AppColors.primary} style={styles.spinner} />
+      <ActivityIndicator size="large" color={Colors.primary} style={styles.spinner} />
     </View>
   );
 }
@@ -21,21 +21,21 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: AppColors.background,
-    padding: 24,
+    backgroundColor: Colors.background,
+    padding: Spacing.xl,
   },
   title: {
-    fontSize: 28,
+    fontSize: FontSize.display,
     fontWeight: '700',
-    color: AppColors.text,
-    marginBottom: 8,
+    color: Colors.text,
+    marginBottom: Spacing.sm,
   },
   subtitle: {
-    fontSize: 16,
-    color: AppColors.textMuted,
-    marginBottom: 24,
+    fontSize: FontSize.md,
+    color: Colors.textMuted,
+    marginBottom: Spacing.xl,
   },
   spinner: {
-    marginTop: 8,
+    marginTop: Spacing.sm,
   },
 });

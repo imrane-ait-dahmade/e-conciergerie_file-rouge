@@ -5,9 +5,9 @@ import { Role } from '../../roles/schemas/role.schema';
 import { User } from '../schemas/user.schema';
 
 /**
- * Seed admin initial — comme un AdminUserSeeder Laravel.
+ * Seed admin ponctuel (ex. script CLI) — un seul compte admin depuis des données passées en paramètre.
  *
- * Appel typique : depuis UsersService.createInitialAdmin() avec les valeurs lues du .env.
+ * Pour la démo à 3 comptes au démarrage, le projet utilise `demo-users.seed.ts` (UsersService).
  */
 export async function seedInitialAdmin(
   userModel: Model<User>,

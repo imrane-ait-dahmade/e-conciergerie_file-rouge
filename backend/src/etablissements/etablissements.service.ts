@@ -6,21 +6,51 @@
 import {
   ForbiddenException,
   Injectable,
+  Logger,
   NotFoundException,
+  OnApplicationBootstrap,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as mongoose from 'mongoose';
+import { Domaine } from '../domaines/schemas/domaine.schema';
+import { Pays } from '../pays/schemas/pays.schema';
+import { Quartier } from '../quartiers/schemas/quartier.schema';
+import { User } from '../users/schemas/user.schema';
+import { Ville } from '../villes/schemas/ville.schema';
 import { Etablissement } from './schemas/etablissement.schema';
 import { CreateEtablissementDto } from './dto/create-etablissement.dto';
 import { UpdateEtablissementDto } from './dto/update-etablissement.dto';
+import { seedDemoEtablissementsKenitra } from './seeds/demo-etablissements-kenitra.seed';
 
 @Injectable()
-export class EtablissementsService {
+export class EtablissementsService implements OnApplicationBootstrap {
+  private readonly logger = new Logger(EtablissementsService.name);
+
   constructor(
     @InjectModel(Etablissement.name)
     private etablissementModel: Model<Etablissement>,
+    @InjectModel(User.name) private userModel: Model<User>,
+    @InjectModel(Domaine.name) private domaineModel: Model<Domaine>,
+    @InjectModel(Pays.name) private paysModel: Model<Pays>,
+    @InjectModel(Ville.name) private villeModel: Model<Ville>,
+    @InjectModel(Quartier.name) private quartierModel: Model<Quartier>,
   ) {}
+
+  /**
+   * Après tous les `onModuleInit` (users, géo, domaines) : 3 établissements démo à Kénitra.
+   */
+  async onApplicationBootstrap(): Promise<void> {
+    await seedDemoEtablissementsKenitra(
+      this.etablissementModel,
+      this.userModel,
+      this.domaineModel,
+      this.paysModel,
+      this.villeModel,
+      this.quartierModel,
+      this.logger,
+    );
+  }
 
   /**
    * Créer un établissement.
@@ -39,6 +69,51 @@ export class EtablissementsService {
    */
   async findAll() {
     return this.etablissementModel.find();
+  }
+
+  /**
+   * Section accueil « Best providers » : uniquement établissements actifs et mis en avant.
+   */
+  async findHomeBestProviders(limit = 12) {
+    const cap = Math.min(Math.max(limit, 1), 50);
+    return this.etablissementModel
+      .find({
+        isActive: true,
+        isFeaturedForHomeBestProviders: true,
+      })
+      .sort({ bestProviderSortOrder: 1, createdAt: -1 })
+      .limit(cap)
+      .populate({ path: 'ville', select: 'nom' })
+      .select(
+        'nom slug logo coverImage image ville averageRating reviewCount bestProviderSortOrder',
+      )
+      .lean()
+      .exec();
+  }
+
+  /**
+   * Best providers pour l’app mobile : même filtre, tri explicite pour la home
+   * (ordre d’affichage, note moyenne, id).
+   */
+  async findMobileBestProviders(limit = 20) {
+    const cap = Math.min(Math.max(limit, 1), 50);
+    return this.etablissementModel
+      .find({
+        isActive: true,
+        isFeaturedForHomeBestProviders: true,
+      })
+      .sort({
+        bestProviderSortOrder: 1,
+        averageRating: -1,
+        _id: -1,
+      })
+      .limit(cap)
+      .populate({ path: 'ville', select: 'nom' })
+      .select(
+        'nom slug logo coverImage image ville averageRating reviewCount bestProviderSortOrder',
+      )
+      .lean()
+      .exec();
   }
 
   /**

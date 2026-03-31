@@ -1,5 +1,10 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { Domaine, DomaineSchema } from '../domaines/schemas/domaine.schema';
+import {
+  EtablissementServiceCaracteristique,
+  EtablissementServiceCaracteristiqueSchema,
+} from '../etablissement-service-caracteristiques/schemas/etablissement-service-caracteristique.schema';
 import { MediaModule } from '../media/media.module';
 import { Role, RoleSchema } from '../roles/schemas/role.schema';
 import { Service, ServiceSchema } from '../services/schemas/service.schema';
@@ -23,8 +28,10 @@ import {
     MediaModule,
     MongooseModule.forFeature([
       { name: EtablissementService.name, schema: EtablissementServiceSchema },
+      { name: EtablissementServiceCaracteristique.name, schema: EtablissementServiceCaracteristiqueSchema },
       { name: Etablissement.name, schema: EtablissementSchema },
       { name: Service.name, schema: ServiceSchema },
+      { name: Domaine.name, schema: DomaineSchema },
       { name: User.name, schema: UserSchema },
       { name: Role.name, schema: RoleSchema },
     ]),

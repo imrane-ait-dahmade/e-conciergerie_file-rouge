@@ -16,6 +16,7 @@ import { Reservation } from '../reservations/schemas/reservation.schema';
 import { ROLE_NAMES } from '../roles/seeds/roles.seed';
 import { User } from '../users/schemas/user.schema';
 import { Ville } from '../villes/schemas/ville.schema';
+import { normalizeAdminEtablissementDoc } from './admin-etablissement.resource';
 import { AdminEtablissementsService } from './admin-etablissements.service';
 import { AdminCreateEtablissementDto } from './dto/admin-create-etablissement.dto';
 import { Etablissement } from './schemas/etablissement.schema';
@@ -165,8 +166,18 @@ describe('AdminEtablissementsService', () => {
 
       const result = await service.findAllPaginated({ page: 2, limit: 5 });
 
-      expect(result.data).toEqual([detailDoc]);
+      expect(result.data).toEqual([
+        normalizeAdminEtablissementDoc(detailDoc as Record<string, unknown>),
+      ]);
       expect(result).toMatchObject({ total: 3, page: 2, limit: 5 });
+    });
+  });
+
+  describe('updateBestProviders', () => {
+    it('throws BadRequestException when body has no updatable fields', async () => {
+      await expect(service.updateBestProviders(ETAB_ID, {})).rejects.toThrow(
+        BadRequestException,
+      );
     });
   });
 
@@ -184,7 +195,9 @@ describe('AdminEtablissementsService', () => {
     it('returns document when found', async () => {
       mockEtabFindOneChain(detailDoc);
 
-      await expect(service.findOne(ETAB_ID)).resolves.toEqual(detailDoc);
+      await expect(service.findOne(ETAB_ID)).resolves.toEqual(
+        normalizeAdminEtablissementDoc(detailDoc as Record<string, unknown>),
+      );
     });
   });
 
@@ -312,7 +325,9 @@ describe('AdminEtablissementsService', () => {
           prestataire: new Types.ObjectId(PRESTATAIRE_ID),
         }),
       );
-      expect(result).toEqual(detailDoc);
+      expect(result).toEqual(
+        normalizeAdminEtablissementDoc(detailDoc as Record<string, unknown>),
+      );
     });
   });
 
@@ -341,7 +356,9 @@ describe('AdminEtablissementsService', () => {
       const result = await service.update(ETAB_ID, {});
 
       expect(etablissementModel.findByIdAndUpdate).not.toHaveBeenCalled();
-      expect(result).toEqual(detailDoc);
+      expect(result).toEqual(
+        normalizeAdminEtablissementDoc(detailDoc as Record<string, unknown>),
+      );
     });
 
     it('throws BadRequestException when new prestataire is not prestataire role', async () => {
@@ -380,7 +397,9 @@ describe('AdminEtablissementsService', () => {
         { $set: { isActive: false } },
         { new: true },
       );
-      expect(result).toEqual(detailDoc);
+      expect(result).toEqual(
+        normalizeAdminEtablissementDoc(detailDoc as Record<string, unknown>),
+      );
     });
   });
 

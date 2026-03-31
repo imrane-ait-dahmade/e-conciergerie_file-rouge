@@ -10,7 +10,7 @@ import {
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { PrimaryButton } from '@/src/components/PrimaryButton';
-import { AppColors } from '@/src/constants/theme';
+import { Colors, FontSize, Radius, Spacing } from '@/src/constants/theme';
 import { useAuth } from '@/src/context/AuthContext';
 import { ApiError } from '@/src/services/api';
 import type { AuthStackParamList } from '@/src/navigation/navigationTypes';
@@ -56,7 +56,7 @@ export function LoginScreen({ navigation }: Props) {
           value={email}
           onChangeText={setEmail}
           placeholder="vous@exemple.com"
-          placeholderTextColor={AppColors.textMuted}
+          placeholderTextColor={Colors.textMuted}
         />
         <Text style={styles.label}>Mot de passe</Text>
         <TextInput
@@ -65,7 +65,7 @@ export function LoginScreen({ navigation }: Props) {
           value={password}
           onChangeText={setPassword}
           placeholder="••••••••"
-          placeholderTextColor={AppColors.textMuted}
+          placeholderTextColor={Colors.textMuted}
         />
         {error ? <Text style={styles.error}>{error}</Text> : null}
         <PrimaryButton title="Connexion" onPress={onSubmit} loading={loading} />
@@ -78,36 +78,36 @@ export function LoginScreen({ navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
-  flex: { flex: 1, backgroundColor: AppColors.background },
+  flex: { flex: 1, backgroundColor: Colors.background },
   container: {
-    padding: 24,
-    paddingBottom: 48,
+    padding: Spacing.xl,
+    paddingBottom: Spacing.xxl + Spacing.base,
   },
   label: {
-    fontSize: 14,
+    fontSize: FontSize.sm,
     fontWeight: '600',
-    color: AppColors.text,
+    color: Colors.text,
     marginBottom: 6,
   },
   input: {
     borderWidth: 1,
-    borderColor: AppColors.border,
-    borderRadius: 10,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    fontSize: 16,
-    marginBottom: 16,
-    backgroundColor: AppColors.card,
-    color: AppColors.text,
+    borderColor: Colors.border,
+    borderRadius: Radius.md,
+    paddingHorizontal: Spacing.md + 2,
+    paddingVertical: Spacing.md,
+    fontSize: FontSize.md,
+    marginBottom: Spacing.base,
+    backgroundColor: Colors.card,
+    color: Colors.text,
   },
   error: {
-    color: AppColors.error,
-    marginBottom: 12,
+    color: Colors.error,
+    marginBottom: Spacing.md,
   },
   link: {
-    marginTop: 20,
+    marginTop: Spacing.lg,
     textAlign: 'center',
-    color: AppColors.primary,
-    fontSize: 15,
+    color: Colors.primary,
+    fontSize: FontSize.md,
   },
 });

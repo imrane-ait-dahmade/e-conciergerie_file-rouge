@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { PrimaryButton } from '@/src/components/PrimaryButton';
-import { AppColors } from '@/src/constants/theme';
+import { Colors, FontSize, LineHeight, Spacing } from '@/src/constants/theme';
 import type { AuthStackParamList } from '@/src/navigation/navigationTypes';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'Welcome'>;
@@ -31,23 +31,23 @@ export function WelcomeScreen({ navigation }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
+    padding: Spacing.xl,
     justifyContent: 'center',
-    backgroundColor: AppColors.background,
+    backgroundColor: Colors.background,
   },
   title: {
-    fontSize: 26,
+    fontSize: FontSize.xxl + 2,
     fontWeight: '700',
-    color: AppColors.text,
-    marginBottom: 12,
+    color: Colors.text,
+    marginBottom: Spacing.md,
   },
   text: {
-    fontSize: 16,
-    color: AppColors.textMuted,
-    marginBottom: 32,
-    lineHeight: 22,
+    fontSize: FontSize.md,
+    color: Colors.textMuted,
+    marginBottom: Spacing.xxl,
+    lineHeight: LineHeight.normal,
   },
   btn: {
-    marginBottom: 12,
+    marginBottom: Spacing.md,
   },
 });

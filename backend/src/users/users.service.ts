@@ -7,12 +7,11 @@ import {
   OnModuleInit,
   UnauthorizedException,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { Role } from '../roles/schemas/role.schema';
 import { RolesService } from '../roles/roles.service';
-import { seedInitialAdmin } from './seeds/admin.seed';
+import { seedDemoUsers } from './seeds/demo-users.seed';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login_user.dto';
 import { UpdateOwnProfileDto } from './dto/update-own-profile.dto';
@@ -32,12 +31,11 @@ export class UsersService implements OnModuleInit {
     @InjectModel(Role.name) private roleModel: Model<Role>,
     private readonly jwtService: JwtService,
     private readonly rolesService: RolesService,
-    private readonly config: ConfigService,
   ) {}
 
-  // Au démarrage : comme un seeder Laravel lancé depuis AppServiceProvider::boot().
+  /** Au démarrage : 3 comptes de démo idempotents — voir `seeds/demo-users.seed.ts`. */
   async onModuleInit(): Promise<void> {
-    await this.createInitialAdmin();
+    await seedDemoUsers(this.userModel, this.roleModel, this.logger);
   }
 
   /**
@@ -126,23 +124,6 @@ export class UsersService implements OnModuleInit {
       .populate('role')
       .lean();
     return toSafeUserResponse(newUser as unknown as Record<string, unknown>);
-  }
-
-  /**
-   * Lit le .env (ADMIN_*) et délègue au fichier seed — comme appeler un Seeder depuis le service provider.
-   */
-  async createInitialAdmin(): Promise<void> {
-    await seedInitialAdmin(
-      this.userModel,
-      this.roleModel,
-      {
-        email: this.config.get<string>('adminSeed.email') ?? '',
-        password: this.config.get<string>('adminSeed.password') ?? '',
-        nom: this.config.get<string>('adminSeed.nom') ?? 'Admin',
-        prenom: this.config.get<string>('adminSeed.prenom') ?? 'Système',
-      },
-      this.logger,
-    );
   }
 
   /**

@@ -27,6 +27,12 @@
     },
     "plugins": [
       [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "L’application utilise votre position pour afficher les services à proximité."
+        }
+      ],
+      [
         "expo-splash-screen",
         {
           "image": "./assets/images/splash-icon.png",

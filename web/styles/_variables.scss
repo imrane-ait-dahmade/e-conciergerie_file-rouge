@@ -34,29 +34,29 @@
 //      - défaut douce        → $border-default
 // -----------------------------------------------------------------------------
 
-// Marque
-$brand-primary: #1e3a8a; // bleu fort — liens, focus, accents marque
-$brand-secondary: #0b1120; // marine — titres, logo texte, hiérarchie « brand »
+// Marque (aligné app mobile : bleu liens / or CTA / marine titres)
+$brand-primary: #2f64e1; // bleu — liens, focus, prix mis en avant
+$brand-secondary: #27408b; // bleu profond — variantes, hiérarchie secondaire
 
 // Accents
-$accent: #fbbf24; // or chaud — CTA principaux, badges highlight
-$accent-hover: #f59e0b;
+$accent: #f4c021; // or — CTA principaux, badges highlight
+$accent-hover: #e0b318;
 $accent-warning: #d97706; // alertes, états attention (distinct de l’or CTA)
 
 // Surfaces
-$background-page: #f8fafc; // fond global des pages
+$background-page: #eef0f4; // fond global des pages
 $background-card: #ffffff; // cartes, panneaux, champs sur fond gris
-$background-muted: #f1f5f9; // bandes, zones secondaires, trust placeholders
+$background-muted: #e8ecf2; // bandes, zones secondaires, trust placeholders
 
 // Texte
-$text-primary: $brand-secondary; // titres, lecture principale (marine)
-$text-muted: #64748b; // sous-titres, labels secondaires, placeholders
-$text-on-accent: #ffffff; // texte sur bouton or ou fonds très sombres
+$text-primary: #06153a; // marine — titres, lecture principale
+$text-muted: #70819b; // sous-titres, labels secondaires, placeholders
+$text-on-accent: #06153a; // sur CTA or — meilleur contraste que blanc sur #f4c021
 $text-on-brand: #ffffff; // texte sur bouton plein bleu (si utilisé)
 
 // Bordures (modernes, douces)
-$border-default: #e2e8f0;
-$border-strong: #cbd5e1; // séparateurs un peu plus visibles
+$border-default: #d9dadd;
+$border-strong: #c5cad3; // séparateurs un peu plus visibles
 
 // États (formulaires, alertes)
 $state-success: #16a34a;
@@ -89,7 +89,7 @@ $color-background: $background-page;
 $color-foreground: $text-primary;
 $color-muted: $background-muted;
 $color-muted-foreground: $text-muted;
-$color-black: $brand-secondary;
+$color-black: $text-primary;
 
 // Compat maquette header / CTA (déprécié au profit des tokens sémantiques)
 $color-figma-brand-text: $text-primary;
@@ -127,13 +127,13 @@ $radius-full: 9999px;
 // 6) Ombres
 // -----------------------------------------------------------------------------
 
-$shadow-sm: 0 1px 2px rgb(15 23 42 / 0.06);
+$shadow-sm: 0 1px 2px rgb(6 21 58 / 0.07);
 $shadow-md:
-  0 4px 6px -1px rgb(15 23 42 / 0.08),
-  0 2px 4px -2px rgb(15 23 42 / 0.06);
+  0 4px 6px -1px rgb(6 21 58 / 0.09),
+  0 2px 4px -2px rgb(6 21 58 / 0.06);
 $shadow-lg:
-  0 10px 15px -3px rgb(15 23 42 / 0.08),
-  0 4px 6px -4px rgb(15 23 42 / 0.06);
+  0 10px 15px -3px rgb(6 21 58 / 0.09),
+  0 4px 6px -4px rgb(6 21 58 / 0.06);
 
 // -----------------------------------------------------------------------------
 // 7) Typographie
@@ -178,10 +178,10 @@ $layout-auth-max-width: 28rem;
 $layout-auth-max-width-lg: 38rem;
 
 $auth-gradient-angle: 160deg;
-$auth-gradient-start: #eff6ff;
-$auth-gradient-mid: #f8fafc;
-$auth-gradient-end: #fffbeb;
-$auth-gradient-spot: rgb(59 130 246 / 0.15);
+$auth-gradient-start: #e8eefb;
+$auth-gradient-mid: #eef0f4;
+$auth-gradient-end: #fdf6e3;
+$auth-gradient-spot: rgb(47 100 225 / 0.14);
 $auth-page-min-height: calc(100dvh - 3.5rem);
 
 $auth-page-padding-x: $space-4;
@@ -195,7 +195,7 @@ $auth-card-header-padding-bottom: $space-4;
 $auth-card-content-padding-top: $space-4;
 
 $auth-card-bg: $background-card;
-$auth-card-border-color: rgb(226 232 240 / 0.85);
+$auth-card-border-color: rgb(217 218 221 / 0.95);
 $auth-card-border-width: 1px;
 // Carte / champs / CTA : rayon un peu plus doux (8px, grille 8px)
 $auth-card-radius: $radius-md;
@@ -247,15 +247,15 @@ $auth-input-border: 1px solid $border-default;
 $auth-input-bg: rgb(255 255 255 / 0.85);
 $auth-input-padding-x: $space-3;
 $auth-input-focus-ring-width: 2px;
-$auth-input-focus-ring-color: rgb(30 58 138 / 0.35);
+$auth-input-focus-ring-color: rgb(47 100 225 / 0.38);
 
 $auth-button-min-height: 2.5rem;
 $auth-button-radius: $radius-md;
 $auth-button-padding-x: $space-6;
 $auth-button-font-weight: $font-weight-semibold;
 $auth-button-shadow:
-  0 1px 2px rgb(30 58 138 / 0.12),
-  0 2px 8px rgb(245 158 11 / 0.22);
+  0 1px 2px rgb(47 100 225 / 0.14),
+  0 2px 8px rgb(244 192 33 / 0.28);
 $auth-button-bg: $accent;
 $auth-button-bg-hover: $accent-hover;
 $auth-button-color: $text-on-accent;

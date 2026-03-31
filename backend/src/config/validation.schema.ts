@@ -34,6 +34,9 @@ export const validationSchema = Joi.object({
   // Frontend
   FRONTEND_URL: Joi.string().uri().default('http://localhost:3000'),
 
+  /** Origine Expo / Metro (Expo Web, outils) — défaut localhost:8081 ; surcharger si besoin (LAN). */
+  MOBILE_DEV_ORIGIN: Joi.string().uri().optional(),
+
   // Mail
   MAIL_FROM: Joi.string().email().default('noreply@localhost'),
 
@@ -43,6 +46,7 @@ export const validationSchema = Joi.object({
   MINIO_USE_SSL: Joi.string().valid('true', 'false').default('false'),
   MINIO_ACCESS_KEY: Joi.string().default('minioadmin'),
   MINIO_SECRET_KEY: Joi.string().default('minioadmin'),
+  MINIO_REGION: Joi.string().default('us-east-1'),
   MINIO_BUCKET: Joi.string().default('uploads'),
   MINIO_PUBLIC_URL: Joi.string().uri().default('http://localhost:9000'),
 });

@@ -14,6 +14,8 @@ export type DomaineDoc = {
   _id: string;
   nom: string;
   description?: string;
+  /** Clé d’icône (Ionicons) ou URL — optionnel */
+  icon?: string;
   createdAt?: string;
   updatedAt?: string;
 };
@@ -22,6 +24,7 @@ export type ServiceDoc = {
   _id: string;
   nom: string;
   description?: string;
+  icon?: string;
   domaine: MongoRef | string;
   createdAt?: string;
   updatedAt?: string;
@@ -30,6 +33,7 @@ export type ServiceDoc = {
 export type CaracteristiqueDoc = {
   _id: string;
   libelle: string;
+  icon?: string;
   service?: MongoRef | string | null;
   createdAt?: string;
   updatedAt?: string;

@@ -53,5 +53,6 @@ import { EtablissementsService } from './etablissements.service';
   ],
   controllers: [EtablissementsController, AdminEtablissementsController],
   providers: [EtablissementsService, AdminEtablissementsService, RolesGuard],
+  exports: [EtablissementsService],
 })
 export class EtablissementsModule {}

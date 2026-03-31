@@ -5,6 +5,7 @@ import { Types } from 'mongoose';
 import { DomaineService } from '../domaines/domaine.service';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
+import { Domaine } from '../domaines/schemas/domaine.schema';
 import { Service } from './schemas/service.schema';
 import { ServiceService } from './service.service';
 
@@ -27,6 +28,11 @@ describe('ServiceService', () => {
     findById: jest.fn(),
     findByIdAndUpdate: jest.fn(),
     findByIdAndDelete: jest.fn(),
+    findOneAndUpdate: jest.fn(),
+  };
+
+  const domaineModel = {
+    findOne: jest.fn().mockResolvedValue(null),
   };
 
   const domaineService = {
@@ -80,6 +86,7 @@ describe('ServiceService', () => {
       providers: [
         ServiceService,
         { provide: getModelToken(Service.name), useValue: serviceModel },
+        { provide: getModelToken(Domaine.name), useValue: domaineModel },
         { provide: DomaineService, useValue: domaineService },
       ],
     }).compile();
@@ -156,7 +163,7 @@ describe('ServiceService', () => {
       expect(serviceModel.find).toHaveBeenCalled();
       expect(chain.sort).toHaveBeenCalledWith({ nom: 1 });
       expect(chain.populate).toHaveBeenCalledWith([
-        { path: 'domaine', select: 'nom description' },
+        { path: 'domaine', select: 'nom description icon' },
       ]);
       expect(result).toEqual(rows);
     });
@@ -210,7 +217,7 @@ describe('ServiceService', () => {
       expect(domaineService.findOne).toHaveBeenCalledWith(DOMAINE_ID);
       expect(serviceModel.findByIdAndUpdate).toHaveBeenCalledWith(
         SERVICE_ID,
-        { domaine: new Types.ObjectId(DOMAINE_ID) },
+        { $set: { domaine: new Types.ObjectId(DOMAINE_ID) } },
         { new: true },
       );
     });
@@ -224,7 +231,7 @@ describe('ServiceService', () => {
       expect(domaineService.findOne).not.toHaveBeenCalled();
       expect(serviceModel.findByIdAndUpdate).toHaveBeenCalledWith(
         SERVICE_ID,
-        { nom: 'N' },
+        { $set: { nom: 'N' } },
         { new: true },
       );
     });

@@ -3,6 +3,7 @@ import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Types } from 'mongoose';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
+import { Quartier } from '../quartiers/schemas/quartier.schema';
 import { Ville } from '../villes/schemas/ville.schema';
 import { CreatePaysDto } from './dto/create-pays.dto';
 import { UpdatePaysDto } from './dto/update-pays.dto';
@@ -22,10 +23,18 @@ describe('PaysService', () => {
     findById: jest.fn(),
     findByIdAndUpdate: jest.fn(),
     findByIdAndDelete: jest.fn(),
+    findOneAndUpdate: jest.fn(),
   };
 
   const villeModel = {
     countDocuments: jest.fn(),
+    findOne: jest.fn(),
+    create: jest.fn(),
+  };
+
+  const quartierModel = {
+    exists: jest.fn(),
+    create: jest.fn(),
   };
 
   /** Mongoose query chain used by find().sort().skip().limit().exec() */
@@ -43,11 +52,26 @@ describe('PaysService', () => {
   beforeEach(async () => {
     jest.clearAllMocks();
 
+    paysModel.findOneAndUpdate.mockResolvedValue({
+      _id: new Types.ObjectId(SAMPLE_ID),
+      nom: 'Maroc',
+      code: 'MA',
+    });
+    villeModel.findOne.mockReturnValue({
+      exec: jest.fn().mockResolvedValue({
+        _id: new Types.ObjectId('507f1f77bcf86cd799439012'),
+        nom: 'Kénitra',
+        pays: new Types.ObjectId(SAMPLE_ID),
+      }),
+    });
+    quartierModel.exists.mockResolvedValue(true);
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         PaysService,
         { provide: getModelToken(Pays.name), useValue: paysModel },
         { provide: getModelToken(Ville.name), useValue: villeModel },
+        { provide: getModelToken(Quartier.name), useValue: quartierModel },
       ],
     }).compile();
 

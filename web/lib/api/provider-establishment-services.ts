@@ -4,6 +4,7 @@
 import { getApiBaseUrl } from "@/lib/api";
 import { getAccessToken } from "@/lib/auth-storage";
 import { readErrorMessage } from "@/lib/api/client";
+import { throwIfNotOk } from "@/lib/api/read-json-error";
 import type { EtablissementServiceAssignment } from "@/lib/types/etablissement-service";
 
 export type CreateProviderEtablissementServicePayload = {
@@ -11,11 +12,23 @@ export type CreateProviderEtablissementServicePayload = {
   service: string;
   prix?: number;
   commentaire?: string;
+  adresse?: string;
+  address?: string;
+  latitude?: number;
+  longitude?: number;
+  location_label?: string;
+  location_type?: string;
 };
 
 export type UpdateProviderEtablissementServicePayload = {
   prix?: number;
   commentaire?: string;
+  adresse?: string;
+  address?: string;
+  latitude?: number | null;
+  longitude?: number | null;
+  location_label?: string;
+  location_type?: string;
 };
 
 function headersJsonAuth(): HeadersInit {
@@ -61,7 +74,7 @@ export async function createProviderEstablishmentService(
     headers: headersJsonAuth(),
     body: JSON.stringify(payload),
   });
-  if (!res.ok) throw new Error(await readErrorMessage(res));
+  if (!res.ok) await throwIfNotOk(res);
   return res.json() as Promise<EtablissementServiceAssignment>;
 }
 
@@ -78,7 +91,7 @@ export async function updateProviderEstablishmentService(
       body: JSON.stringify(payload),
     },
   );
-  if (!res.ok) throw new Error(await readErrorMessage(res));
+  if (!res.ok) await throwIfNotOk(res);
   return res.json() as Promise<EtablissementServiceAssignment>;
 }
 

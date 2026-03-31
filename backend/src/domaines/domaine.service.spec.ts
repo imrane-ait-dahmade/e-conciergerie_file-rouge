@@ -102,6 +102,9 @@ describe('DomaineService', () => {
       expect(domaineModel.create).toHaveBeenCalledWith({
         nom: 'Hôtellerie',
         description: 'details',
+        slug: 'hotellerie',
+        isActive: true,
+        order: 0,
       });
       expect(result).toEqual(created);
     });
@@ -112,7 +115,111 @@ describe('DomaineService', () => {
 
       await service.create(dto);
 
-      expect(domaineModel.create).toHaveBeenCalledWith({ nom: 'Restauration' });
+      expect(domaineModel.create).toHaveBeenCalledWith({
+        nom: 'Restauration',
+        slug: 'restauration',
+        isActive: true,
+        order: 0,
+      });
+    });
+
+    it('persists optional icon when provided', async () => {
+      const dto: CreateDomaineDto = {
+        nom: 'Hébergement',
+        icon: 'bed',
+      };
+      domaineModel.create.mockResolvedValue({ ...dto });
+
+      await service.create(dto);
+
+      expect(domaineModel.create).toHaveBeenCalledWith({
+        nom: 'Hébergement',
+        slug: 'hebergement',
+        isActive: true,
+        order: 0,
+        icon: 'bed',
+      });
+    });
+  });
+
+  describe('findActiveForMobileHome', () => {
+    it('returns empty array when no domaines', async () => {
+      const chain = {
+        lean: jest.fn().mockReturnThis(),
+        exec: jest.fn().mockResolvedValue([]),
+      };
+      domaineModel.find.mockReturnValue(chain);
+
+      await expect(service.findActiveForMobileHome()).resolves.toEqual([]);
+      expect(domaineModel.find).toHaveBeenCalledWith({
+        isActive: { $ne: false },
+      });
+    });
+
+    it('maps active domaines sorted by order then name', async () => {
+      const rows = [
+        {
+          _id: '507f1f77bcf86cd799439012',
+          nom: 'Vols',
+          slug: 'vols',
+          icon: 'plane',
+          isActive: true,
+          order: 2,
+        },
+        {
+          _id: VALID_ID,
+          nom: 'Hébergements',
+          slug: 'hebergements',
+          icon: 'bed',
+          isActive: true,
+          order: 1,
+        },
+      ];
+      const chain = {
+        lean: jest.fn().mockReturnThis(),
+        exec: jest.fn().mockResolvedValue(rows),
+      };
+      domaineModel.find.mockReturnValue(chain);
+
+      const result = await service.findActiveForMobileHome();
+
+      expect(result).toEqual([
+        {
+          id: VALID_ID,
+          name: 'Hébergements',
+          slug: 'hebergements',
+          icon: 'bed',
+          isActive: true,
+          order: 1,
+        },
+        {
+          id: '507f1f77bcf86cd799439012',
+          name: 'Vols',
+          slug: 'vols',
+          icon: 'plane',
+          isActive: true,
+          order: 2,
+        },
+      ]);
+    });
+
+    it('derives slug from nom when slug missing in document', async () => {
+      const rows = [
+        {
+          _id: VALID_ID,
+          nom: 'Spa & Bien-être',
+          isActive: true,
+          order: 0,
+        },
+      ];
+      domaineModel.find.mockReturnValue({
+        lean: jest.fn().mockReturnThis(),
+        exec: jest.fn().mockResolvedValue(rows),
+      });
+
+      const result = await service.findActiveForMobileHome();
+
+      expect(result[0].slug).toBe('spa-bien-etre');
     });
   });
 
@@ -180,7 +287,7 @@ describe('DomaineService', () => {
 
       expect(domaineModel.findByIdAndUpdate).toHaveBeenCalledWith(
         VALID_ID,
-        { nom: 'New', description: 'D' },
+        { $set: { nom: 'New', description: 'D' } },
         { new: true },
       );
       expect(result).toEqual(updated);
@@ -192,6 +299,32 @@ describe('DomaineService', () => {
 
       await expect(service.update(VALID_ID, { nom: 'X' })).rejects.toThrow(
         NotFoundException,
+      );
+    });
+
+    it('sets icon with $set', async () => {
+      mockFindByIdChain({ _id: VALID_ID });
+      mockFindByIdAndUpdateChain({ _id: VALID_ID, icon: 'plane' });
+
+      await service.update(VALID_ID, { icon: 'plane' });
+
+      expect(domaineModel.findByIdAndUpdate).toHaveBeenCalledWith(
+        VALID_ID,
+        { $set: { icon: 'plane' } },
+        { new: true },
+      );
+    });
+
+    it('clears icon with $unset when value is empty after trim', async () => {
+      mockFindByIdChain({ _id: VALID_ID });
+      mockFindByIdAndUpdateChain({ _id: VALID_ID });
+
+      await service.update(VALID_ID, { icon: '   ' });
+
+      expect(domaineModel.findByIdAndUpdate).toHaveBeenCalledWith(
+        VALID_ID,
+        { $unset: { icon: 1 } },
+        { new: true },
       );
     });
   });

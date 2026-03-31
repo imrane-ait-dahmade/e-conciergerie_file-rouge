@@ -1,17 +1,11 @@
 import { getApiBaseUrl } from "@/lib/api";
+import { ApiRequestError } from "@/lib/api/api-request-error";
+import { readJsonErrorBody } from "@/lib/api/read-json-error";
 import { getAccessToken } from "@/lib/auth-storage";
 
-async function readBodyMessage(res: Response): Promise<string> {
-  const text = await res.text();
-  if (!text) return `${res.status} ${res.statusText}`;
-  try {
-    const body = JSON.parse(text) as { message?: string | string[] };
-    if (typeof body.message === "string") return body.message;
-    if (Array.isArray(body.message)) return body.message.join(", ");
-  } catch {
-    /* ignore */
-  }
-  return `${res.status} ${res.statusText}`;
+async function throwApiError(res: Response): Promise<never> {
+  const { message, messages } = await readJsonErrorBody(res);
+  throw new ApiRequestError(message, messages, res.status);
 }
 
 function headersJsonAuth(): HeadersInit {
@@ -51,6 +45,11 @@ export type AdminEtablissement = {
   _id: string;
   nom: string;
   adresse?: string;
+  /** Alias API de `adresse`. */
+  address?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
+  location?: { type: "Point"; coordinates: [number, number] } | null;
   description?: string;
   telephone?: string;
   email?: string;
@@ -73,6 +72,8 @@ export type CreateAdminEtablissementPayload = {
   nom: string;
   prestataire: string;
   adresse?: string;
+  latitude?: number;
+  longitude?: number;
   description?: string;
   telephone?: string;
   email?: string;
@@ -85,6 +86,8 @@ export type UpdateAdminEtablissementPayload = {
   nom?: string;
   prestataire?: string;
   adresse?: string;
+  latitude?: number;
+  longitude?: number;
   description?: string;
   telephone?: string;
   email?: string;
@@ -131,7 +134,7 @@ export async function fetchAdminEtablissements(params?: {
     method: "GET",
     headers: headersJsonAuth(),
   });
-  if (!res.ok) throw new Error(await readBodyMessage(res));
+  if (!res.ok) await throwApiError(res);
   const text = await res.text();
   return text
     ? (JSON.parse(text) as PaginatedEtablissements)
@@ -145,7 +148,7 @@ export async function fetchAdminEtablissement(id: string): Promise<AdminEtabliss
     method: "GET",
     headers: headersJsonAuth(),
   });
-  if (!res.ok) throw new Error(await readBodyMessage(res));
+  if (!res.ok) await throwApiError(res);
   return JSON.parse(await res.text()) as AdminEtablissement;
 }
 
@@ -159,7 +162,7 @@ export async function createAdminEtablissement(
     headers: headersJsonAuth(),
     body: JSON.stringify(payload),
   });
-  if (!res.ok) throw new Error(await readBodyMessage(res));
+  if (!res.ok) await throwApiError(res);
   return JSON.parse(await res.text()) as AdminEtablissement;
 }
 
@@ -174,7 +177,7 @@ export async function updateAdminEtablissement(
     headers: headersJsonAuth(),
     body: JSON.stringify(payload),
   });
-  if (!res.ok) throw new Error(await readBodyMessage(res));
+  if (!res.ok) await throwApiError(res);
   return JSON.parse(await res.text()) as AdminEtablissement;
 }
 
@@ -189,7 +192,7 @@ export async function patchAdminEtablissementStatus(
     headers: headersJsonAuth(),
     body: JSON.stringify({ isActive }),
   });
-  if (!res.ok) throw new Error(await readBodyMessage(res));
+  if (!res.ok) await throwApiError(res);
   return JSON.parse(await res.text()) as AdminEtablissement;
 }
 
@@ -200,5 +203,5 @@ export async function deleteAdminEtablissement(id: string): Promise<void> {
     method: "DELETE",
     headers: headersJsonAuth(),
   });
-  if (!res.ok) throw new Error(await readBodyMessage(res));
+  if (!res.ok) await throwApiError(res);
 }

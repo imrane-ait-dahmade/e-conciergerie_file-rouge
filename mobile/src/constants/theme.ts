@@ -1,14 +1,14 @@
 /**
  * Point d’entrée du design system mobile.
- * Importe depuis ici dans les écrans : couleurs, espacements, rayons, typo.
+ * Couleurs : utiliser `colors` au quotidien ; `palette` pour étendre la marque.
  */
-export { Brand, Colors } from '@/src/constants/colors';
+export { Brand, Colors, colors, palette } from '@/src/theme/colors';
+export type { ColorName, PaletteName } from '@/src/theme/colors';
 export { Spacing } from '@/src/constants/spacing';
 export { Radius } from '@/src/constants/radius';
 export { FontSize, LineHeight } from '@/src/constants/typography';
 
 /**
- * @deprecated Préférer `Colors` — conservé pour ne pas casser les imports existants.
- * Les clés sont identiques à `Colors`.
+ * @deprecated Utiliser `colors` — alias pour anciens imports.
  */
-export { Colors as AppColors } from '@/src/constants/colors';
+export { colors as AppColors } from '@/src/theme/colors';

@@ -8,7 +8,12 @@ import Constants from 'expo-constants';
 function getApiBaseUrl(): string {
   const fromEnv = process.env.EXPO_PUBLIC_API_URL;
   if (fromEnv && fromEnv.length > 0) {
-    return fromEnv.replace(/\/$/, '');
+    let base = fromEnv.replace(/\/$/, '');
+    // Sans schéma, fetch résout en URL relative → préfixe incorrect (ex. localhost:8081/192.168…)
+    if (!/^https?:\/\//i.test(base)) {
+      base = `http://${base}`;
+    }
+    return base;
   }
   const extra = Constants.expoConfig?.extra as { apiUrl?: string } | undefined;
   if (extra?.apiUrl) {
@@ -19,3 +24,12 @@ function getApiBaseUrl(): string {
 }
 
 export const API_BASE_URL = getApiBaseUrl();
+
+/**
+ * Si `true`, la page domaine utilise des données mock (`data/domain-detail.mock.ts`)
+ * au lieu de `GET /mobile/domains/:id/details` — pratique sans backend prêt.
+ * Définir `EXPO_PUBLIC_DOMAIN_DETAIL_MOCK=1` dans `.env`.
+ */
+export const DOMAIN_DETAIL_USE_MOCK =
+  process.env.EXPO_PUBLIC_DOMAIN_DETAIL_MOCK === 'true' ||
+  process.env.EXPO_PUBLIC_DOMAIN_DETAIL_MOCK === '1';

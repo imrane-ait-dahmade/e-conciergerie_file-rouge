@@ -1,40 +1,44 @@
-import Ionicons from '@expo/vector-icons/Ionicons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import { AppColors } from '@/src/constants/theme';
+import { BottomNav } from '@/src/components/navigation/BottomNav';
 import { EstablishmentsNavigator } from '@/src/navigation/EstablishmentsNavigator';
+import { HomeNavigator } from '@/src/navigation/HomeNavigator';
 import type { MainTabParamList } from '@/src/navigation/navigationTypes';
-import { HomeScreen } from '@/src/screens/HomeScreen';
+import { MapScreen } from '@/src/screens/MapScreen';
 import { ProfileScreen } from '@/src/screens/ProfileScreen';
 
 const Tab = createBottomTabNavigator<MainTabParamList>();
 
 /**
- * Barre d’onglets en bas : Accueil, Établissements, Profil.
+ * Onglets : Accueil, Recherche (liste établissements), Carte, Profil — barre personnalisée.
  */
 export function MainTabNavigator() {
   return (
     <Tab.Navigator
+      tabBar={(props) => <BottomNav {...props} />}
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: AppColors.primary,
-        tabBarInactiveTintColor: AppColors.textMuted,
       }}
     >
       <Tab.Screen
         name="Home"
-        component={HomeScreen}
+        component={HomeNavigator}
         options={{
           title: 'Accueil',
-          tabBarIcon: ({ color, size }) => <Ionicons name="home-outline" size={size} color={color} />,
         }}
       />
       <Tab.Screen
-        name="Establishments"
+        name="Search"
         component={EstablishmentsNavigator}
         options={{
-          title: 'Établissements',
-          tabBarIcon: ({ color, size }) => <Ionicons name="business-outline" size={size} color={color} />,
+          title: 'Recherche',
+        }}
+      />
+      <Tab.Screen
+        name="Map"
+        component={MapScreen}
+        options={{
+          title: 'Carte',
         }}
       />
       <Tab.Screen
@@ -42,7 +46,6 @@ export function MainTabNavigator() {
         component={ProfileScreen}
         options={{
           title: 'Profil',
-          tabBarIcon: ({ color, size }) => <Ionicons name="person-outline" size={size} color={color} />,
         }}
       />
     </Tab.Navigator>

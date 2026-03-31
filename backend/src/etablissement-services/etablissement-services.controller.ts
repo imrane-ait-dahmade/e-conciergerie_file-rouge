@@ -29,7 +29,12 @@ export class EtablissementServicesController {
   ) {}
 
   @Post()
-  @ApiOperation({ summary: 'Assigner un service du catalogue à un établissement' })
+  @ApiOperation({
+    summary: 'Assigner un service du catalogue à un établissement',
+    description:
+      'Champs optionnels : adresse ou address, latitude/longitude (obligatoirement par paire), ' +
+      'location_label, location_type. Le GeoJSON `location` est calculé automatiquement côté serveur.',
+  })
   create(@Body() dto: CreateEtablissementServiceDto) {
     return this.etablissementServicesService.create(dto);
   }
@@ -49,7 +54,12 @@ export class EtablissementServicesController {
   }
 
   @Patch(':id')
-  @ApiOperation({ summary: 'Mettre à jour prix / commentaire sur la liaison' })
+  @ApiOperation({
+    summary: 'Mettre à jour la liaison (prix, commentaire, géolocalisation, libellés de lieu)',
+    description:
+      'Mise à jour partielle. Coordonnées : envoyer latitude et longitude ensemble, ou les deux à null pour effacer. ' +
+      'Réponse : inclut `address` (alias de adresse) et `location` (Point GeoJSON).',
+  })
   update(@Param('id') id: string, @Body() dto: UpdateEtablissementServiceDto) {
     return this.etablissementServicesService.update(id, dto);
   }

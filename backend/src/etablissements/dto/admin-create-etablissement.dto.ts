@@ -2,14 +2,17 @@ import { Type } from 'class-transformer';
 import {
   IsBoolean,
   IsEmail,
+  IsInt,
   IsMongoId,
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
+  Matches,
   MaxLength,
   Min,
   Max,
+  ValidateIf,
 } from 'class-validator';
 
 /**
@@ -32,18 +35,24 @@ export class AdminCreateEtablissementDto {
   adresse?: string;
 
   @IsOptional()
+  @ValidateIf(
+    (o) => o.latitude !== null && o.latitude !== undefined,
+  )
   @IsNumber()
   @Min(-90)
   @Max(90)
   @Type(() => Number)
-  latitude?: number;
+  latitude?: number | null;
 
   @IsOptional()
+  @ValidateIf(
+    (o) => o.longitude !== null && o.longitude !== undefined,
+  )
   @IsNumber()
   @Min(-180)
   @Max(180)
   @Type(() => Number)
-  longitude?: number;
+  longitude?: number | null;
 
   @IsOptional()
   @IsString()
@@ -65,6 +74,48 @@ export class AdminCreateEtablissementDto {
   @IsString()
   @MaxLength(500)
   image?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(2048)
+  logo?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(2048)
+  coverImage?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(120)
+  @Matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, {
+    message:
+      'Le slug ne doit contenir que des lettres minuscules, chiffres et tirets',
+  })
+  slug?: string;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  @Max(5)
+  @Type(() => Number)
+  averageRating?: number;
+
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  @Type(() => Number)
+  reviewCount?: number;
+
+  @IsOptional()
+  @IsBoolean()
+  isFeaturedForHomeBestProviders?: boolean;
+
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  @Type(() => Number)
+  bestProviderSortOrder?: number;
 
   @IsOptional()
   @IsMongoId({ message: 'Identifiant domaine invalide' })
