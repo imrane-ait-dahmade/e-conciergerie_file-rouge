@@ -12,7 +12,6 @@ type Props = {
   onDomainChange: (domainId?: string) => void;
   onCityChange: (city?: string) => void;
   onToggleMinRating: () => void;
-  onToggleActiveOnly: () => void;
   onResetFilters: () => void;
 };
 
@@ -43,12 +42,9 @@ export function FilterChips({
   onDomainChange,
   onCityChange,
   onToggleMinRating,
-  onToggleActiveOnly,
   onResetFilters,
 }: Props) {
-  const hasFilters = Boolean(
-    filters.domainId || filters.city || filters.minRating != null || filters.activeOnly,
-  );
+  const hasFilters = Boolean(filters.domainId || filters.city || filters.minRating != null);
 
   return (
     <View style={styles.wrap}>
@@ -79,11 +75,6 @@ export function FilterChips({
           label="Note 4+"
           selected={filters.minRating != null}
           onPress={onToggleMinRating}
-        />
-        <Chip
-          label="Actifs"
-          selected={filters.activeOnly === true}
-          onPress={onToggleActiveOnly}
         />
         {domains.slice(0, 6).map((domain) => (
           <Chip

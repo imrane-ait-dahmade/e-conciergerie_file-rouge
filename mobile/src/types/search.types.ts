@@ -6,7 +6,6 @@ export type SearchFilterState = {
   domainId?: string;
   city?: string;
   minRating?: number;
-  activeOnly?: boolean;
 };
 
 export type SearchQueryParams = SearchFilterState & {

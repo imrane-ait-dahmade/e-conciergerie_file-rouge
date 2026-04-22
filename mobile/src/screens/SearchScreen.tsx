@@ -201,12 +201,6 @@ export function SearchScreen() {
               minRating: prev.minRating != null ? undefined : 4,
             }))
           }
-          onToggleActiveOnly={() =>
-            setFilters((prev) => ({
-              ...prev,
-              activeOnly: prev.activeOnly ? undefined : true,
-            }))
-          }
           onResetFilters={resetFilters}
         />
         <SortSelector value={sort} onChange={setSort} />
